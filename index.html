@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Calc</title>
+</head>
+<body>
+<div>
+    <style>
+        .headerCalc {
+            text-align: center;
+        }
+
+        #flexBox {
+            display: flex;
+            flex-flow: row wrap;
+            justify-content: space-around;
+        }
+
+        .unitAndPrice {
+            display: flex;
+            flex-flow: row;
+            flex-grow: 3;
+        }
+
+        #inCartUnit {
+            flex-grow: 3;
+            padding-right: 25px;
+            padding-left: 25px;
+        }
+
+        #inCartPrice {
+            flex-grow: 1;
+            padding-right: 25px;
+            padding-left: 25px;
+        }
+
+        #totalPrice {
+            flex-grow: 1;
+        }
+
+        #unitList {
+            overflow: auto;
+        }
+
+        #cartPrices {
+            padding: 5px;
+        }
+
+        #cartUnits {
+            padding: 5px;
+        }
+
+        .inCartLineUnit {
+            display: flex;
+            justify-content: space-between;
+            height: 20px;
+        }
+
+        .inCartLineUnit:hover {
+            cursor: context-menu;
+        }
+
+        .inCartLinePrice:hover {
+            cursor: context-menu;
+        }
+
+        .inCartLinePrice {
+            height: 20px;
+        }
+
+        .item {
+            overflow: auto;
+            max-height: 400px;
+            padding: 25px;
+            min-width: 350px;
+        }
+
+        .delete {
+            color: red;
+            font-family: "Arial";
+            font-weight: bold;
+            background: transparent;
+        }
+
+        .delete:hover {
+            cursor: pointer;
+        }
+
+        .unitAtList {
+            position: relative;
+            margin: 10px;
+            padding: 3px;
+            max-width: 300px;
+            border: 3px solid #8644D7;
+            border-radius: 8px;
+        }
+
+        .unitAtList:hover {
+            bottom: 4px;
+            left: 4px;
+            box-shadow: -4px 4px 3px 0 gray;
+            cursor: pointer;
+        }
+
+        .unitAtList:active {
+            background: #8644D7;
+            bottom: -4px;
+            left: -4px;
+            box-shadow: none;
+        }
+
+        .highlightUnit {
+            background: #8644D7;
+            box-shadow: -5px 0 8px 8px white inset;
+        }
+
+        .flexBoxBtn {
+            display: flex;
+            flex-flow: row nowrap;
+            justify-content: right;
+        }
+
+        .btn {
+            float: none;
+            margin: 10px;
+            padding: 10px;
+            border: 0;
+            background: #FFD200;
+            color: white;
+        }
+
+        .btn:hover {
+            background: darkorange;
+            cursor: pointer;
+        }
+
+        .btn:active {
+            background: #8644D7;
+        }
+
+        #submitCalc {
+            width: 500px;
+        }
+
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        ::-webkit-scrollbar-track {
+            box-shadow: inset 0 0 3px grey;
+            border-radius: 2px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #8644D7;
+            border-radius: 2px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: mediumblue;
+        }
+
+        .loadingCalc:hover {
+            cursor: wait;
+        }
+    </style>
+
+    <div id="calcWrapper">
+        <h2 class="headerCalc">Конструктор курса</h2>
+        <div id="flexBox">
+            <div id="unitList" class="item"></div>
+            <div class="unitAndPrice item">
+                <div id="inCartUnit">
+                    <div class="inCartLineUnit"><b>Юнит</b></div>
+                    <hr>
+                    <div id="cartUnits"></div>
+                </div>
+                <div id="inCartPrice">
+                    <div class="inCartLinePrice"><b>Цена</b></div>
+                    <hr>
+                    <div id="cartPrices"></div>
+                </div>
+            </div>
+            <div id="totalPrice" class="item">
+                <div><b>Итого</b></div>
+                <hr>
+                <div id="totalSum"></div>
+            </div>
+        </div>
+        <div class="flexBoxBtn">
+            <button id="clearButton" class="btn">Очистить</button>
+            <button id="submitCalc" class="btn">Оставить заявку</button>
+        </div>
+    </div>
+    <script>
+        console.log(window.navigator.userAgent);
+        const run = async () => {
+
+            class Data {
+                #url;
+                #data;
+                #profitMultiplier;
+                #constantExpenses;
+                #units;
+                #bankOfRussiaAPI;
+                #usd;
+                #kzt;
+
+                constructor() {
+                    this.#url = 'https://script.google.com/macros/s/AKfycbyvuqVCLoujMoF4fEQIVzlx78E3DVLgD9fEfxKTaG2D-Z5ctCMPewsrsQCl4OH_qJaC/exec';
+                    this.#bankOfRussiaAPI = 'https://www.cbr-xml-daily.ru/daily_json.js';
+                }
+
+                getFromAPI = async () => {
+                    this.#data = await this.fetchData(this.#url);
+                    this.#profitMultiplier = +this.#data[0][0].amount;
+                    this.#constantExpenses = +this.#data[0][1].amount;
+                    this.#units = this.#data[1];
+                }
+
+                fetchExchangeRates = async () => {
+                    const rates = await fetch(this.#bankOfRussiaAPI)
+                        .then(data=>data.json());
+                    this.#usd = +rates.Valute.USD.Value;
+                    this.#kzt = +rates.Valute.KZT.Value;
+                }
+
+                getUSDrate = () => {
+                    return this.#usd;
+                }
+
+                getKZTrate = () => {
+                    return this.#kzt;
+                }
+
+                getProfitMultiplier = () => {
+                    return this.#profitMultiplier;
+                }
+
+                getConstantExpenses = () => {
+                    return this.#constantExpenses;
+                }
+
+                getUnits = () => {
+                    return this.#units;
+                }
+
+                fetchData = async (url) => {
+                    const data = fetch(url)
+                        .then(resp => resp.json())
+                        .then(data => {
+                            if (data.status >= 200 && data.status < 300) {
+                                return data.data;
+                            } else {
+                                return new Error('server is not responding')
+                            }
+                        })
+                    return data;
+                }
+                sendOrder = async (cart, userData) => {
+
+                    class Order {
+                        constructor(email, units, totalPrice) {
+                            this.email = email
+                            this.units = units;
+                            this.totalPrice = totalPrice;
+                        }
+                    }
+
+                    class OrderedUnit {
+                        constructor(id, name, purePrice, priceWithExpenses) {
+                            this.id = id;
+                            this.name = name;
+                            this.purePrice = purePrice;
+                            this.priceWithExpenses = priceWithExpenses;
+                        }
+                    }
+
+                    if (cart.length > 0) {
+                        let total = 0;
+                        const orderedUnits = cart.map((el) => {
+                            total += el.fullPrice;
+                            return new OrderedUnit(el.id, el.name, el.price.toFixed(2), el.fullPrice.toFixed(2));
+                        })
+                        const dto = new Order(userData, orderedUnits, total.toFixed(2));
+                        const response = await fetch(this.#url, {
+                            method: 'POST',
+                            mode: 'no-cors',
+                            body: JSON.stringify(dto)
+                        })
+                    }
+                }
+            };
+
+            class UseCases {
+                #data;
+                #cart;
+                #total;
+                #userData;
+
+                constructor(data) {
+                    this.#data = data;
+                    this.#cart = [];
+                    this.#total = 0;
+                }
+
+                oneUnitFullPriceFormula = (x) => {
+                    return (x.price + this.#data.getConstantExpenses() / this.#cart.length) * (1 + +this.#data.getProfitMultiplier());
+                }
+
+                addToCart = (e) => {
+                    const unit = this.#data.getUnits()[+e.target.dataset.index];
+                    this.#cart.push(unit);
+                    this.setTotal();
+                    return this.#cart;
+                }
+
+                submit = (func) => {
+                    func(this.#cart, this.#userData);
+                    return this.clearCart();
+                };
+
+                enterUserData = (userData) => {
+                    this.#userData = userData;
+                    return this.submit(this.#data.sendOrder);
+                }
+
+                removeFromCart = (e) => {
+                    this.#cart.splice(+e.target.dataset.index, 1);
+                    this.setTotal();
+                    return this.#cart;
+                }
+
+                clearCart = () => {
+                    this.#cart = [];
+                    this.setTotal();
+                    return this.#cart;
+                }
+
+                setTotal = () => {
+                    this.#total = 0;
+                    this.#cart.forEach((el) => {
+                        el.fullPrice = this.oneUnitFullPriceFormula(el);
+                        this.#total += el.fullPrice;
+                    })
+                }
+
+                getCart = () => {
+                    return this.#cart;
+                }
+            };
+
+            class Draw {
+                #useCases
+
+                constructor(useCases) {
+                    this.#useCases = useCases;
+                    this.clearButton = document.getElementById('clearButton');
+                    this.submitCalc = document.getElementById('submitCalc');
+                    this.submitCalc.addEventListener('click', this.sendCart);
+                    this.clearButton.addEventListener('click', this.clearCartBtn);
+                }
+
+                createUnitList = (units) => {
+                    const unitList = document.getElementById('unitList');
+                    units.forEach((unit, i) => {
+                        const element = document.createElement('div');
+                        element.id = unit.id;
+                        element.dataset.index = i;
+                        element.title = unit.text;
+                        element.className = 'unitAtList';
+                        element.addEventListener('click', this.clickOnUnit);
+                        const textContent = document.createTextNode(unit.name);
+                        element.appendChild(textContent);
+                        unitList.append(element);
+                    })
+                }
+
+                clickOnUnit = (e) => {
+                    const cart = this.#useCases.addToCart(e);
+                    this.renderCart(cart);
+                }
+
+                removeOneFromCart = (e) => {
+                    const cart = this.#useCases.removeFromCart(e);
+                    this.renderCart(cart);
+                }
+
+                sendCart = () => {
+                    const calcWrapper = document.getElementById('calcWrapper');
+                    calcWrapper.classList.add('loadingCalc');
+                    const cart = this.#useCases.enterUserData(prompt('Введите ваш телефон или e-mail', ''));
+                    alert('Наш сотрудник свяжется с вами в ближайшее время');
+                    calcWrapper.classList.remove('loadingCalc');
+                    this.renderCart(cart);
+                }
+
+                clearCartBtn = () => {
+                    const cart = this.#useCases.clearCart();
+                    this.renderCart(cart);
+                }
+
+                renderCart = (cart) => {
+                    let total = 0;
+                    const cartUnits = document.getElementById('cartUnits');
+                    const cartPrices = document.getElementById('cartPrices');
+                    cartUnits.innerHTML = '';
+                    cartPrices.innerHTML = '';
+                    cart.forEach((unit, i) => {
+                        total += unit.fullPrice;
+                        const inCartLineUnit = document.createElement('div');
+                        inCartLineUnit.className = 'inCartLineUnit';
+                        inCartLineUnit.dataset.index = i;
+                        inCartLineUnit.addEventListener('mouseover', this.highlightLine);
+                        inCartLineUnit.addEventListener('mouseleave', this.removeHighlight)
+                        const inCartLinePrice = document.createElement('div');
+                        inCartLinePrice.dataset.index = i;
+                        inCartLinePrice.className = 'inCartLinePrice';
+                        inCartLinePrice.addEventListener('mouseover', this.highlightLine);
+                        inCartLinePrice.addEventListener('mouseleave', this.removeHighlight)
+                        const textContentUnit = document.createTextNode(unit.name);
+                        const textContentPrice = document.createTextNode(unit.fullPrice);
+                        const deleteUnit = document.createElement('div');
+                        deleteUnit.className = 'delete';
+                        deleteUnit.addEventListener('click', this.removeOneFromCart);
+                        deleteUnit.dataset.index = i;
+                        const textContentDelete = document.createTextNode('x');
+                        deleteUnit.appendChild(textContentDelete);
+                        inCartLineUnit.appendChild(textContentUnit);
+                        inCartLineUnit.appendChild(deleteUnit);
+                        inCartLinePrice.appendChild(textContentPrice);
+                        cartUnits.appendChild(inCartLineUnit);
+                        cartPrices.appendChild(inCartLinePrice);
+                    })
+                    const totalSum = document.getElementById('totalSum');
+                    const textContentTotal = document.createTextNode(total.toFixed(2).toString());
+                    totalSum.innerHTML = '';
+                    totalSum.appendChild(textContentTotal);
+                };
+
+                whatColumn = (e) => {
+                    const el1 = e.target;
+                    let el2;
+                    const index = +el1.dataset.index;
+                    if (el1.classList.contains('inCartLineUnit')) {
+                        const cartPrices = document.querySelectorAll('.inCartLinePrice');
+                        el2 = cartPrices.item(index + 1);
+                    } else {
+                        const cartUnits = document.querySelectorAll('.inCartLineUnit');
+                        el2 = cartUnits.item(index + 1);
+                    }
+                    return [el1, el2];
+                }
+
+                highlightLine = (e) => {
+                    const [el1, el2] = this.whatColumn(e);
+                    el1.classList.add('highlightUnit');
+                    el2.classList.add('highlightUnit');
+                }
+
+                removeHighlight = (e) => {
+                    const [el1, el2] = this.whatColumn(e);
+                    el1.classList.remove('highlightUnit');
+                    el2.classList.remove('highlightUnit');
+                }
+//TODO
+                static serverError = () => {
+                    console.log('error 404');
+                }
+            };
+
+            const data = new Data();
+            try {
+                await data.getFromAPI();
+            } catch {
+                Draw.serverError();
+            }
+            try {
+                await data.fetchExchangeRates();
+                console.log(data.getUSDrate());
+                console.log(data.getKZTrate());
+            } catch (e) {
+                console.log(e)
+            }
+            const useCases = new UseCases(data);
+            const draw = new Draw(useCases);
+            try {
+                draw.createUnitList(data.getUnits());
+            } catch {
+                Draw.serverError();
+            }
+
+            console.log()
+
+        };
+
+        run();
+
+
+        // const Calculator = async () => {
+        //
+        //     const setTotal = () => {
+        //         total = 0;
+        //         cart.forEach((el) => {
+        //             total += (el.price + constantExpenses / cart.length) * (1 + +profitMultiplier);
+        //         })
+        //     }
+        //
+        //     const clearCart = () => {
+        //         cart = [];
+        //         setTotal();
+        //         renderCart(cart);
+        //     }
+        //
+        //     const URL = 'https://script.google.com/macros/s/AKfycbyvuqVCLoujMoF4fEQIVzlx78E3DVLgD9fEfxKTaG2D-Z5ctCMPewsrsQCl4OH_qJaC/exec'
+        //
+        //     const sendData = async () => {
+        //         if (cart.length > 0) {
+        //             const calcWrapper = document.getElementById('calcWrapper');
+        //             calcWrapper.classList.add('loadingCalc');
+        //             const email = prompt('Введите ваш телефон или e-mail', '');
+        //             const orderedUnits = cart.map((el) => {
+        //                 return new OrderedUnit(el.id, el.name, el.price, (el.price + constantExpenses / cart.length) * (1 + +profitMultiplier));
+        //             })
+        //             const dto = new Order(email, orderedUnits, total);
+        //             const response = await fetch(URL, {
+        //                 method: 'POST',
+        //                 mode: 'no-cors',
+        //                 body: JSON.stringify(dto)
+        //             })
+        //             clearCart();
+        //             alert('Наш сотрудник свяжется с вами в ближайшее время')
+        //             calcWrapper.classList.remove('loadingCalc');
+        //         }
+        //     }
+        //
+        //     const clearButton = document.getElementById('clearButton');
+        //     const submitCalc = document.getElementById('submitCalc');
+        //     clearButton.onclick = clearCart;
+        //     submitCalc.onclick = sendData;
+        //
+        //     const fetchData = async () => {
+        //         const data = fetch(URL)
+        //             .then(resp => resp.json())
+        //             .then(data => {
+        //                 if (data.status === 200) {
+        //                     return data.data;
+        //                 } else {
+        //                     return new Error('server is not responding')
+        //                 }
+        //             })
+        //         return data;
+        //     }
+        //     const data = await fetchData();
+        //
+        //     const profitMultiplier = data[0][0].amount;
+        //     const constantExpenses = data[0][1].amount;
+        //     const units = data[1];
+        //     let cart = [];
+        //     let total = 0;
+        //
+        //     const removeFromCart = (e) => {
+        //         cart.splice(+e.target.dataset.index, 1);
+        //         setTotal();
+        //         renderCart(cart);
+        //     }
+        //
+        //     const whatColumn = (e) => {
+        //         const el1 = e.target;
+        //         let el2;
+        //         const index = +el1.dataset.index;
+        //         if (el1.classList.contains('inCartLineUnit')) {
+        //             const cartPrices = document.querySelectorAll('.inCartLinePrice');
+        //             el2 = cartPrices.item(index + 1);
+        //         } else {
+        //             const cartUnits = document.querySelectorAll('.inCartLineUnit');
+        //             el2 = cartUnits.item(index + 1);
+        //         }
+        //         return [el1, el2];
+        //     }
+        //
+        //     const highlightLine = (e) => {
+        //         const [el1, el2] = whatColumn(e);
+        //         el1.classList.add('highlightUnit');
+        //         el2.classList.add('highlightUnit');
+        //     }
+        //
+        //     const removeHighlight = (e) => {
+        //         const [el1, el2] = whatColumn(e);
+        //         el1.classList.remove('highlightUnit');
+        //         el2.classList.remove('highlightUnit');
+        //     }
+        //
+        //     const renderCart = (cart) => {
+        //         const cartUnits = document.getElementById('cartUnits');
+        //         const cartPrices = document.getElementById('cartPrices');
+        //         cartUnits.innerHTML = '';
+        //         cartPrices.innerHTML = '';
+        //         cart.forEach((unit, i) => {
+        //             const inCartLineUnit = document.createElement('div');
+        //             inCartLineUnit.className = 'inCartLineUnit';
+        //             inCartLineUnit.dataset.index = i;
+        //             inCartLineUnit.addEventListener('mouseover', highlightLine);
+        //             inCartLineUnit.addEventListener('mouseleave', removeHighlight)
+        //             const inCartLinePrice = document.createElement('div');
+        //             inCartLinePrice.dataset.index = i;
+        //             inCartLinePrice.className = 'inCartLinePrice';
+        //             inCartLinePrice.addEventListener('mouseover', highlightLine);
+        //             inCartLinePrice.addEventListener('mouseleave', removeHighlight)
+        //             const textContentUnit = document.createTextNode(unit.name);
+        //             const textContentPrice = document.createTextNode(((unit.price + constantExpenses / cart.length) * (1 + +profitMultiplier)).toFixed(2));
+        //             const deleteUnit = document.createElement('div');
+        //             deleteUnit.className = 'delete';
+        //             deleteUnit.onclick = removeFromCart;
+        //             deleteUnit.dataset.index = i;
+        //             const textContentDelete = document.createTextNode('x');
+        //             deleteUnit.appendChild(textContentDelete);
+        //             inCartLineUnit.appendChild(textContentUnit);
+        //             inCartLineUnit.appendChild(deleteUnit);
+        //             inCartLinePrice.appendChild(textContentPrice);
+        //             cartUnits.appendChild(inCartLineUnit);
+        //             cartPrices.appendChild(inCartLinePrice);
+        //         })
+        //         const totalSum = document.getElementById('totalSum');
+        //         const textContentTotal = document.createTextNode(total.toFixed(2).toString());
+        //         totalSum.innerHTML = '';
+        //         totalSum.appendChild(textContentTotal);
+        //     }
+        //
+        //     const addToCart = (e) => {
+        //         const unit = units[+e.target.dataset.index];
+        //         cart.push(unit);
+        //         setTotal();
+        //         renderCart(cart);
+        //     }
+        //
+        //     const createUnitList = (data) => {
+        //         const unitList = document.getElementById('unitList');
+        //         units.forEach((unit, i) => {
+        //             const element = document.createElement('div');
+        //             element.id = unit.id;
+        //             element.dataset.index = i;
+        //             element.title = unit.text;
+        //             element.className = 'unitAtList';
+        //             element.onclick = addToCart;
+        //             const textContent = document.createTextNode(unit.name);
+        //             element.appendChild(textContent);
+        //             unitList.append(element);
+        //         })
+        //     }
+        //     createUnitList(data);
+        // }
+        // Calculator();
+    </script>
+</div>
+</body>
+</html>
