@@ -7,195 +7,162 @@
 <body>
 <div>
     <style>
-        .headerCalc {
-            text-align: center;
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300&family=Pathway+Gothic+One&display=swap');
+
+        #calcWrapper {
+            visibility: hidden;
+            background-color: rgba(255, 255, 255, 1);
+            font-family: 'Montserrat', sans-serif;
+            width: 1216px;
+            border-radius: 16px;
+            box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.1);
+            padding: 23px 40px 40px 23px;;
         }
 
-        #flexBox {
-            display: flex;
-            flex-flow: row wrap;
-            justify-content: space-around;
-        }
-
-        .unitAndPrice {
-            display: flex;
-            flex-flow: row;
-            flex-grow: 3;
-        }
-
-        #inCartUnit {
-            flex-grow: 3;
-            padding-right: 25px;
-            padding-left: 25px;
-        }
-
-        #inCartPrice {
-            flex-grow: 1;
-            padding-right: 25px;
-            padding-left: 25px;
-        }
-
-        #totalPrice {
-            flex-grow: 1;
-        }
-
-        #unitList {
-            overflow: auto;
-        }
-
-        #cartPrices {
-            padding: 5px;
-        }
-
-        #cartUnits {
-            padding: 5px;
-        }
-
-        .inCartLineUnit {
-            display: flex;
-            justify-content: space-between;
-            height: 20px;
-        }
-
-        .inCartLineUnit:hover {
-            cursor: context-menu;
-        }
-
-        .inCartLinePrice:hover {
-            cursor: context-menu;
-        }
-
-        .inCartLinePrice {
-            height: 20px;
-        }
-
-        .item {
-            overflow: auto;
-            max-height: 400px;
-            padding: 25px;
-            min-width: 350px;
-        }
-
-        .delete {
-            color: red;
-            font-family: "Arial";
+        #calcHeader {
+            display: inline-block;
+            color: rgba(134, 68, 215, 1);
+            font-family: 'Montserrat', sans-serif;
             font-weight: bold;
-            background: transparent;
+            text-align: left;
+            vertical-align: top;
+            letter-spacing: .15rem;
+            margin-bottom: 5px;
         }
 
-        .delete:hover {
-            cursor: pointer;
-        }
-
-        .unitAtList {
+        #calcLogo {
             position: relative;
-            margin: 10px;
-            padding: 3px;
-            max-width: 300px;
-            border: 3px solid #8644D7;
-            border-radius: 8px;
+            display: inline-block;
+            width: 187px;
+            height: 95px;
+            float: right;
         }
 
-        .unitAtList:hover {
-            bottom: 4px;
-            left: 4px;
-            box-shadow: -4px 4px 3px 0 gray;
+        #calcSubHeader {
+            display: inline-block;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            color: rgba(75, 80, 97, 1);
+            letter-spacing: .15rem;
+        }
+
+        #SLSwitchWrapper {
+            font-size: 0px;
+        }
+
+        #SLChoiceText {
+            display: inline-block;
+            font-size: 20px;
+            color: rgba(75, 80, 97, 1);
+            width: 347px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        #SLYesButton {
+            display: inline-block;
+            text-align: center;
+            font-size: 20px;
+            width: 120px;
+            height: 46px;
+            border: 3px solid rgba(255, 210, 0, 1);
+            border-radius: 25px 0 0 25px;
+            margin-right: 0;
+            margin-left: 50px;
+            line-height: 3.1em;
+        }
+
+        #SLNoButton {
+            display: inline-block;
+            text-align: center;
+            font-size: 20px;
+            width: 120px;
+            height: 46px;
+            border: 3px solid rgba(255, 210, 0, 1);
+            border-radius: 0 25px 25px 0;
+            margin-left: 0;
+            line-height: 3.1em;
+        }
+
+        .calcTextInButton {
+            position: relative;
+            top: -0.35em
+        }
+
+        .calcButton:hover {
+            background-color: orange;
             cursor: pointer;
         }
 
-        .unitAtList:active {
-            background: #8644D7;
-            bottom: -4px;
-            left: -4px;
-            box-shadow: none;
+        .calcButton:active {
+            background-color: darkorange;
         }
 
-        .highlightUnit {
-            background: #8644D7;
-            box-shadow: -5px 0 8px 8px white inset;
+        .calcButtonPressed {
+            background-color: rgba(255, 210, 0, 1);
         }
 
-        .flexBoxBtn {
-            display: flex;
-            flex-flow: row nowrap;
-            justify-content: right;
+        #chooseCourseWrapper {
+            visibility: hidden;
         }
 
-        .btn {
-            float: none;
-            margin: 10px;
-            padding: 10px;
-            border: 0;
-            background: #FFD200;
-            color: white;
+        .chooseCourseButton {
+            font-size: 20px;
+            width: 240px;
+            height: 46px;
+            border: 3px solid rgba(255, 210, 0, 1);
+            border-radius: 25px;
+            background-color: rgba(255, 255, 255, 1);
         }
 
-        .btn:hover {
-            background: darkorange;
+        .chooseCourseButton:hover {
+            background-color: orange;
             cursor: pointer;
         }
 
-        .btn:active {
-            background: #8644D7;
+        .chooseCourseButton:active {
+            background-color: darkorange;
         }
 
-        #submitCalc {
-            width: 500px;
+        .chooseCourseButtonSelected {
+            background-color: rgba(255, 210, 0, 1);
         }
 
-        ::-webkit-scrollbar {
-            width: 5px;
+        .chooseCourseButtonNotSelected {
+            border: 3px solid rgba(221, 221, 221, 1);
+            color: rgba(221, 221, 221, 1);
         }
 
-        ::-webkit-scrollbar-track {
-            box-shadow: inset 0 0 3px grey;
-            border-radius: 2px;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #8644D7;
-            border-radius: 2px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: mediumblue;
-        }
-
-        .loadingCalc:hover {
-            cursor: wait;
-        }
     </style>
 
     <div id="calcWrapper">
-        <h2 class="headerCalc">Конструктор курса</h2>
-        <div id="flexBox">
-            <div id="unitList" class="item"></div>
-            <div class="unitAndPrice item">
-                <div id="inCartUnit">
-                    <div class="inCartLineUnit"><b>Юнит</b></div>
-                    <hr>
-                    <div id="cartUnits"></div>
-                </div>
-                <div id="inCartPrice">
-                    <div class="inCartLinePrice"><b>Цена</b></div>
-                    <hr>
-                    <div id="cartPrices"></div>
-                </div>
+        <h1 id="calcHeader">КАЛЬКУЛЯТОР КУРСА</h1>
+        <img src="https://downloader.disk.yandex.ru/preview/75ead0cec289444e37160f97fbed503e13b7560713b4b25ab4d6efcd9a5f06e7/6325ecbe/6BT_65iy4PXvu2PF0YpJ6D14QMkfvcNQtXs-2_Y00s8dlFBC17CHsnKS2hMMDK46hUoqW2j11FiUO_Ru2YXPJw%3D%3D?uid=0&filename=logo-04.png&disposition=inline&hash=&limit=0&content_type=image%2Fpng&owner_uid=0&tknv=v2&size=2048x2048"
+             alt="logo"
+             id="calcLogo">
+        <br>
+        <h3 id="calcSubHeader">ВЫБЕРИТЕ НУЖНЫЕ ВАМ ХАРАКТЕРИСТИКИ</h3>
+        <br>
+        <div id="SLSwitchWrapper">
+            <span id="SLChoiceText">Разработка курса в соответствии с вашим фирменным стилем?</span>
+            <div id="SLYesButton" class="calcButton">
+                <div class="calcTextInButton">ДА</div>
             </div>
-            <div id="totalPrice" class="item">
-                <div><b>Итого</b></div>
-                <hr>
-                <div id="totalSum"></div>
+            <div id="SLNoButton" class="calcButton">
+                <div class="calcTextInButton">НЕТ</div>
             </div>
         </div>
-        <div class="flexBoxBtn">
-            <button id="clearButton" class="btn">Очистить</button>
-            <button id="submitCalc" class="btn">Оставить заявку</button>
+        <div id="chooseCourseWrapper">
+            <span>Какой курс вам нужен?</span>
+            <button class="chooseCourseButton" id="longReadButton">ЛОНГРИД</button>
+            <button class="chooseCourseButton" id="videoCourseButton">ВИДЕОКУРС</button>
+            <button class="chooseCourseButton" id="trainerButton">ТРЕНАЖЁР</button>
         </div>
     </div>
+
     <script>
         console.log(window.navigator.userAgent);
-        //TODO debugging
+
         const calc = () => {
 
             class Data {
@@ -203,13 +170,15 @@
                 #data;
                 #profitMultiplier;
                 #constantExpenses;
+                #constantExpensesPure;
+                #constantExpensesSL;
                 #courseBranding;
                 #constantExpensesRUB;
                 #constantExpensesUSD;
                 #constantExpensesKZT;
-                #courseBrandingRUB;
-                #courseBrandingUSD;
-                #courseBrandingKZT;
+                #constantExpensesSLRUB;
+                #constantExpensesSLUSD;
+                #constantExpensesSLKZT;
                 #units;
                 #bankOfRussiaAPI;
                 #usd;
@@ -224,7 +193,9 @@
                     this.#data = await this.fetchData(this.#url);
                     this.#profitMultiplier = +this.#data[0][0].amount;
                     this.#constantExpenses = +this.#data[0][1].amount;
+                    this.#constantExpensesPure = this.#constantExpenses;
                     this.#courseBranding = +this.#data[0][2].amount;
+                    this.#constantExpensesSL = this.#constantExpenses + this.#courseBranding;
                     this.#units = this.#data[1];
                     this.#units.forEach((unit) => {
                         if (unit.trainerSL === '')
@@ -294,32 +265,59 @@
                     this.#constantExpensesRUB = this.#constantExpenses;
                     this.#constantExpensesUSD = this.#constantExpensesRUB / this.#usd;
                     this.#constantExpensesKZT = this.#constantExpensesRUB / this.#kzt;
-                    this.#courseBrandingRUB = this.#courseBranding;
-                    this.#courseBrandingUSD = this.#courseBrandingRUB / this.#usd;
-                    this.#courseBrandingKZT = this.#courseBrandingRUB / this.#kzt;
+                    this.#constantExpensesSLRUB = this.#constantExpensesSL;
+                    this.#constantExpensesSLUSD = this.#constantExpensesSLRUB / this.#usd;
+                    this.#constantExpensesSLKZT = this.#constantExpensesSLRUB / this.#kzt;
                     console.log(this.#units);
                 }
+
+                setSLPrices = (cur) => {
+                    this.#units.forEach((unit) => {
+                        if (unit.priceSL) {
+                            unit.price = unit.priceSL;
+                        }
+                    })
+                }
+
+                setNoneSLPrices = () => {
+                    this.#units.forEach((unit) => {
+                        if (unit.priceSL) {
+                            unit.price = unit.priceRise;
+                        }
+                    })
+                }
+
 
                 setCurrency = (cur) => {
                     switch (cur) {
                         case 'USD':
-                            this.#units = this.#units.map((unit) => {
+                            this.#units.forEach((unit) => {
                                 unit.price = unit.USDprice;
-                                this.#constantExpenses = this.#constantExpensesUSD;
-                                this.#courseBranding = this.#courseBrandingUSD;
-                            })
+                                if (unit.priceSL) {
+                                    unit.priceSL = unit.USDpriceSL;
+                                }
+                            });
+                            this.#constantExpenses = this.#constantExpensesUSD;
+                            this.#constantExpensesSL = this.#constantExpensesSLUSD;
                         case 'KZT':
-                            this.#units = this.#units.map((unit) => {
+                            this.#units.forEach((unit) => {
                                 unit.price = unit.KZTprice;
-                                this.#constantExpenses = this.#constantExpensesKZT;
-                                this.#courseBranding = this.#courseBrandingKZT;
+                                if (unit.priceSL) {
+                                    unit.priceSL = unit.KZTpriceSL;
+                                }
                             })
+                            this.#constantExpenses = this.#constantExpensesKZT;
+                            this.#constantExpensesSL = this.#constantExpensesSLKZT;
                         case 'RUB':
-                            this.#units = this.#units.map((unit) => {
+                            this.#units.forEach((unit) => {
                                 unit.price = unit.RUBprice;
-                                this.#constantExpenses = this.#constantExpensesRUB;
-                                this.#courseBranding = this.#courseBrandingRUB;
+                                if (unit.priceSL) {
+                                    unit.priceSL = unit.RUBpriceSL;
+                                }
                             })
+                            this.#constantExpenses = this.#constantExpensesRUB;
+                            this.#constantExpensesSL = this.#constantExpensesSLRUB;
+
                     }
                 }
 
@@ -376,16 +374,38 @@
                 #cart;
                 #total;
                 #userData;
+                #slSwitch;
+                #slSelectedByUser;
+                #currency;
 
                 constructor(data) {
                     this.#data = data;
                     this.#cart = [];
                     this.#selected = [];
                     this.#total = 0;
+                    this.#slSwitch = false;
+                    this.#slSelectedByUser = false;
+                    this.#currency = 'RUB';
                 }
 
                 oneUnitFullPriceFormula = (x) => {
                     return (x.price + this.#data.getConstantExpenses() / this.#cart.length) * (1 + +this.#data.getProfitMultiplier());
+                }
+
+                slSwitchOn = () => {
+                    if (this.#slSwitch = false) {
+                        this.#slSwitch = true;
+                        this.#slSelectedByUser = true;
+                        this.#data.setSLPrices(this.#currency);
+                    }
+                }
+
+                slSwitchOff = () => {
+                    if (this.#slSwitch = true) {
+                        this.#slSwitch = false;
+                        this.#slSelectedByUser = false;
+                        this.#data.setNoneSLPrices();
+                    }
                 }
 
                 addToCart = (e) => {
@@ -444,118 +464,178 @@
 
                 constructor(useCases) {
                     this.#useCases = useCases;
-                    this.clearButton = document.getElementById('clearButton');
-                    this.submitCalc = document.getElementById('submitCalc');
-                    this.submitCalc.addEventListener('click', this.sendCart);
-                    this.clearButton.addEventListener('click', this.clearCartBtn);
+                    this.chooseCourseWrapper = document.getElementById('chooseCourseWrapper');
+                    this.SLYesButton = document.getElementById('SLYesButton');
+                    this.SLNoButton = document.getElementById('SLNoButton');
+                    this.SLYesButton.addEventListener('click', () => {
+                        this.SLYesButton.classList.remove('calcButton');
+                        this.SLYesButton.classList.add('calcButtonPressed');
+                        this.SLNoButton.classList.remove('calcButtonPressed');
+                        this.SLNoButton.classList.add('calcButton');
+                        this.chooseCourseWrapper.style.visibility = 'visible';
+                        useCases.slSwitchOn();
+                    });
+                    this.SLNoButton.addEventListener('click', () => {
+                        this.SLNoButton.classList.remove('calcButton');
+                        this.SLNoButton.classList.add('calcButtonPressed');
+                        this.SLYesButton.classList.remove('calcButtonPressed');
+                        this.SLYesButton.classList.add('calcButton');
+                        this.chooseCourseWrapper.style.visibility = 'visible';
+                        useCases.slSwitchOff();
+                    });
+                    this.longReadButton = document.getElementById('longReadButton');
+                    this.videoCourseButton = document.getElementById('videoCourseButton');
+                    this.trainerButton = document.getElementById('trainerButton');
+                    this.longReadButton.addEventListener('click', () => {
+                        this.longReadButton.classList.remove('chooseCourseButtonNotSelected');
+                        this.longReadButton.classList.add('chooseCourseButtonSelected');
+                        this.videoCourseButton.classList.remove('chooseCourseButtonSelected');
+                        this.videoCourseButton.classList.add('chooseCourseButtonNotSelected');
+                        this.trainerButton.classList.remove('chooseCourseButtonSelected');
+                        this.trainerButton.classList.add('chooseCourseButtonNotSelected');
+                    });
+                    this.videoCourseButton.addEventListener('click', () => {
+                        this.videoCourseButton.classList.remove('chooseCourseButtonNotSelected');
+                        this.videoCourseButton.classList.add('chooseCourseButtonSelected');
+                        this.longReadButton.classList.remove('chooseCourseButtonSelected');
+                        this.longReadButton.classList.add('chooseCourseButtonNotSelected');
+                        this.trainerButton.classList.remove('chooseCourseButtonSelected');
+                        this.trainerButton.classList.add('chooseCourseButtonNotSelected');
+                    });
+                    this.trainerButton.addEventListener('click', () => {
+                        this.trainerButton.classList.remove('chooseCourseButtonNotSelected');
+                        this.trainerButton.classList.add('chooseCourseButtonSelected');
+                        this.longReadButton.classList.remove('chooseCourseButtonSelected');
+                        this.longReadButton.classList.add('chooseCourseButtonNotSelected');
+                        this.videoCourseButton.classList.remove('chooseCourseButtonSelected');
+                        this.videoCourseButton.classList.add('chooseCourseButtonNotSelected');
+                    });
                 }
 
-                createUnitList = (units) => {
-                    const unitList = document.getElementById('unitList');
-                    units.forEach((unit, i) => {
-                        const element = document.createElement('div');
-                        element.id = unit.id;
-                        element.dataset.index = i;
-                        element.title = unit.text;
-                        element.className = 'unitAtList';
-                        element.addEventListener('click', this.clickOnUnit);
-                        const textContent = document.createTextNode(unit.name);
-                        element.appendChild(textContent);
-                        unitList.append(element);
-                    })
+                openCalc = () => {
+                    const calc = document.getElementById('calcWrapper');
+                    calc.style.visibility = 'visible';
                 }
 
-                clickOnUnit = (e) => {
-                    const cart = this.#useCases.addToCart(e);
-                    this.renderCart(cart);
-                }
-
-                removeOneFromCart = (e) => {
-                    const cart = this.#useCases.removeOneFromCart(e);
-                    this.renderCart(cart);
-                }
-
-                sendCart = () => {
-                    const calcWrapper = document.getElementById('calcWrapper');
-                    calcWrapper.classList.add('loadingCalc');
-                    const cart = this.#useCases.enterUserData(prompt('Введите ваш телефон или e-mail', ''));
-                    alert('Наш сотрудник свяжется с вами в ближайшее время');
-                    calcWrapper.classList.remove('loadingCalc');
-                    this.renderCart(cart);
-                }
-
-                clearCartBtn = () => {
-                    const cart = this.#useCases.clearCart();
-                    this.renderCart(cart);
-                }
-
-                renderCart = (cart) => {
-                    let total = 0;
-                    const cartUnits = document.getElementById('cartUnits');
-                    const cartPrices = document.getElementById('cartPrices');
-                    cartUnits.innerHTML = '';
-                    cartPrices.innerHTML = '';
-                    cart.forEach((unit, i) => {
-                        total += unit.fullPrice;
-                        const inCartLineUnit = document.createElement('div');
-                        inCartLineUnit.className = 'inCartLineUnit';
-                        inCartLineUnit.dataset.index = i;
-                        inCartLineUnit.addEventListener('mouseover', this.highlightLine);
-                        inCartLineUnit.addEventListener('mouseleave', this.removeHighlight)
-                        const inCartLinePrice = document.createElement('div');
-                        inCartLinePrice.dataset.index = i;
-                        inCartLinePrice.className = 'inCartLinePrice';
-                        inCartLinePrice.addEventListener('mouseover', this.highlightLine);
-                        inCartLinePrice.addEventListener('mouseleave', this.removeHighlight)
-                        const textContentUnit = document.createTextNode(unit.name);
-                        const textContentPrice = document.createTextNode(unit.fullPrice);
-                        const deleteUnit = document.createElement('div');
-                        deleteUnit.className = 'delete';
-                        deleteUnit.addEventListener('click', this.removeOneFromCart);
-                        deleteUnit.dataset.index = i;
-                        const textContentDelete = document.createTextNode('x');
-                        deleteUnit.appendChild(textContentDelete);
-                        inCartLineUnit.appendChild(textContentUnit);
-                        inCartLineUnit.appendChild(deleteUnit);
-                        inCartLinePrice.appendChild(textContentPrice);
-                        cartUnits.appendChild(inCartLineUnit);
-                        cartPrices.appendChild(inCartLinePrice);
-                    })
-                    const totalSum = document.getElementById('totalSum');
-                    const textContentTotal = document.createTextNode(total.toFixed(2).toString());
-                    totalSum.innerHTML = '';
-                    totalSum.appendChild(textContentTotal);
-                };
-
-                whatColumn = (e) => {
-                    const el1 = e.target;
-                    let el2;
-                    const index = +el1.dataset.index;
-                    if (el1.classList.contains('inCartLineUnit')) {
-                        const cartPrices = document.querySelectorAll('.inCartLinePrice');
-                        el2 = cartPrices.item(index + 1);
-                    } else {
-                        const cartUnits = document.querySelectorAll('.inCartLineUnit');
-                        el2 = cartUnits.item(index + 1);
-                    }
-                    return [el1, el2];
-                }
-
-                highlightLine = (e) => {
-                    const [el1, el2] = this.whatColumn(e);
-                    el1.classList.add('highlightUnit');
-                    el2.classList.add('highlightUnit');
-                }
-
-                removeHighlight = (e) => {
-                    const [el1, el2] = this.whatColumn(e);
-                    el1.classList.remove('highlightUnit');
-                    el2.classList.remove('highlightUnit');
-                }
 //TODO
                 static serverError = (e) => {
                     console.log(e);
                 }
+
+//                 constructor(useCases) {
+//                     this.#useCases = useCases;
+//                     this.clearButton = document.getElementById('clearButton');
+//                     this.submitCalc = document.getElementById('submitCalc');
+//                     this.submitCalc.addEventListener('click', this.sendCart);
+//                     this.clearButton.addEventListener('click', this.clearCartBtn);
+//                 }
+//
+//                 createUnitList = (units) => {
+//                     const unitList = document.getElementById('unitList');
+//                     units.forEach((unit, i) => {
+//                         const element = document.createElement('div');
+//                         element.id = unit.id;
+//                         element.dataset.index = i;
+//                         element.title = unit.text;
+//                         element.className = 'unitAtList';
+//                         element.addEventListener('click', this.clickOnUnit);
+//                         const textContent = document.createTextNode(unit.name);
+//                         element.appendChild(textContent);
+//                         unitList.append(element);
+//                     })
+//                 }
+//
+//                 clickOnUnit = (e) => {
+//                     const cart = this.#useCases.addToCart(e);
+//                     this.renderCart(cart);
+//                 }
+//
+//                 removeOneFromCart = (e) => {
+//                     const cart = this.#useCases.removeOneFromCart(e);
+//                     this.renderCart(cart);
+//                 }
+//
+//                 sendCart = () => {
+//                     const calcWrapper = document.getElementById('calcWrapper');
+//                     calcWrapper.classList.add('loadingCalc');
+//                     const cart = this.#useCases.enterUserData(prompt('Введите ваш телефон или e-mail', ''));
+//                     alert('Наш сотрудник свяжется с вами в ближайшее время');
+//                     calcWrapper.classList.remove('loadingCalc');
+//                     this.renderCart(cart);
+//                 }
+//
+//                 clearCartBtn = () => {
+//                     const cart = this.#useCases.clearCart();
+//                     this.renderCart(cart);
+//                 }
+//
+//                 renderCart = (cart) => {
+//                     let total = 0;
+//                     const cartUnits = document.getElementById('cartUnits');
+//                     const cartPrices = document.getElementById('cartPrices');
+//                     cartUnits.innerHTML = '';
+//                     cartPrices.innerHTML = '';
+//                     cart.forEach((unit, i) => {
+//                         total += unit.fullPrice;
+//                         const inCartLineUnit = document.createElement('div');
+//                         inCartLineUnit.className = 'inCartLineUnit';
+//                         inCartLineUnit.dataset.index = i;
+//                         inCartLineUnit.addEventListener('mouseover', this.highlightLine);
+//                         inCartLineUnit.addEventListener('mouseleave', this.removeHighlight)
+//                         const inCartLinePrice = document.createElement('div');
+//                         inCartLinePrice.dataset.index = i;
+//                         inCartLinePrice.className = 'inCartLinePrice';
+//                         inCartLinePrice.addEventListener('mouseover', this.highlightLine);
+//                         inCartLinePrice.addEventListener('mouseleave', this.removeHighlight)
+//                         const textContentUnit = document.createTextNode(unit.name);
+//                         const textContentPrice = document.createTextNode(unit.fullPrice);
+//                         const deleteUnit = document.createElement('div');
+//                         deleteUnit.className = 'delete';
+//                         deleteUnit.addEventListener('click', this.removeOneFromCart);
+//                         deleteUnit.dataset.index = i;
+//                         const textContentDelete = document.createTextNode('x');
+//                         deleteUnit.appendChild(textContentDelete);
+//                         inCartLineUnit.appendChild(textContentUnit);
+//                         inCartLineUnit.appendChild(deleteUnit);
+//                         inCartLinePrice.appendChild(textContentPrice);
+//                         cartUnits.appendChild(inCartLineUnit);
+//                         cartPrices.appendChild(inCartLinePrice);
+//                     })
+//                     const totalSum = document.getElementById('totalSum');
+//                     const textContentTotal = document.createTextNode(total.toFixed(2).toString());
+//                     totalSum.innerHTML = '';
+//                     totalSum.appendChild(textContentTotal);
+//                 };
+//
+//                 whatColumn = (e) => {
+//                     const el1 = e.target;
+//                     let el2;
+//                     const index = +el1.dataset.index;
+//                     if (el1.classList.contains('inCartLineUnit')) {
+//                         const cartPrices = document.querySelectorAll('.inCartLinePrice');
+//                         el2 = cartPrices.item(index + 1);
+//                     } else {
+//                         const cartUnits = document.querySelectorAll('.inCartLineUnit');
+//                         el2 = cartUnits.item(index + 1);
+//                     }
+//                     return [el1, el2];
+//                 }
+//
+//                 highlightLine = (e) => {
+//                     const [el1, el2] = this.whatColumn(e);
+//                     el1.classList.add('highlightUnit');
+//                     el2.classList.add('highlightUnit');
+//                 }
+//
+//                 removeHighlight = (e) => {
+//                     const [el1, el2] = this.whatColumn(e);
+//                     el1.classList.remove('highlightUnit');
+//                     el2.classList.remove('highlightUnit');
+//                 }
+// //TODO
+//                 static serverError = (e) => {
+//                     console.log(e);
+//                 }
             };
 
             const run = async () => {
@@ -570,7 +650,8 @@
                 if (success) {
                     const useCases = new UseCases(data);
                     const draw = new Draw(useCases);
-                    draw.createUnitList(data.getUnits());
+                    draw.openCalc();
+                    // draw.createUnitList(data.getUnits());
                 }
                 try {
                     if (success) {
