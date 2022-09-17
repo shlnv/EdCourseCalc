@@ -195,13 +195,21 @@
     </div>
     <script>
         console.log(window.navigator.userAgent);
-        const run = async () => {
+        //TODO debugging
+        const calc = () => {
 
             class Data {
                 #url;
                 #data;
                 #profitMultiplier;
                 #constantExpenses;
+                #courseBranding;
+                #constantExpensesRUB;
+                #constantExpensesUSD;
+                #constantExpensesKZT;
+                #courseBrandingRUB;
+                #courseBrandingUSD;
+                #courseBrandingKZT;
                 #units;
                 #bankOfRussiaAPI;
                 #usd;
@@ -216,14 +224,36 @@
                     this.#data = await this.fetchData(this.#url);
                     this.#profitMultiplier = +this.#data[0][0].amount;
                     this.#constantExpenses = +this.#data[0][1].amount;
+                    this.#courseBranding = +this.#data[0][2].amount;
                     this.#units = this.#data[1];
+                    this.#units.forEach((unit) => {
+                        if (unit.trainerSL === '')
+                            unit.trainerSL = false;
+                        if (unit.tool === '')
+                            unit.tool = false;
+                        unit.longread = +unit.longread;
+                        unit.videocourse = +unit.videocourse;
+                        unit.trainer = +unit.trainer;
+                    })
+                    return true;
+                }
+
+                fetchData = async (url) => {
+                    const response = await fetch(url)
+                    const data = await response.json();
+                    if (data.ok) {
+                        return data.data;
+                    } else {
+                        return new Error('server is not responding')
+                    }
                 }
 
                 fetchExchangeRates = async () => {
-                    const rates = await fetch(this.#bankOfRussiaAPI)
-                        .then(data=>data.json());
+                    const data = await fetch(this.#bankOfRussiaAPI);
+                    const rates = await data.json();
                     this.#usd = +rates.Valute.USD.Value;
                     this.#kzt = +rates.Valute.KZT.Value;
+                    return true;
                 }
 
                 getUSDrate = () => {
@@ -232,6 +262,65 @@
 
                 getKZTrate = () => {
                     return this.#kzt;
+                }
+
+                setPrices = () => {
+                    this.#units.forEach((unit) => {
+                        unit.RUBprice = unit.price;
+                        unit.USDprice = unit.RUBprice / this.#usd;
+                        unit.KZTprice = unit.RUBprice / this.#kzt;
+                        if (unit.priceSL === '') {
+                            unit.priceSL = false;
+                        } else {
+                            unit.RUBpriceSL = unit.priceSL;
+                            unit.USDpriceSL = unit.RUBpriceSL / this.#usd;
+                            unit.KZTpriceSL = unit.RUBpriceSL / this.#usd;
+                        }
+                        if (unit.priceRise === '') {
+                            unit.priceRise = false;
+                        } else {
+                            unit.RUBpriceRise = unit.priceRise;
+                            unit.USDpriceRise = unit.RUBpriceRise / this.#usd;
+                            unit.KZTpriceRise = unit.RUBpriceRise / this.#usd;
+                        }
+                        if (unit.priceTilda === '') {
+                            unit.priceTilda = false;
+                        } else {
+                            unit.RUBpriceTilda = unit.priceTilda;
+                            unit.USDpriceTilda = unit.RUBpriceTilda / this.#usd;
+                            unit.KZTpriceTilda = unit.RUBpriceTilda / this.#usd;
+                        }
+                    });
+                    this.#constantExpensesRUB = this.#constantExpenses;
+                    this.#constantExpensesUSD = this.#constantExpensesRUB / this.#usd;
+                    this.#constantExpensesKZT = this.#constantExpensesRUB / this.#kzt;
+                    this.#courseBrandingRUB = this.#courseBranding;
+                    this.#courseBrandingUSD = this.#courseBrandingRUB / this.#usd;
+                    this.#courseBrandingKZT = this.#courseBrandingRUB / this.#kzt;
+                    console.log(this.#units);
+                }
+
+                setCurrency = (cur) => {
+                    switch (cur) {
+                        case 'USD':
+                            this.#units = this.#units.map((unit) => {
+                                unit.price = unit.USDprice;
+                                this.#constantExpenses = this.#constantExpensesUSD;
+                                this.#courseBranding = this.#courseBrandingUSD;
+                            })
+                        case 'KZT':
+                            this.#units = this.#units.map((unit) => {
+                                unit.price = unit.KZTprice;
+                                this.#constantExpenses = this.#constantExpensesKZT;
+                                this.#courseBranding = this.#courseBrandingKZT;
+                            })
+                        case 'RUB':
+                            this.#units = this.#units.map((unit) => {
+                                unit.price = unit.RUBprice;
+                                this.#constantExpenses = this.#constantExpensesRUB;
+                                this.#courseBranding = this.#courseBrandingRUB;
+                            })
+                    }
                 }
 
                 getProfitMultiplier = () => {
@@ -246,18 +335,6 @@
                     return this.#units;
                 }
 
-                fetchData = async (url) => {
-                    const data = fetch(url)
-                        .then(resp => resp.json())
-                        .then(data => {
-                            if (data.status >= 200 && data.status < 300) {
-                                return data.data;
-                            } else {
-                                return new Error('server is not responding')
-                            }
-                        })
-                    return data;
-                }
                 sendOrder = async (cart, userData) => {
 
                     class Order {
@@ -295,6 +372,7 @@
 
             class UseCases {
                 #data;
+                #selected;
                 #cart;
                 #total;
                 #userData;
@@ -302,6 +380,7 @@
                 constructor(data) {
                     this.#data = data;
                     this.#cart = [];
+                    this.#selected = [];
                     this.#total = 0;
                 }
 
@@ -314,6 +393,10 @@
                     this.#cart.push(unit);
                     this.setTotal();
                     return this.#cart;
+                };
+
+                selectFromCart = (e) => {
+                    this.#selected.push(e.target.dataset.index);
                 }
 
                 submit = (func) => {
@@ -326,7 +409,7 @@
                     return this.submit(this.#data.sendOrder);
                 }
 
-                removeFromCart = (e) => {
+                removeOneFromCart = (e) => {
                     this.#cart.splice(+e.target.dataset.index, 1);
                     this.setTotal();
                     return this.#cart;
@@ -349,6 +432,11 @@
                 getCart = () => {
                     return this.#cart;
                 }
+
+                getSelected = () => {
+                    return this.#selected;
+                }
+
             };
 
             class Draw {
@@ -383,7 +471,7 @@
                 }
 
                 removeOneFromCart = (e) => {
-                    const cart = this.#useCases.removeFromCart(e);
+                    const cart = this.#useCases.removeOneFromCart(e);
                     this.renderCart(cart);
                 }
 
@@ -465,193 +553,41 @@
                     el2.classList.remove('highlightUnit');
                 }
 //TODO
-                static serverError = () => {
-                    console.log('error 404');
+                static serverError = (e) => {
+                    console.log(e);
                 }
             };
 
-            const data = new Data();
-            try {
-                await data.getFromAPI();
-            } catch {
-                Draw.serverError();
+            const run = async () => {
+                let success = false;
+                const data = new Data();
+                try {
+                    success = await data.getFromAPI();
+                } catch (e) {
+                    console.log('caught data.getFromAPI()');
+                    Draw.serverError(e);
+                }
+                if (success) {
+                    const useCases = new UseCases(data);
+                    const draw = new Draw(useCases);
+                    draw.createUnitList(data.getUnits());
+                }
+                try {
+                    if (success) {
+                        success = await data.fetchExchangeRates()
+                    }
+                } catch (e) {
+                    console.log('caught data.fetchExchangeRates() error')
+                    Draw.serverError(e);
+                }
+                if (success) {
+                    await data.setPrices();
+                }
             }
-            try {
-                await data.fetchExchangeRates();
-                console.log(data.getUSDrate());
-                console.log(data.getKZTrate());
-            } catch (e) {
-                console.log(e)
-            }
-            const useCases = new UseCases(data);
-            const draw = new Draw(useCases);
-            try {
-                draw.createUnitList(data.getUnits());
-            } catch {
-                Draw.serverError();
-            }
-
-            console.log()
-
+            run();
         };
+        calc();
 
-        run();
-
-
-        // const Calculator = async () => {
-        //
-        //     const setTotal = () => {
-        //         total = 0;
-        //         cart.forEach((el) => {
-        //             total += (el.price + constantExpenses / cart.length) * (1 + +profitMultiplier);
-        //         })
-        //     }
-        //
-        //     const clearCart = () => {
-        //         cart = [];
-        //         setTotal();
-        //         renderCart(cart);
-        //     }
-        //
-        //     const URL = 'https://script.google.com/macros/s/AKfycbyvuqVCLoujMoF4fEQIVzlx78E3DVLgD9fEfxKTaG2D-Z5ctCMPewsrsQCl4OH_qJaC/exec'
-        //
-        //     const sendData = async () => {
-        //         if (cart.length > 0) {
-        //             const calcWrapper = document.getElementById('calcWrapper');
-        //             calcWrapper.classList.add('loadingCalc');
-        //             const email = prompt('Введите ваш телефон или e-mail', '');
-        //             const orderedUnits = cart.map((el) => {
-        //                 return new OrderedUnit(el.id, el.name, el.price, (el.price + constantExpenses / cart.length) * (1 + +profitMultiplier));
-        //             })
-        //             const dto = new Order(email, orderedUnits, total);
-        //             const response = await fetch(URL, {
-        //                 method: 'POST',
-        //                 mode: 'no-cors',
-        //                 body: JSON.stringify(dto)
-        //             })
-        //             clearCart();
-        //             alert('Наш сотрудник свяжется с вами в ближайшее время')
-        //             calcWrapper.classList.remove('loadingCalc');
-        //         }
-        //     }
-        //
-        //     const clearButton = document.getElementById('clearButton');
-        //     const submitCalc = document.getElementById('submitCalc');
-        //     clearButton.onclick = clearCart;
-        //     submitCalc.onclick = sendData;
-        //
-        //     const fetchData = async () => {
-        //         const data = fetch(URL)
-        //             .then(resp => resp.json())
-        //             .then(data => {
-        //                 if (data.status === 200) {
-        //                     return data.data;
-        //                 } else {
-        //                     return new Error('server is not responding')
-        //                 }
-        //             })
-        //         return data;
-        //     }
-        //     const data = await fetchData();
-        //
-        //     const profitMultiplier = data[0][0].amount;
-        //     const constantExpenses = data[0][1].amount;
-        //     const units = data[1];
-        //     let cart = [];
-        //     let total = 0;
-        //
-        //     const removeFromCart = (e) => {
-        //         cart.splice(+e.target.dataset.index, 1);
-        //         setTotal();
-        //         renderCart(cart);
-        //     }
-        //
-        //     const whatColumn = (e) => {
-        //         const el1 = e.target;
-        //         let el2;
-        //         const index = +el1.dataset.index;
-        //         if (el1.classList.contains('inCartLineUnit')) {
-        //             const cartPrices = document.querySelectorAll('.inCartLinePrice');
-        //             el2 = cartPrices.item(index + 1);
-        //         } else {
-        //             const cartUnits = document.querySelectorAll('.inCartLineUnit');
-        //             el2 = cartUnits.item(index + 1);
-        //         }
-        //         return [el1, el2];
-        //     }
-        //
-        //     const highlightLine = (e) => {
-        //         const [el1, el2] = whatColumn(e);
-        //         el1.classList.add('highlightUnit');
-        //         el2.classList.add('highlightUnit');
-        //     }
-        //
-        //     const removeHighlight = (e) => {
-        //         const [el1, el2] = whatColumn(e);
-        //         el1.classList.remove('highlightUnit');
-        //         el2.classList.remove('highlightUnit');
-        //     }
-        //
-        //     const renderCart = (cart) => {
-        //         const cartUnits = document.getElementById('cartUnits');
-        //         const cartPrices = document.getElementById('cartPrices');
-        //         cartUnits.innerHTML = '';
-        //         cartPrices.innerHTML = '';
-        //         cart.forEach((unit, i) => {
-        //             const inCartLineUnit = document.createElement('div');
-        //             inCartLineUnit.className = 'inCartLineUnit';
-        //             inCartLineUnit.dataset.index = i;
-        //             inCartLineUnit.addEventListener('mouseover', highlightLine);
-        //             inCartLineUnit.addEventListener('mouseleave', removeHighlight)
-        //             const inCartLinePrice = document.createElement('div');
-        //             inCartLinePrice.dataset.index = i;
-        //             inCartLinePrice.className = 'inCartLinePrice';
-        //             inCartLinePrice.addEventListener('mouseover', highlightLine);
-        //             inCartLinePrice.addEventListener('mouseleave', removeHighlight)
-        //             const textContentUnit = document.createTextNode(unit.name);
-        //             const textContentPrice = document.createTextNode(((unit.price + constantExpenses / cart.length) * (1 + +profitMultiplier)).toFixed(2));
-        //             const deleteUnit = document.createElement('div');
-        //             deleteUnit.className = 'delete';
-        //             deleteUnit.onclick = removeFromCart;
-        //             deleteUnit.dataset.index = i;
-        //             const textContentDelete = document.createTextNode('x');
-        //             deleteUnit.appendChild(textContentDelete);
-        //             inCartLineUnit.appendChild(textContentUnit);
-        //             inCartLineUnit.appendChild(deleteUnit);
-        //             inCartLinePrice.appendChild(textContentPrice);
-        //             cartUnits.appendChild(inCartLineUnit);
-        //             cartPrices.appendChild(inCartLinePrice);
-        //         })
-        //         const totalSum = document.getElementById('totalSum');
-        //         const textContentTotal = document.createTextNode(total.toFixed(2).toString());
-        //         totalSum.innerHTML = '';
-        //         totalSum.appendChild(textContentTotal);
-        //     }
-        //
-        //     const addToCart = (e) => {
-        //         const unit = units[+e.target.dataset.index];
-        //         cart.push(unit);
-        //         setTotal();
-        //         renderCart(cart);
-        //     }
-        //
-        //     const createUnitList = (data) => {
-        //         const unitList = document.getElementById('unitList');
-        //         units.forEach((unit, i) => {
-        //             const element = document.createElement('div');
-        //             element.id = unit.id;
-        //             element.dataset.index = i;
-        //             element.title = unit.text;
-        //             element.className = 'unitAtList';
-        //             element.onclick = addToCart;
-        //             const textContent = document.createTextNode(unit.name);
-        //             element.appendChild(textContent);
-        //             unitList.append(element);
-        //         })
-        //     }
-        //     createUnitList(data);
-        // }
-        // Calculator();
     </script>
 </div>
 </body>
