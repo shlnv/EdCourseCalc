@@ -47,7 +47,7 @@
         }
 
         #SLSwitchWrapper {
-            font-size: 0px;
+            font-size: 0;
         }
 
         #SLChoiceText {
@@ -198,13 +198,15 @@
                     this.#constantExpensesSL = this.#constantExpenses + this.#courseBranding;
                     this.#units = this.#data[1];
                     this.#units.forEach((unit) => {
-                        if (unit.trainerSL === '')
-                            unit.trainerSL = false;
-                        if (unit.tool === '')
-                            unit.tool = false;
+                        if (unit.toolSwitcher === '')
+                            unit.toolSwitcher = false;
+                        unit.name = unit.nameRiseNameBase;
                         unit.longread = +unit.longread;
                         unit.videocourse = +unit.videocourse;
                         unit.trainer = +unit.trainer;
+                        unit.RisePossibility = +unit.RisePossibility;
+                        unit.SLPossibility = +unit.SLPossibility;
+                        unit.TildaPossibility = +unit.TildaPossibility;
                     })
                     return true;
                 }
@@ -237,6 +239,7 @@
 
                 setPrices = () => {
                     this.#units.forEach((unit) => {
+                        unit.price = unit.priceRiseBasePrise;
                         unit.RUBprice = unit.price;
                         unit.USDprice = unit.RUBprice / this.#usd;
                         unit.KZTprice = unit.RUBprice / this.#kzt;
@@ -247,10 +250,10 @@
                             unit.USDpriceSL = unit.RUBpriceSL / this.#usd;
                             unit.KZTpriceSL = unit.RUBpriceSL / this.#usd;
                         }
-                        if (unit.priceRise === '') {
-                            unit.priceRise = false;
+                        if (unit.priceRiseBasePrise === '') {
+                            unit.priceRiseBasePrise = false;
                         } else {
-                            unit.RUBpriceRise = unit.priceRise;
+                            unit.RUBpriceRise = unit.priceRiseBasePrise;
                             unit.USDpriceRise = unit.RUBpriceRise / this.#usd;
                             unit.KZTpriceRise = unit.RUBpriceRise / this.#usd;
                         }
@@ -273,13 +276,13 @@
 
                 setSLPrices = (cur) => {
                     this.#units.forEach((unit) => {
-                        if (unit.priceSL) {
+                        if (unit.SLPossibility) {
                             unit.price = unit.priceSL;
                         }
                     })
                 }
 
-                setNoneSLPrices = () => {
+                setRisePrices = () => {
                     this.#units.forEach((unit) => {
                         if (unit.priceSL) {
                             unit.price = unit.priceRise;
@@ -375,7 +378,6 @@
                 #total;
                 #userData;
                 #slSwitch;
-                #slSelectedByUser;
                 #currency;
 
                 constructor(data) {
@@ -384,7 +386,6 @@
                     this.#selected = [];
                     this.#total = 0;
                     this.#slSwitch = false;
-                    this.#slSelectedByUser = false;
                     this.#currency = 'RUB';
                 }
 
@@ -393,20 +394,14 @@
                 }
 
                 slSwitchOn = () => {
-                    if (this.#slSwitch = false) {
-                        this.#slSwitch = true;
-                        this.#slSelectedByUser = true;
-                        this.#data.setSLPrices(this.#currency);
+                    this.#slSwitch = true;
                     }
-                }
+
 
                 slSwitchOff = () => {
-                    if (this.#slSwitch = true) {
                         this.#slSwitch = false;
-                        this.#slSelectedByUser = false;
-                        this.#data.setNoneSLPrices();
                     }
-                }
+
 
                 addToCart = (e) => {
                     const unit = this.#data.getUnits()[+e.target.dataset.index];
