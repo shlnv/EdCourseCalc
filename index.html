@@ -444,7 +444,6 @@
                 }
 
                 getUnits = () => {
-                    console.log(this.#units)
                     return this.#units;
                 }
 
@@ -512,9 +511,8 @@
 
                 slSwitchOn = () => {
                     this.#slSwitch = true;
-                    console.log(this.#data.getUnits)
-                    this.#data.getUnits().forEach((unit)=>{
-                        if(unit.SLPossibility){
+                    this.#data.getUnits().forEach((unit) => {
+                        if (unit.SLPossibility) {
                             unit.name = unit.nameSL;
                             unit.price = unit.priceSL;
                         }
@@ -524,16 +522,16 @@
 
                 slSwitchOff = () => {
                     this.#slSwitch = false;
-                    if(this.#tildaSwitch) {
-                        this.#data.getUnits.forEach((unit)=>{
-                            if(unit.TildaPossibility){
+                    if (this.#tildaSwitch) {
+                        this.#data.getUnits.forEach((unit) => {
+                            if (unit.TildaPossibility) {
                                 unit.name = unit.nameTilda;
                                 unit.price = unit.priceTilda;
                             }
                         })
                     } else {
-                        this.#data.getUnits.forEach((unit)=>{
-                            if(unit.RisePossibility){
+                        this.#data.getUnits.forEach((unit) => {
+                            if (unit.RisePossibility) {
                                 unit.name = unit.nameRiseNameBase;
                                 unit.price = unit.priceRiseBasePrise;
                             }
@@ -543,8 +541,8 @@
 
                 tildaSwitchOn = () => {
                     this.#tildaSwitch = true;
-                    this.#data.getUnits.forEach((unit)=>{
-                        if(!this.#slSwitch && unit.TildaPossibility){
+                    this.#data.getUnits.forEach((unit) => {
+                        if (!this.#slSwitch && unit.TildaPossibility) {
                             unit.name = unit.nameTilda;
                             unit.price = unit.priceTilda;
                         }
@@ -553,18 +551,21 @@
 
                 tildaSwitchOff = () => {
                     this.#tildaSwitch = false;
-                    this.#data.getUnits.forEach((unit)=>{
-                        if(!this.#slSwitch && unit.TildaPossibility){
+                    this.#data.getUnits.forEach((unit) => {
+                        if (!this.#slSwitch && unit.TildaPossibility) {
                             unit.name = unit.nameRiseNameBase;
                             unit.price = unit.priceRiseBasePrise;
                         }
                     })
                 }
 
-                addToCart = (e) => {
-                    const unit = this.#data.getUnits()[+e.target.dataset.index];
-                    this.#cart.push(unit);
-                    this.setTotal();
+                addToCart = (id) => {
+                    this.#data.getUnits.forEach((unit) => {
+                        if (unit.id == id) {
+                            this.#cart.push(unit);
+                            this.setTotal();
+                        }
+                    })
                     return this.#cart;
                 };
 
@@ -615,7 +616,7 @@
                 videocourseFilter = () => {
                     let videocourseList = [];
                     this.#data.getUnits().forEach((unit) => {
-                        if(unit.videocourse) {
+                        if (unit.videocourse) {
                             videocourseList.push(unit)
                         }
                     });
@@ -643,7 +644,8 @@
             };
 
             class Draw {
-                #useCases
+                #useCases;
+                #filter;
 
                 constructor(useCases) {
                     this.#useCases = useCases;
@@ -680,6 +682,7 @@
                     this.videoCourseButton = document.getElementById('videoCourseButton');
                     this.trainerButton = document.getElementById('trainerButton');
                     this.longReadButton.addEventListener('click', () => {
+                        this.#filter = 'LONGREAD';
                         this.longReadButton.classList.remove('chooseCourseButtonNotSelected');
                         this.longReadButton.classList.add('chooseCourseButtonSelected');
                         this.videoCourseButton.classList.remove('chooseCourseButtonSelected');
@@ -692,6 +695,7 @@
                         this.renderUnitList(this.#useCases.longreadFilter());
                     });
                     this.videoCourseButton.addEventListener('click', () => {
+                        this.#filter = 'VIDEOCOURSE';
                         this.videoCourseButton.classList.remove('chooseCourseButtonNotSelected');
                         this.videoCourseButton.classList.add('chooseCourseButtonSelected');
                         this.longReadButton.classList.remove('chooseCourseButtonSelected');
@@ -704,6 +708,7 @@
                         this.renderUnitList(this.#useCases.videocourseFilter());
                     });
                     this.trainerButton.addEventListener('click', () => {
+                        this.#filter = 'TRAINER';
                         this.trainerButton.classList.remove('chooseCourseButtonNotSelected');
                         this.trainerButton.classList.add('chooseCourseButtonSelected');
                         this.longReadButton.classList.remove('chooseCourseButtonSelected');
@@ -725,7 +730,6 @@
 
                 renderUnitList = (units) => {
                     this.unitList.innerHTML = '';
-                    console.log(units)
                     units.forEach((unit, i) => {
                         const div = document.createElement('div')
                         const input = document.createElement('input');
@@ -733,8 +737,7 @@
                         input.id = unit.id;
                         input.dataset.index = i;
                         input.className = 'unitAtList';
-                        input.addEventListener('click', () => {
-                        });
+                        input.onchange = this.selectFromUnitList;
                         const label = document.createElement('label');
                         label.htmlFor = input.id;
                         const textContent = document.createTextNode(unit.name);
@@ -743,6 +746,17 @@
                         div.appendChild(label);
                         this.unitList.appendChild(div)
                     })
+                }
+
+                selectFromUnitList = (e) => {
+                    console.log(e);
+                    if (!e.target.checked) {
+                        this.#useCases.addToCart(e.target.id);
+                    }
+                }
+
+                deselectFromUnitList = (e) => {
+                    //TODO
                 }
 
 //TODO
@@ -886,7 +900,7 @@
                         success = await data.fetchExchangeRates()
                     }
                 } catch (e) {
-                    console.log('caught data.fetchExchangeRates() error')
+                    console.log('caught data.fetchExchangeRates error')
                     Draw.serverError(e);
                 }
                 if (success) {
