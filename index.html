@@ -444,6 +444,7 @@
                 }
 
                 getUnits = () => {
+                    console.log(this.#units)
                     return this.#units;
                 }
 
@@ -491,6 +492,7 @@
                 #userData;
                 #slSwitch;
                 #tildaSwitch;
+                #filter;
                 #currency;
 
                 constructor(data) {
@@ -510,13 +512,54 @@
 
                 slSwitchOn = () => {
                     this.#slSwitch = true;
+                    console.log(this.#data.getUnits)
+                    this.#data.getUnits().forEach((unit)=>{
+                        if(unit.SLPossibility){
+                            unit.name = unit.nameSL;
+                            unit.price = unit.priceSL;
+                        }
+                    })
                 }
 
 
                 slSwitchOff = () => {
                     this.#slSwitch = false;
+                    if(this.#tildaSwitch) {
+                        this.#data.getUnits.forEach((unit)=>{
+                            if(unit.TildaPossibility){
+                                unit.name = unit.nameTilda;
+                                unit.price = unit.priceTilda;
+                            }
+                        })
+                    } else {
+                        this.#data.getUnits.forEach((unit)=>{
+                            if(unit.RisePossibility){
+                                unit.name = unit.nameRiseNameBase;
+                                unit.price = unit.priceRiseBasePrise;
+                            }
+                        })
+                    }
                 }
 
+                tildaSwitchOn = () => {
+                    this.#tildaSwitch = true;
+                    this.#data.getUnits.forEach((unit)=>{
+                        if(!this.#slSwitch && unit.TildaPossibility){
+                            unit.name = unit.nameTilda;
+                            unit.price = unit.priceTilda;
+                        }
+                    })
+                }
+
+                tildaSwitchOff = () => {
+                    this.#tildaSwitch = false;
+                    this.#data.getUnits.forEach((unit)=>{
+                        if(!this.#slSwitch && unit.TildaPossibility){
+                            unit.name = unit.nameRiseNameBase;
+                            unit.price = unit.priceRiseBasePrise;
+                        }
+                    })
+                }
 
                 addToCart = (e) => {
                     const unit = this.#data.getUnits()[+e.target.dataset.index];
@@ -563,11 +606,30 @@
                     let longreadList = [];
                     this.#data.getUnits().forEach((unit) => {
                         if (unit.longread) {
-                            if ((this.#slSwitch && unit.SLPossibility) || (!this.#slSwitch && !unit.SLPossibility))
-                                longreadList.push(unit);
+                            longreadList.push(unit);
                         }
                     });
                     return longreadList;
+                }
+
+                videocourseFilter = () => {
+                    let videocourseList = [];
+                    this.#data.getUnits().forEach((unit) => {
+                        if(unit.videocourse) {
+                            videocourseList.push(unit)
+                        }
+                    });
+                    return videocourseList;
+                };
+
+                trainerFilter = () => {
+                    let trainerList = [];
+                    this.#data.getUnits().forEach((unit) => {
+                        if (unit.trainer) {
+                            trainerList.push(unit);
+                        }
+                    });
+                    return trainerList;
                 }
 
                 getCart = () => {
@@ -639,6 +701,7 @@
                         this.videoCourseExampleLink.style.display = 'inline';
                         this.longreadExampleLink.style.display = 'none';
                         this.trainerExampleLink.style.display = 'none';
+                        this.renderUnitList(this.#useCases.videocourseFilter());
                     });
                     this.trainerButton.addEventListener('click', () => {
                         this.trainerButton.classList.remove('chooseCourseButtonNotSelected');
@@ -650,6 +713,7 @@
                         this.trainerExampleLink.style.display = 'inline';
                         this.longreadExampleLink.style.display = 'none';
                         this.videoCourseExampleLink.style.display = 'none';
+                        this.renderUnitList(this.#useCases.trainerFilter());
                     });
                     this.unitList = document.getElementById('unitList');
                 }
