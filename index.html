@@ -46,47 +46,81 @@
             letter-spacing: .15rem;
         }
 
-        #SLSwitchWrapper {
+        #SLAndCourseSwitchWrapper {
             font-size: 0;
+            display: grid;
+            align-items: center;
+            grid-template-columns: 1.5fr 1fr 1fr 1fr;
+            grid-template-rows: auto;
+            grid-template-areas:
+            "text1 buttons1 . ."
+            "gap . . ."
+            "text2 longReadWrapper videoCourseWrapper trainerWrapper";
+        }
+
+        .buttonAndExampleWrapper {
+            display: inline;
+            width: 240px;
+            text-align: right;
+        }
+
+        #longReadWrapper {
+            grid-area: longReadWrapper;
+        }
+
+        #videoCourseWrapper {
+            grid-area: videoCourseWrapper;
+        }
+
+        #trainerWrapper {
+            grid-area: trainerWrapper;
         }
 
         #SLChoiceText {
-            display: inline-block;
+            grid-area: text1;
             font-size: 20px;
             color: rgba(75, 80, 97, 1);
             width: 347px;
-            margin-top: 20px;
-            margin-bottom: 20px;
+        }
+
+        #SLChoiceButtonsWrapper {
+            grid-area: buttons1;
+        }
+
+        .calcGridGap {
+            grid-area: gap;
+            height: 25px;
+        }
+
+        #chooseCourseText {
+            display: none;
+            grid-area: text2;
+            font-size: 20px;
         }
 
         #SLYesButton {
             display: inline-block;
-            text-align: center;
             font-size: 20px;
             width: 120px;
             height: 46px;
             border: 3px solid rgba(255, 210, 0, 1);
             border-radius: 25px 0 0 25px;
-            margin-right: 0;
-            margin-left: 50px;
-            line-height: 3.1em;
+            margin: 0;
         }
 
         #SLNoButton {
             display: inline-block;
-            text-align: center;
             font-size: 20px;
             width: 120px;
             height: 46px;
             border: 3px solid rgba(255, 210, 0, 1);
             border-radius: 0 25px 25px 0;
-            margin-left: 0;
-            line-height: 3.1em;
+            margin: 0;
         }
 
-        .calcTextInButton {
-            position: relative;
-            top: -0.35em
+        .calcButton {
+            background-color: rgba(255, 255, 255, 1);
+            margin-top: 20px;
         }
 
         .calcButton:hover {
@@ -102,11 +136,8 @@
             background-color: rgba(255, 210, 0, 1);
         }
 
-        #chooseCourseWrapper {
-            visibility: hidden;
-        }
-
         .chooseCourseButton {
+            display: none;
             font-size: 20px;
             width: 240px;
             height: 46px;
@@ -133,6 +164,67 @@
             color: rgba(221, 221, 221, 1);
         }
 
+        .calcExampleLink {
+            color: rgba(75, 80, 97, 1);
+            font-size: 10px;
+            text-decoration: none;
+            border-bottom: 1px dashed rgba(75, 80, 97, 1);
+            display: none;
+        }
+
+        .calcExampleLink:hover {
+            color: blue;
+            cursor: pointer;
+        }
+
+        .calcExampleLink:visited {
+            color: rgba(75, 80, 97, 1);
+        }
+
+        #calcCart {
+            display: grid;
+            align-items: center;
+            grid-template-columns: 0.3fr 1.2fr 1.5fr 0.5fr 0.5fr 0.5fr;
+            grid-template-rows: auto;
+            grid-template-areas:
+            "cartHeader cartHeader . . calcCurrencies ."
+            ". unitList unitDescription unitQuantity unitPrice ."
+            ". . . . totalPrice totalPrice"
+            ". . . . calcSubmitButton calcSubmitButton"
+        }
+
+        #cartHeader {
+            grid-area: cartHeader;
+        }
+
+        #calcCurrencies {
+            grid-area: calcCurrencies;
+        }
+
+        #unitList {
+            grid-area: unitList;
+        }
+
+        #unitDescription {
+            grid-area: unitDescription;
+        }
+
+        #unitQuantity {
+            grid-area: unitQuantity;
+        }
+
+        #unitPrice {
+            grid-area: unitPrice;
+        }
+
+        #totalPrice {
+            grid-area: totalPrice;
+        }
+
+        #calcSubmitButton {
+            grid-area: calcSubmitButton;
+        }
+
     </style>
 
     <div id="calcWrapper">
@@ -143,20 +235,40 @@
         <br>
         <h3 id="calcSubHeader">ВЫБЕРИТЕ НУЖНЫЕ ВАМ ХАРАКТЕРИСТИКИ</h3>
         <br>
-        <div id="SLSwitchWrapper">
+        <div id="SLAndCourseSwitchWrapper">
             <span id="SLChoiceText">Разработка курса в соответствии с вашим фирменным стилем?</span>
-            <div id="SLYesButton" class="calcButton">
-                <div class="calcTextInButton">ДА</div>
+            <div id="SLChoiceButtonsWrapper">
+                <button id="SLYesButton" class="calcButton">ДА</button>
+                <button id="SLNoButton" class="calcButton">НЕТ</button>
             </div>
-            <div id="SLNoButton" class="calcButton">
-                <div class="calcTextInButton">НЕТ</div>
+            <div class="calcGridGap"></div>
+            <span id="chooseCourseText">Какой курс вам нужен?</span>
+            <div id="longReadWrapper" class="buttonAndExampleWrapper">
+                <button class="chooseCourseButton" id="longReadButton">ЛОНГРИД</button>
+                <a id="longreadExampleLink" class="calcExampleLink">Посмотреть пример курса</a>
+            </div>
+            <div id="videoCourseWrapper" class="buttonAndExampleWrapper">
+                <button class="chooseCourseButton" id="videoCourseButton">ВИДЕОКУРС</button>
+                <a id="videoCourseExampleLink" class="calcExampleLink">Посмотреть пример курса</a>
+            </div>
+            <div id="trainerWrapper" class="buttonAndExampleWrapper">
+                <button class="chooseCourseButton" id="trainerButton">ТРЕНАЖЁР</button>
+                <a id="trainerExampleLink" class="calcExampleLink">Посмотреть пример курса</a>
             </div>
         </div>
-        <div id="chooseCourseWrapper">
-            <span>Какой курс вам нужен?</span>
-            <button class="chooseCourseButton" id="longReadButton">ЛОНГРИД</button>
-            <button class="chooseCourseButton" id="videoCourseButton">ВИДЕОКУРС</button>
-            <button class="chooseCourseButton" id="trainerButton">ТРЕНАЖЁР</button>
+        <div id="calcCart">
+            <span id="cartHeader">Выберите нужные блоки</span>
+            <div id="calcCurrencies">
+                <span>&#8381;</span>
+                <span>$</span>
+                <span>&#8376;</span>
+            </div>
+            <form id="unitList"></form>
+            <div id="unitDescription"></div>
+            <div id="unitQuantity"></div>
+            <div id="unitPrice"></div>
+            <div id="totalPrice"></div>
+            <button id="calcSubmitButton">Заказать курс</button>
         </div>
     </div>
 
@@ -271,7 +383,6 @@
                     this.#constantExpensesSLRUB = this.#constantExpensesSL;
                     this.#constantExpensesSLUSD = this.#constantExpensesSLRUB / this.#usd;
                     this.#constantExpensesSLKZT = this.#constantExpensesSLRUB / this.#kzt;
-                    console.log(this.#units);
                 }
 
                 setSLPrices = (cur) => {
@@ -376,8 +487,10 @@
                 #selected;
                 #cart;
                 #total;
+                #unitList;
                 #userData;
                 #slSwitch;
+                #tildaSwitch;
                 #currency;
 
                 constructor(data) {
@@ -385,7 +498,9 @@
                     this.#cart = [];
                     this.#selected = [];
                     this.#total = 0;
+                    this.#unitList = []
                     this.#slSwitch = false;
+                    this.#tildaSwitch = false;
                     this.#currency = 'RUB';
                 }
 
@@ -395,12 +510,12 @@
 
                 slSwitchOn = () => {
                     this.#slSwitch = true;
-                    }
+                }
 
 
                 slSwitchOff = () => {
-                        this.#slSwitch = false;
-                    }
+                    this.#slSwitch = false;
+                }
 
 
                 addToCart = (e) => {
@@ -444,6 +559,17 @@
                     })
                 }
 
+                longreadFilter = () => {
+                    let longreadList = [];
+                    this.#data.getUnits().forEach((unit) => {
+                        if (unit.longread) {
+                            if ((this.#slSwitch && unit.SLPossibility) || (!this.#slSwitch && !unit.SLPossibility))
+                                longreadList.push(unit);
+                        }
+                    });
+                    return longreadList;
+                }
+
                 getCart = () => {
                     return this.#cart;
                 }
@@ -459,15 +585,22 @@
 
                 constructor(useCases) {
                     this.#useCases = useCases;
-                    this.chooseCourseWrapper = document.getElementById('chooseCourseWrapper');
+                    this.chooseCourseText = document.getElementById('chooseCourseText')
+                    this.chooseCourseButtons = document.getElementsByClassName('chooseCourseButton');
                     this.SLYesButton = document.getElementById('SLYesButton');
                     this.SLNoButton = document.getElementById('SLNoButton');
+                    this.longreadExampleLink = document.getElementById('longreadExampleLink');
+                    this.videoCourseExampleLink = document.getElementById('videoCourseExampleLink');
+                    this.trainerExampleLink = document.getElementById('trainerExampleLink');
                     this.SLYesButton.addEventListener('click', () => {
                         this.SLYesButton.classList.remove('calcButton');
                         this.SLYesButton.classList.add('calcButtonPressed');
                         this.SLNoButton.classList.remove('calcButtonPressed');
                         this.SLNoButton.classList.add('calcButton');
-                        this.chooseCourseWrapper.style.visibility = 'visible';
+                        this.chooseCourseText.style.display = 'inline';
+                        for (let chooseCourseButton of this.chooseCourseButtons) {
+                            chooseCourseButton.style.display = 'inline';
+                        }
                         useCases.slSwitchOn();
                     });
                     this.SLNoButton.addEventListener('click', () => {
@@ -475,7 +608,10 @@
                         this.SLNoButton.classList.add('calcButtonPressed');
                         this.SLYesButton.classList.remove('calcButtonPressed');
                         this.SLYesButton.classList.add('calcButton');
-                        this.chooseCourseWrapper.style.visibility = 'visible';
+                        this.chooseCourseText.style.display = 'inline';
+                        for (let chooseCourseButton of this.chooseCourseButtons) {
+                            chooseCourseButton.style.display = 'inline';
+                        }
                         useCases.slSwitchOff();
                     });
                     this.longReadButton = document.getElementById('longReadButton');
@@ -488,6 +624,10 @@
                         this.videoCourseButton.classList.add('chooseCourseButtonNotSelected');
                         this.trainerButton.classList.remove('chooseCourseButtonSelected');
                         this.trainerButton.classList.add('chooseCourseButtonNotSelected');
+                        this.longreadExampleLink.style.display = 'inline';
+                        this.videoCourseExampleLink.style.display = 'none';
+                        this.trainerExampleLink.style.display = 'none';
+                        this.renderUnitList(this.#useCases.longreadFilter());
                     });
                     this.videoCourseButton.addEventListener('click', () => {
                         this.videoCourseButton.classList.remove('chooseCourseButtonNotSelected');
@@ -496,6 +636,9 @@
                         this.longReadButton.classList.add('chooseCourseButtonNotSelected');
                         this.trainerButton.classList.remove('chooseCourseButtonSelected');
                         this.trainerButton.classList.add('chooseCourseButtonNotSelected');
+                        this.videoCourseExampleLink.style.display = 'inline';
+                        this.longreadExampleLink.style.display = 'none';
+                        this.trainerExampleLink.style.display = 'none';
                     });
                     this.trainerButton.addEventListener('click', () => {
                         this.trainerButton.classList.remove('chooseCourseButtonNotSelected');
@@ -504,12 +647,38 @@
                         this.longReadButton.classList.add('chooseCourseButtonNotSelected');
                         this.videoCourseButton.classList.remove('chooseCourseButtonSelected');
                         this.videoCourseButton.classList.add('chooseCourseButtonNotSelected');
+                        this.trainerExampleLink.style.display = 'inline';
+                        this.longreadExampleLink.style.display = 'none';
+                        this.videoCourseExampleLink.style.display = 'none';
                     });
+                    this.unitList = document.getElementById('unitList');
                 }
 
                 openCalc = () => {
                     const calc = document.getElementById('calcWrapper');
                     calc.style.visibility = 'visible';
+                }
+
+                renderUnitList = (units) => {
+                    this.unitList.innerHTML = '';
+                    console.log(units)
+                    units.forEach((unit, i) => {
+                        const div = document.createElement('div')
+                        const input = document.createElement('input');
+                        input.type = 'checkbox';
+                        input.id = unit.id;
+                        input.dataset.index = i;
+                        input.className = 'unitAtList';
+                        input.addEventListener('click', () => {
+                        });
+                        const label = document.createElement('label');
+                        label.htmlFor = input.id;
+                        const textContent = document.createTextNode(unit.name);
+                        label.appendChild(textContent);
+                        div.appendChild(input);
+                        div.appendChild(label);
+                        this.unitList.appendChild(div)
+                    })
                 }
 
 //TODO
