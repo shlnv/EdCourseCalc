@@ -188,7 +188,7 @@
             grid-template-rows: auto;
             grid-template-areas:
             "cartHeader cartHeader . . calcCurrencies ."
-            ". unitList unitDescription unitQuantity unitPrice ."
+            ". unitList calcInCart unitQuantity unitPrice ."
             ". . . . totalPrice totalPrice"
             ". . . . calcSubmitButton calcSubmitButton"
         }
@@ -205,8 +205,8 @@
             grid-area: unitList;
         }
 
-        #unitDescription {
-            grid-area: unitDescription;
+        #calcInCart {
+            grid-area: calcInCart;
         }
 
         #unitQuantity {
@@ -223,6 +223,24 @@
 
         #calcSubmitButton {
             grid-area: calcSubmitButton;
+        }
+
+        .calcPlusMinus {
+            display: inline-block;
+            border: 1px solid rgba(75, 80, 97, 1);
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+        }
+
+        .calcPlusMinus:hover {
+            cursor: pointer;
+            color: rgba(134, 68, 215, 1);
+        }
+
+        .calcPlusMinus:active {
+            cursor: pointer;
+            color: blue;
         }
 
     </style>
@@ -264,7 +282,7 @@
                 <span>&#8376;</span>
             </div>
             <form id="unitList"></form>
-            <div id="unitDescription"></div>
+            <div id="calcInCart"></div>
             <div id="unitQuantity"></div>
             <div id="unitPrice"></div>
             <div id="totalPrice"></div>
@@ -309,7 +327,7 @@
                     this.#courseBranding = +this.#data[0][2].amount;
                     this.#constantExpensesSL = this.#constantExpenses + this.#courseBranding;
                     this.#units = this.#data[1];
-                    this.#units.forEach((unit) => {
+                    this.#units.forEach((unit, i) => {
                         if (unit.toolSwitcher === '')
                             unit.toolSwitcher = false;
                         unit.name = unit.nameRiseNameBase;
@@ -319,6 +337,8 @@
                         unit.RisePossibility = +unit.RisePossibility;
                         unit.SLPossibility = +unit.SLPossibility;
                         unit.TildaPossibility = +unit.TildaPossibility;
+                        unit.index = i;
+                        unit.quantityInCart = 0;
                     })
                     return true;
                 }
@@ -484,29 +504,26 @@
 
             class UseCases {
                 #data;
-                #selected;
                 #cart;
                 #total;
-                #unitList;
                 #userData;
                 #slSwitch;
                 #tildaSwitch;
-                #filter;
                 #currency;
+                #numberOfPositions
 
                 constructor(data) {
                     this.#data = data;
                     this.#cart = [];
-                    this.#selected = [];
                     this.#total = 0;
-                    this.#unitList = []
                     this.#slSwitch = false;
                     this.#tildaSwitch = false;
                     this.#currency = 'RUB';
+                    this.#numberOfPositions = 0;
                 }
 
                 oneUnitFullPriceFormula = (x) => {
-                    return (x.price + this.#data.getConstantExpenses() / this.#cart.length) * (1 + +this.#data.getProfitMultiplier());
+                    return ((x.price * x.quantityInCart) + this.#data.getConstantExpenses() / this.#numberOfPositions) * (1 + +this.#data.getProfitMultiplier());
                 }
 
                 slSwitchOn = () => {
@@ -523,14 +540,14 @@
                 slSwitchOff = () => {
                     this.#slSwitch = false;
                     if (this.#tildaSwitch) {
-                        this.#data.getUnits.forEach((unit) => {
+                        this.#data.getUnits().forEach((unit) => {
                             if (unit.TildaPossibility) {
                                 unit.name = unit.nameTilda;
                                 unit.price = unit.priceTilda;
                             }
                         })
                     } else {
-                        this.#data.getUnits.forEach((unit) => {
+                        this.#data.getUnits().forEach((unit) => {
                             if (unit.RisePossibility) {
                                 unit.name = unit.nameRiseNameBase;
                                 unit.price = unit.priceRiseBasePrise;
@@ -559,19 +576,11 @@
                     })
                 }
 
-                addToCart = (id) => {
-                    this.#data.getUnits.forEach((unit) => {
-                        if (unit.id == id) {
-                            this.#cart.push(unit);
-                            this.setTotal();
-                        }
-                    })
+                addToCart = (index) => {
+                    this.#cart.push(this.#data.getUnits()[index]);
+                    this.setTotal();
                     return this.#cart;
                 };
-
-                selectFromCart = (e) => {
-                    this.#selected.push(e.target.dataset.index);
-                }
 
                 submit = (func) => {
                     func(this.#cart, this.#userData);
@@ -583,8 +592,8 @@
                     return this.submit(this.#data.sendOrder);
                 }
 
-                removeOneFromCart = (e) => {
-                    this.#cart.splice(+e.target.dataset.index, 1);
+                removeOneFromCart = (index) => {
+                    this.#cart.splice(index, 1);
                     this.setTotal();
                     return this.#cart;
                 }
@@ -597,10 +606,16 @@
 
                 setTotal = () => {
                     this.#total = 0;
-                    this.#cart.forEach((el) => {
-                        el.fullPrice = this.oneUnitFullPriceFormula(el);
-                        this.#total += el.fullPrice;
+                    this.#data.getUnits().forEach((unit) => {
+                        if (unit.quantityInCart) {
+                            unit.fullPrice = this.oneUnitFullPriceFormula(unit);
+                            this.#total += unit.fullPrice;
+                        }
                     })
+                }
+
+                getTotal = () => {
+                    return this.#total;
                 }
 
                 longreadFilter = () => {
@@ -637,10 +652,21 @@
                     return this.#cart;
                 }
 
-                getSelected = () => {
-                    return this.#selected;
+                getUnits = () => {
+                    return this.#data.getUnits();
                 }
 
+                quantityInCartIncrement(index) {
+                    console.log('+++')
+                    this.#data.getUnits()[index].quantityInCart++;
+                    this.#numberOfPositions++
+                }
+
+                quantityInCartDecrement(index) {
+                    console.log('---')
+                    this.#data.getUnits()[index].quantityInCart--;
+                    this.#numberOfPositions--;
+                }
             };
 
             class Draw {
@@ -720,7 +746,12 @@
                         this.videoCourseExampleLink.style.display = 'none';
                         this.renderUnitList(this.#useCases.trainerFilter());
                     });
+
                     this.unitList = document.getElementById('unitList');
+                    this.cartUnits = document.getElementById('calcInCart');
+                    this.cartQuantity = document.getElementById('unitQuantity');
+                    this.cartPrices = document.getElementById('unitPrice');
+                    this.cartTotalPrice = document.getElementById('totalPrice');
                 }
 
                 openCalc = () => {
@@ -735,8 +766,11 @@
                         const input = document.createElement('input');
                         input.type = 'checkbox';
                         input.id = unit.id;
-                        input.dataset.index = i;
+                        input.dataset.index = unit.index;
                         input.className = 'unitAtList';
+                        if (unit.quantityInCart) {
+                            input.checked = true;
+                        }
                         input.onchange = this.selectFromUnitList;
                         const label = document.createElement('label');
                         label.htmlFor = input.id;
@@ -749,14 +783,85 @@
                 }
 
                 selectFromUnitList = (e) => {
-                    console.log(e);
-                    if (!e.target.checked) {
-                        this.#useCases.addToCart(e.target.id);
+                    if (e.target.checked) {
+                        this.#useCases.quantityInCartIncrement(e.target.dataset.index);
+                    } else {
+                        this.#useCases.getUnits()[e.target.dataset.index].quantityInCart = 0;
                     }
+                    this.#useCases.setTotal();
+                    this.renderCart();
                 }
 
-                deselectFromUnitList = (e) => {
-                    //TODO
+                renderCart = () => {
+                    this.cartUnits.innerHTML = '';
+                    this.cartPrices.innerHTML = '';
+                    this.cartQuantity.innerHTML = '';
+                    this.#useCases.getUnits().forEach((unit, i) => {
+                        if (unit.quantityInCart) {
+                            const inCartLineUnit = document.createElement('div');
+                            inCartLineUnit.className = 'inCartLineUnit';
+                            inCartLineUnit.dataset.index = unit.index;
+                            inCartLineUnit.addEventListener('mouseover', () => {
+                            });
+                            inCartLineUnit.addEventListener('mouseleave', () => {
+                            })
+                            const inCartLinePrice = document.createElement('div');
+                            inCartLinePrice.dataset.index = unit.index;
+                            inCartLinePrice.className = 'inCartLinePrice';
+                            inCartLinePrice.addEventListener('mouseover', () => {
+                            });
+                            inCartLinePrice.addEventListener('mouseleave', () => {
+                            })
+                            const textContentUnit = document.createTextNode(unit.name);
+                            const textContentPrice = document.createTextNode(unit.fullPrice.toFixed(2));
+                            const quantityWrapper = document.createElement('div');
+                            const plus = document.createElement('button');
+                            quantityWrapper.appendChild(plus);
+                            const textPlus = document.createTextNode('+');
+                            plus.appendChild(textPlus);
+                            plus.className = 'calcPlusMinus';
+                            plus.dataset.index = unit.index;
+                            plus.addEventListener('click', () => this.onPlus(unit.index));
+                            const quantity = document.createElement('span');
+                            quantityWrapper.appendChild(quantity);
+                            const quantityText = document.createTextNode(' ' + unit.quantityInCart + ' ');
+                            quantity.appendChild(quantityText);
+                            const minus = document.createElement('button');
+                            quantityWrapper.appendChild(minus);
+                            const textMinus = document.createTextNode('-');
+                            minus.appendChild(textMinus);
+                            minus.className = 'calcPlusMinus';
+                            minus.dataset.index = unit.index;
+                            //TODO
+                            minus.addEventListener('click', () => this.onMinus(unit.index));
+                            inCartLineUnit.appendChild(textContentUnit);
+                            inCartLinePrice.appendChild(textContentPrice);
+                            this.cartUnits.appendChild(inCartLineUnit);
+                            this.cartPrices.appendChild(inCartLinePrice);
+                            this.cartQuantity.appendChild(quantityWrapper);
+                        }
+                    })
+                    const totalPrice = document.getElementById('totalPrice');
+                    const textContentTotal = document.createTextNode(this.#useCases.getTotal().toFixed(2).toString());
+                    totalPrice.innerHTML = '';
+                    totalPrice.appendChild(textContentTotal);
+                };
+
+                onPlus = (index) => {
+                    this.#useCases.quantityInCartIncrement(index);
+                    this.#useCases.setTotal();
+                    this.renderCart();
+                }
+
+                onMinus = (index) => {
+                    this.#useCases.quantityInCartDecrement(index);
+                    const unit = this.#useCases.getUnits()[index];
+                    if (unit.quantityInCart == 0) {
+                        const check = document.getElementById(unit.id);
+                        check.checked = false;
+                    }
+                    this.#useCases.setTotal();
+                    this.renderCart();
                 }
 
 //TODO
