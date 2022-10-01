@@ -10,7 +10,7 @@
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300&family=Pathway+Gothic+One&display=swap');
 
         #calcWrapper {
-            visibility: hidden;
+            display: none;
             background-color: rgba(255, 255, 255, 1);
             font-family: 'Montserrat', sans-serif;
             width: 1216px;
@@ -244,6 +244,10 @@
             color: blue;
         }
 
+        #calcHide {
+            display: none;
+        }
+
     </style>
 
     <div id="calcWrapper">
@@ -275,19 +279,21 @@
                 <a id="trainerExampleLink" class="calcExampleLink">Посмотреть пример курса</a>
             </div>
         </div>
-        <div id="calcCart">
-            <span id="cartHeader">Выберите нужные блоки</span>
-            <div id="calcCurrencies">
-                <span>&#8381;</span>
-                <span>$</span>
-                <span>&#8376;</span>
+        <div id="calcHide">
+            <div id="calcCart">
+                <span id="cartHeader">Выберите нужные блоки</span>
+                <div id="calcCurrencies">
+                    <span>&#8381;</span>
+                    <span>$</span>
+                    <span>&#8376;</span>
+                </div>
+                <form id="unitList"></form>
+                <div id="calcInCart"></div>
+                <div id="unitQuantity"></div>
+                <div id="unitPrice"></div>
+                <div id="totalPrice"></div>
+                <button id="calcSubmitButton">Заказать курс</button>
             </div>
-            <form id="unitList"></form>
-            <div id="calcInCart"></div>
-            <div id="unitQuantity"></div>
-            <div id="unitPrice"></div>
-            <div id="totalPrice"></div>
-            <button id="calcSubmitButton">Заказать курс</button>
         </div>
     </div>
 
@@ -302,14 +308,10 @@
                 #profitMultiplier;
                 #constantExpenses;
                 #constantExpensesPure;
-                #constantExpensesSL;
                 #courseBranding;
                 #constantExpensesRUB;
                 #constantExpensesUSD;
                 #constantExpensesKZT;
-                #constantExpensesSLRUB;
-                #constantExpensesSLUSD;
-                #constantExpensesSLKZT;
                 #units;
                 #bankOfRussiaAPI;
                 #usd;
@@ -325,8 +327,8 @@
                     this.#profitMultiplier = +this.#data[0][0].amount;
                     this.#constantExpenses = +this.#data[0][1].amount;
                     this.#constantExpensesPure = this.#constantExpenses;
-                    this.#courseBranding = +this.#data[0][2].amount;
-                    this.#constantExpensesSL = this.#constantExpenses + this.#courseBranding;
+                    this.#courseBranding = this.#data[0][2];
+                    console.log(this.#courseBranding);
                     this.#units = this.#data[1];
                     this.#units.forEach((unit, i) => {
                         if (unit.toolSwitcher === '')
@@ -401,9 +403,6 @@
                     this.#constantExpensesRUB = this.#constantExpenses;
                     this.#constantExpensesUSD = this.#constantExpensesRUB / this.#usd;
                     this.#constantExpensesKZT = this.#constantExpensesRUB / this.#kzt;
-                    this.#constantExpensesSLRUB = this.#constantExpensesSL;
-                    this.#constantExpensesSLUSD = this.#constantExpensesSLRUB / this.#usd;
-                    this.#constantExpensesSLKZT = this.#constantExpensesSLRUB / this.#kzt;
                 }
 
                 setSLPrices = (cur) => {
@@ -433,7 +432,6 @@
                                 }
                             });
                             this.#constantExpenses = this.#constantExpensesUSD;
-                            this.#constantExpensesSL = this.#constantExpensesSLUSD;
                         case 'KZT':
                             this.#units.forEach((unit) => {
                                 unit.price = unit.KZTprice;
@@ -442,7 +440,6 @@
                                 }
                             })
                             this.#constantExpenses = this.#constantExpensesKZT;
-                            this.#constantExpensesSL = this.#constantExpensesSLKZT;
                         case 'RUB':
                             this.#units.forEach((unit) => {
                                 unit.price = unit.RUBprice;
@@ -451,7 +448,6 @@
                                 }
                             })
                             this.#constantExpenses = this.#constantExpensesRUB;
-                            this.#constantExpensesSL = this.#constantExpensesSLRUB;
 
                     }
                 }
@@ -619,10 +615,12 @@
                 }
 
                 setTotal = () => {
-                    if(this.#designSwitch){
-                        this.#total =
+                    if (this.#designSwitch) {
+                        //TODO
+                        this.#total = 0
                     } else {
-                    this.#total = 0;}
+                        this.#total = 0;
+                    }
                     this.#data.getUnits().forEach((unit) => {
                         if (unit.quantityInCart) {
                             unit.fullPrice = this.oneUnitFullPriceFormula(unit);
@@ -699,6 +697,7 @@
                     this.longreadExampleLink = document.getElementById('longreadExampleLink');
                     this.videoCourseExampleLink = document.getElementById('videoCourseExampleLink');
                     this.trainerExampleLink = document.getElementById('trainerExampleLink');
+                    this.calcHide = document.getElementById('calcHide');
                     this.SLYesButton.addEventListener('click', () => {
                         this.SLYesButton.classList.remove('calcButton');
                         this.SLYesButton.classList.add('calcButtonPressed');
@@ -710,7 +709,8 @@
                         }
                         this.#useCases.slSwitchOn();
                         this.#useCases.designSwitchOn();
-                        this.renderUnitList();
+                        this.renderUnitListWithFilters();
+                        this.renderUnitList(this.#useCases.getUnits());
                         this.renderCart();
                     });
                     this.SLNoButton.addEventListener('click', () => {
@@ -724,7 +724,8 @@
                         }
                         this.#useCases.slSwitchOff();
                         this.#useCases.designSwitchOff();
-                        this.renderUnitList(this.#useCases.getUnits());
+                        console.log(this.#filter)
+                        this.renderUnitListWithFilters();
                         this.renderCart();
                     });
                     this.longReadButton = document.getElementById('longReadButton');
@@ -742,6 +743,7 @@
                         this.videoCourseExampleLink.style.display = 'none';
                         this.trainerExampleLink.style.display = 'none';
                         this.renderUnitList(this.#useCases.longreadFilter());
+                        this.calcHide.style.display = 'block';
                     });
                     this.videoCourseButton.addEventListener('click', () => {
                         this.#filter = 'VIDEOCOURSE';
@@ -755,6 +757,7 @@
                         this.longreadExampleLink.style.display = 'none';
                         this.trainerExampleLink.style.display = 'none';
                         this.renderUnitList(this.#useCases.videocourseFilter());
+                        this.calcHide.style.display = 'block';
                     });
                     this.trainerButton.addEventListener('click', () => {
                         this.#filter = 'TRAINER';
@@ -768,6 +771,7 @@
                         this.longreadExampleLink.style.display = 'none';
                         this.videoCourseExampleLink.style.display = 'none';
                         this.renderUnitList(this.#useCases.trainerFilter());
+                        this.calcHide.style.display = 'block';
                     });
 
                     this.unitList = document.getElementById('unitList');
@@ -779,11 +783,12 @@
 
                 openCalc = () => {
                     const calc = document.getElementById('calcWrapper');
-                    calc.style.visibility = 'visible';
+                    calc.style.display = 'block';
                 }
 
                 renderUnitList = (units) => {
                     this.unitList.innerHTML = '';
+                    console.log(units);
                     units.forEach((unit, i) => {
                         const div = document.createElement('div')
                         const input = document.createElement('input');
@@ -819,7 +824,7 @@
                     this.cartUnits.innerHTML = '';
                     this.cartPrices.innerHTML = '';
                     this.cartQuantity.innerHTML = '';
-                    if(this.#useCases.getDesignSwitch()){
+                    if (this.#useCases.getDesignSwitch()) {
 
                     }
                     this.#useCases.getUnits().forEach((unit, i) => {
@@ -888,6 +893,19 @@
                     }
                     this.#useCases.setTotal();
                     this.renderCart();
+                }
+
+                renderUnitListWithFilters = () => {
+                    switch (this.#filter) {
+                        case 'LONGREAD':
+                            this.renderUnitList(this.#useCases.longreadFilter());
+                        case 'VIDEOCOURSE':
+                            this.renderUnitList(this.#useCases.videocourseFilter());
+                        case 'TRAINER':
+                            this.renderUnitList(this.#useCases.trainerFilter());
+                        default:
+                            this.renderUnitList(this.#useCases.getUnits());
+                    }
                 }
 
 //TODO
