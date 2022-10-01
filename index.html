@@ -328,7 +328,6 @@
                     this.#constantExpenses = +this.#data[0][1].amount;
                     this.#constantExpensesPure = this.#constantExpenses;
                     this.#courseBranding = this.#data[0][2];
-                    console.log(this.#courseBranding);
                     this.#units = this.#data[1];
                     this.#units.forEach((unit, i) => {
                         if (unit.toolSwitcher === '')
@@ -672,13 +671,11 @@
                 }
 
                 quantityInCartIncrement(index) {
-                    console.log('+++')
                     this.#data.getUnits()[index].quantityInCart++;
                     this.#numberOfPositions++
                 }
 
                 quantityInCartDecrement(index) {
-                    console.log('---')
                     this.#data.getUnits()[index].quantityInCart--;
                     this.#numberOfPositions--;
                 }
@@ -710,7 +707,6 @@
                         this.#useCases.slSwitchOn();
                         this.#useCases.designSwitchOn();
                         this.renderUnitListWithFilters();
-                        this.renderUnitList(this.#useCases.getUnits());
                         this.renderCart();
                     });
                     this.SLNoButton.addEventListener('click', () => {
@@ -724,7 +720,6 @@
                         }
                         this.#useCases.slSwitchOff();
                         this.#useCases.designSwitchOff();
-                        console.log(this.#filter)
                         this.renderUnitListWithFilters();
                         this.renderCart();
                     });
@@ -788,7 +783,6 @@
 
                 renderUnitList = (units) => {
                     this.unitList.innerHTML = '';
-                    console.log(units);
                     units.forEach((unit, i) => {
                         const div = document.createElement('div')
                         const input = document.createElement('input');
@@ -898,13 +892,12 @@
                 renderUnitListWithFilters = () => {
                     switch (this.#filter) {
                         case 'LONGREAD':
+                            console.log('case longread')
                             this.renderUnitList(this.#useCases.longreadFilter());
                         case 'VIDEOCOURSE':
                             this.renderUnitList(this.#useCases.videocourseFilter());
                         case 'TRAINER':
                             this.renderUnitList(this.#useCases.trainerFilter());
-                        default:
-                            this.renderUnitList(this.#useCases.getUnits());
                     }
                 }
 
@@ -913,39 +906,6 @@
                     console.log(e);
                 }
 
-//                 constructor(useCases) {
-//                     this.#useCases = useCases;
-//                     this.clearButton = document.getElementById('clearButton');
-//                     this.submitCalc = document.getElementById('submitCalc');
-//                     this.submitCalc.addEventListener('click', this.sendCart);
-//                     this.clearButton.addEventListener('click', this.clearCartBtn);
-//                 }
-//
-//                 createUnitList = (units) => {
-//                     const unitList = document.getElementById('unitList');
-//                     units.forEach((unit, i) => {
-//                         const element = document.createElement('div');
-//                         element.id = unit.id;
-//                         element.dataset.index = i;
-//                         element.title = unit.text;
-//                         element.className = 'unitAtList';
-//                         element.addEventListener('click', this.clickOnUnit);
-//                         const textContent = document.createTextNode(unit.name);
-//                         element.appendChild(textContent);
-//                         unitList.append(element);
-//                     })
-//                 }
-//
-//                 clickOnUnit = (e) => {
-//                     const cart = this.#useCases.addToCart(e);
-//                     this.renderCart(cart);
-//                 }
-//
-//                 removeOneFromCart = (e) => {
-//                     const cart = this.#useCases.removeOneFromCart(e);
-//                     this.renderCart(cart);
-//                 }
-//
 //                 sendCart = () => {
 //                     const calcWrapper = document.getElementById('calcWrapper');
 //                     calcWrapper.classList.add('loadingCalc');
@@ -954,49 +914,6 @@
 //                     calcWrapper.classList.remove('loadingCalc');
 //                     this.renderCart(cart);
 //                 }
-//
-//                 clearCartBtn = () => {
-//                     const cart = this.#useCases.clearCart();
-//                     this.renderCart(cart);
-//                 }
-//
-//                 renderCart = (cart) => {
-//                     let total = 0;
-//                     const cartUnits = document.getElementById('cartUnits');
-//                     const cartPrices = document.getElementById('cartPrices');
-//                     cartUnits.innerHTML = '';
-//                     cartPrices.innerHTML = '';
-//                     cart.forEach((unit, i) => {
-//                         total += unit.fullPrice;
-//                         const inCartLineUnit = document.createElement('div');
-//                         inCartLineUnit.className = 'inCartLineUnit';
-//                         inCartLineUnit.dataset.index = i;
-//                         inCartLineUnit.addEventListener('mouseover', this.highlightLine);
-//                         inCartLineUnit.addEventListener('mouseleave', this.removeHighlight)
-//                         const inCartLinePrice = document.createElement('div');
-//                         inCartLinePrice.dataset.index = i;
-//                         inCartLinePrice.className = 'inCartLinePrice';
-//                         inCartLinePrice.addEventListener('mouseover', this.highlightLine);
-//                         inCartLinePrice.addEventListener('mouseleave', this.removeHighlight)
-//                         const textContentUnit = document.createTextNode(unit.name);
-//                         const textContentPrice = document.createTextNode(unit.fullPrice);
-//                         const deleteUnit = document.createElement('div');
-//                         deleteUnit.className = 'delete';
-//                         deleteUnit.addEventListener('click', this.removeOneFromCart);
-//                         deleteUnit.dataset.index = i;
-//                         const textContentDelete = document.createTextNode('x');
-//                         deleteUnit.appendChild(textContentDelete);
-//                         inCartLineUnit.appendChild(textContentUnit);
-//                         inCartLineUnit.appendChild(deleteUnit);
-//                         inCartLinePrice.appendChild(textContentPrice);
-//                         cartUnits.appendChild(inCartLineUnit);
-//                         cartPrices.appendChild(inCartLinePrice);
-//                     })
-//                     const totalSum = document.getElementById('totalSum');
-//                     const textContentTotal = document.createTextNode(total.toFixed(2).toString());
-//                     totalSum.innerHTML = '';
-//                     totalSum.appendChild(textContentTotal);
-//                 };
 //
 //                 whatColumn = (e) => {
 //                     const el1 = e.target;
@@ -1022,10 +939,6 @@
 //                     const [el1, el2] = this.whatColumn(e);
 //                     el1.classList.remove('highlightUnit');
 //                     el2.classList.remove('highlightUnit');
-//                 }
-// //TODO
-//                 static serverError = (e) => {
-//                     console.log(e);
 //                 }
             };
 
