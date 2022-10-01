@@ -228,6 +228,7 @@
         .calcPlusMinus {
             display: inline-block;
             border: 1px solid rgba(75, 80, 97, 1);
+            background-color: rgba(255, 255, 255, 1);
             width: 20px;
             height: 20px;
             border-radius: 50%;
@@ -509,6 +510,7 @@
                 #userData;
                 #slSwitch;
                 #tildaSwitch;
+                #designSwitch
                 #currency;
                 #numberOfPositions
 
@@ -518,6 +520,7 @@
                     this.#total = 0;
                     this.#slSwitch = false;
                     this.#tildaSwitch = false;
+                    this.#designSwitch = false;
                     this.#currency = 'RUB';
                     this.#numberOfPositions = 0;
                 }
@@ -536,6 +539,17 @@
                     })
                 }
 
+                designSwitchOn = () => {
+                    this.#designSwitch = true;
+                }
+
+                designSwitchOff = () => {
+                    this.#designSwitch = false;
+                }
+
+                getDesignSwitch = () => {
+                    return this.#designSwitch;
+                }
 
                 slSwitchOff = () => {
                     this.#slSwitch = false;
@@ -605,7 +619,10 @@
                 }
 
                 setTotal = () => {
-                    this.#total = 0;
+                    if(this.#designSwitch){
+                        this.#total =
+                    } else {
+                    this.#total = 0;}
                     this.#data.getUnits().forEach((unit) => {
                         if (unit.quantityInCart) {
                             unit.fullPrice = this.oneUnitFullPriceFormula(unit);
@@ -691,7 +708,10 @@
                         for (let chooseCourseButton of this.chooseCourseButtons) {
                             chooseCourseButton.style.display = 'inline';
                         }
-                        useCases.slSwitchOn();
+                        this.#useCases.slSwitchOn();
+                        this.#useCases.designSwitchOn();
+                        this.renderUnitList();
+                        this.renderCart();
                     });
                     this.SLNoButton.addEventListener('click', () => {
                         this.SLNoButton.classList.remove('calcButton');
@@ -702,7 +722,10 @@
                         for (let chooseCourseButton of this.chooseCourseButtons) {
                             chooseCourseButton.style.display = 'inline';
                         }
-                        useCases.slSwitchOff();
+                        this.#useCases.slSwitchOff();
+                        this.#useCases.designSwitchOff();
+                        this.renderUnitList(this.#useCases.getUnits());
+                        this.renderCart();
                     });
                     this.longReadButton = document.getElementById('longReadButton');
                     this.videoCourseButton = document.getElementById('videoCourseButton');
@@ -796,6 +819,9 @@
                     this.cartUnits.innerHTML = '';
                     this.cartPrices.innerHTML = '';
                     this.cartQuantity.innerHTML = '';
+                    if(this.#useCases.getDesignSwitch()){
+
+                    }
                     this.#useCases.getUnits().forEach((unit, i) => {
                         if (unit.quantityInCart) {
                             const inCartLineUnit = document.createElement('div');
