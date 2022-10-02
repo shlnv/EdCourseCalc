@@ -248,6 +248,22 @@
             display: none;
         }
 
+        #rubleButton {
+
+        }
+
+        #dollarButton {
+
+        }
+
+        #tengeButton {
+
+        }
+
+        .currencyButton:hover {
+            cursor: pointer;
+        }
+
     </style>
 
     <div id="calcWrapper">
@@ -283,9 +299,9 @@
             <div id="calcCart">
                 <span id="cartHeader">Выберите нужные блоки</span>
                 <div id="calcCurrencies">
-                    <span>&#8381;</span>
-                    <span>$</span>
-                    <span>&#8376;</span>
+                    <span id="rubleButton" class="currencyButton">&#8381;</span>
+                    <span id="dollarButton" class="currencyButton">$</span>
+                    <span id="tengeButton" class="currencyButton">&#8376;</span>
                 </div>
                 <form id="unitList"></form>
                 <div id="calcInCart"></div>
@@ -420,7 +436,6 @@
                     })
                 }
 
-
                 setCurrency = (cur) => {
                     switch (cur) {
                         case 'USD':
@@ -431,6 +446,7 @@
                                 }
                             });
                             this.#constantExpenses = this.#constantExpensesUSD;
+                            break;
                         case 'KZT':
                             this.#units.forEach((unit) => {
                                 unit.price = unit.KZTprice;
@@ -439,6 +455,7 @@
                                 }
                             })
                             this.#constantExpenses = this.#constantExpensesKZT;
+                            break;
                         case 'RUB':
                             this.#units.forEach((unit) => {
                                 unit.price = unit.RUBprice;
@@ -447,7 +464,7 @@
                                 }
                             })
                             this.#constantExpenses = this.#constantExpensesRUB;
-
+                            break;
                     }
                 }
 
@@ -521,6 +538,11 @@
                 }
 
                 oneUnitFullPriceFormula = (x) => {
+                    console.log('unit name = ' + x.name);
+                    console.log('unit.price = ' + x.price);
+                    console.log('unit.quantityInCart = ' + x.quantityInCart);
+                    console.log('data.getConstantExpenses = ' + this.#data.getConstantExpenses());
+                    console.log('numberOfPositions = ' + this.#numberOfPositions);
                     return ((x.price * x.quantityInCart) + this.#data.getConstantExpenses() / this.#numberOfPositions) * (1 + +this.#data.getProfitMultiplier());
                 }
 
@@ -532,6 +554,7 @@
                             unit.price = unit.priceSL;
                         }
                     })
+                    this.setTotal();
                 }
 
                 designSwitchOn = () => {
@@ -563,6 +586,7 @@
                             }
                         })
                     }
+                    this.setTotal();
                 }
 
                 tildaSwitchOn = () => {
@@ -573,6 +597,7 @@
                             unit.price = unit.priceTilda;
                         }
                     })
+                    this.setTotal();
                 }
 
                 tildaSwitchOff = () => {
@@ -583,35 +608,13 @@
                             unit.price = unit.priceRiseBasePrise;
                         }
                     })
-                }
-
-                addToCart = (index) => {
-                    this.#cart.push(this.#data.getUnits()[index]);
                     this.setTotal();
-                    return this.#cart;
-                };
-
-                submit = (func) => {
-                    func(this.#cart, this.#userData);
-                    return this.clearCart();
-                };
-
-                enterUserData = (userData) => {
-                    this.#userData = userData;
-                    return this.submit(this.#data.sendOrder);
                 }
 
-                removeOneFromCart = (index) => {
-                    this.#cart.splice(index, 1);
-                    this.setTotal();
-                    return this.#cart;
-                }
-
-                clearCart = () => {
-                    this.#cart = [];
-                    this.setTotal();
-                    return this.#cart;
-                }
+                // enterUserData = (userData) => {
+                //     this.#userData = userData;
+                //     return this.submit(this.#data.sendOrder);
+                // }
 
                 setTotal = () => {
                     if (this.#designSwitch) {
@@ -621,8 +624,8 @@
                         this.#total = 0;
                     }
                     this.#data.getUnits().forEach((unit) => {
+                        unit.fullPrice = this.oneUnitFullPriceFormula(unit);
                         if (unit.quantityInCart) {
-                            unit.fullPrice = this.oneUnitFullPriceFormula(unit);
                             this.#total += unit.fullPrice;
                         }
                     })
@@ -662,10 +665,6 @@
                     return trainerList;
                 }
 
-                getCart = () => {
-                    return this.#cart;
-                }
-
                 getUnits = () => {
                     return this.#data.getUnits();
                 }
@@ -679,6 +678,30 @@
                     this.#data.getUnits()[index].quantityInCart--;
                     this.#numberOfPositions--;
                 }
+
+                setNumberOfPositions = (num) => {
+                    this.#numberOfPositions = num;
+                }
+
+                getNumberOfPositions = () => {
+                    return this.#numberOfPositions;
+                }
+
+                setRublePrice = () => {
+                    this.#data.setCurrency('RUB');
+                    this.setTotal();
+                }
+
+                setDollarPrice = () => {
+                    this.#data.setCurrency('USD');
+                    this.setTotal();
+                }
+
+                setTengePrice = () => {
+                    this.#data.setCurrency('KZT');
+                    this.setTotal();
+                }
+
             };
 
             class Draw {
@@ -704,10 +727,7 @@
                         for (let chooseCourseButton of this.chooseCourseButtons) {
                             chooseCourseButton.style.display = 'inline';
                         }
-                        this.#useCases.slSwitchOn();
-                        this.#useCases.designSwitchOn();
-                        this.renderUnitListWithFilters();
-                        this.renderCart();
+                        return this.onYes();
                     });
                     this.SLNoButton.addEventListener('click', () => {
                         this.SLNoButton.classList.remove('calcButton');
@@ -718,10 +738,7 @@
                         for (let chooseCourseButton of this.chooseCourseButtons) {
                             chooseCourseButton.style.display = 'inline';
                         }
-                        this.#useCases.slSwitchOff();
-                        this.#useCases.designSwitchOff();
-                        this.renderUnitListWithFilters();
-                        this.renderCart();
+                        return this.onNo();
                     });
                     this.longReadButton = document.getElementById('longReadButton');
                     this.videoCourseButton = document.getElementById('videoCourseButton');
@@ -774,6 +791,13 @@
                     this.cartQuantity = document.getElementById('unitQuantity');
                     this.cartPrices = document.getElementById('unitPrice');
                     this.cartTotalPrice = document.getElementById('totalPrice');
+                    this.rubleButton = document.getElementById('rubleButton');
+                    this.rubleButton.addEventListener('click', this.onRuble);
+                    this.dollarButton = document.getElementById('dollarButton');
+                    this.dollarButton.addEventListener('click', this.onDollar);
+                    this.tengeButton = document.getElementById('tengeButton');
+                    this.tengeButton.addEventListener('click', this.onTenge)
+
                 }
 
                 openCalc = () => {
@@ -804,12 +828,15 @@
                     })
                 }
 
+                //TODO move the function to UseCases
                 selectFromUnitList = (e) => {
                     if (e.target.checked) {
                         this.#useCases.quantityInCartIncrement(e.target.dataset.index);
                     } else {
+                        this.#useCases.setNumberOfPositions(this.#useCases.getNumberOfPositions() - this.#useCases.getUnits()[e.target.dataset.index].quantityInCart);
                         this.#useCases.getUnits()[e.target.dataset.index].quantityInCart = 0;
                     }
+                    console.log(this.#useCases.getUnits()[e.target.dataset.index].quantityInCart);
                     this.#useCases.setTotal();
                     this.renderCart();
                 }
@@ -889,15 +916,46 @@
                     this.renderCart();
                 }
 
+                onYes = () => {
+                    this.#useCases.slSwitchOn();
+                    this.#useCases.designSwitchOn();
+                    this.renderUnitListWithFilters();
+                    this.renderCart();
+                }
+
+                onNo = () => {
+                    this.#useCases.slSwitchOff();
+                    this.#useCases.designSwitchOff();
+                    this.renderUnitListWithFilters();
+                    this.renderCart();
+                }
+
+                onRuble = () => {
+                    this.#useCases.setRublePrice();
+                    this.renderCart();
+                };
+
+                onDollar = () => {
+                    this.#useCases.setDollarPrice();
+                    this.renderCart();
+                }
+
+                onTenge = () => {
+                    this.#useCases.setTengePrice();
+                    this.renderCart();
+                }
+
                 renderUnitListWithFilters = () => {
                     switch (this.#filter) {
                         case 'LONGREAD':
-                            console.log('case longread')
                             this.renderUnitList(this.#useCases.longreadFilter());
+                            break;
                         case 'VIDEOCOURSE':
                             this.renderUnitList(this.#useCases.videocourseFilter());
+                            break;
                         case 'TRAINER':
                             this.renderUnitList(this.#useCases.trainerFilter());
+                            break;
                     }
                 }
 
