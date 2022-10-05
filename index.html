@@ -199,6 +199,7 @@
 
         #calcCurrencies {
             grid-area: calcCurrencies;
+            text-align: center;
         }
 
         #unitList {
@@ -223,6 +224,7 @@
 
         #calcSubmitButton {
             grid-area: calcSubmitButton;
+
         }
 
         .calcPlusMinus {
@@ -249,24 +251,66 @@
         }
 
         #rubleButton {
-
+            display: inline-block;
+            float: left;
         }
 
         #dollarButton {
-
         }
 
         #tengeButton {
-
+            display: inline-block;
+            float: right;
         }
 
         .currencyButton:hover {
             cursor: pointer;
         }
 
+        .calcModalWindow {
+            width: 280px;
+            height: 336px;
+            background-color: rgba(255, 255, 255, 1);
+            font-family: 'Montserrat', sans-serif;
+            border-radius: 16px;
+            box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.1);
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            margin: auto;
+        }
+
+        #userDataWindow {
+            display: none;
+        }
+
+        #calcModalClose {
+            float: right;
+            position: relative;
+            top: 15px;
+            right: 20px;
+        }
+
+        #calcModalClose:hover {
+            cursor: pointer;
+        }
+
+        #calcDark {
+            background: rgba(102, 102, 102, 0.5);
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: none;
+        }
+
     </style>
 
     <div id="calcWrapper">
+
         <h1 id="calcHeader">КАЛЬКУЛЯТОР КУРСА</h1>
         <img src="https://downloader.disk.yandex.ru/preview/75ead0cec289444e37160f97fbed503e13b7560713b4b25ab4d6efcd9a5f06e7/6325ecbe/6BT_65iy4PXvu2PF0YpJ6D14QMkfvcNQtXs-2_Y00s8dlFBC17CHsnKS2hMMDK46hUoqW2j11FiUO_Ru2YXPJw%3D%3D?uid=0&filename=logo-04.png&disposition=inline&hash=&limit=0&content_type=image%2Fpng&owner_uid=0&tknv=v2&size=2048x2048"
              alt="logo"
@@ -308,13 +352,29 @@
                 <div id="unitQuantity"></div>
                 <div id="unitPrice"></div>
                 <div id="totalPrice"></div>
-                <button id="calcSubmitButton">Заказать курс</button>
+                <button id="calcSubmitButton" disabled>Заказать курс</button>
+            </div>
+        </div>
+        <div id="calcDark">
+            <div id="userDataWindow" class="calcModalWindow">
+                <div id="calcModalClose">X</div>
+                <h5>Отправим полный курс на почту</h5>
+                <form id="calcUserForm">
+                    <input type="email" name="email" placeholder="email" required>
+                    <input type="tel" name="phone" placeholder="+7 999 999 99 99" required>
+                    <input type="text" name="name" placeholder="Как к вам обращаться?" required>
+                    <input type="submit" value="Оставить заявку">
+                    <div>Нажатием на «Оставить заявку» подтверждаю согласие с обработкой персональный данных</div>
+                </form>
+                <h5>Можете нам написать</h5>
             </div>
         </div>
     </div>
 
     <script>
         console.log(window.navigator.userAgent);
+
+        const YES_NO_BUTTON_UNIT_ID = 'UT-007'
 
         const calc = () => {
 
@@ -348,13 +408,14 @@
                     this.#units.forEach((unit, i) => {
                         if (unit.toolSwitcher === '')
                             unit.toolSwitcher = false;
-                        unit.name = unit.nameRiseNameBase;
+                        unit.innerName = unit.nameRiseNameBase;
                         unit.longread = +unit.longread;
                         unit.videocourse = +unit.videocourse;
                         unit.trainer = +unit.trainer;
                         unit.RisePossibility = +unit.RisePossibility;
                         unit.SLPossibility = +unit.SLPossibility;
                         unit.TildaPossibility = +unit.TildaPossibility;
+                        unit.single = +unit.single;
                         unit.index = i;
                         unit.quantityInCart = 0;
                     })
@@ -389,7 +450,15 @@
 
                 setPrices = () => {
                     this.#units.forEach((unit) => {
-                        unit.price = unit.priceRiseBasePrise;
+                        if (unit.toolSwitcher) {
+                            if (unit.toolSwitcher.trim().toLowerCase() == 'sl') {
+                                unit.price = unit.priceSL;
+                            } else if (unit.toolSwitcher.trim().toLowerCase() == 'tilda') {
+                                unit.price = unit.priceTilda;
+                            } else {
+                                unit.price = unit.priceRiseBasePrise;
+                            }
+                        }
                         unit.RUBprice = unit.price;
                         unit.USDprice = unit.RUBprice / this.#usd;
                         unit.KZTprice = unit.RUBprice / this.#kzt;
@@ -440,27 +509,45 @@
                     switch (cur) {
                         case 'USD':
                             this.#units.forEach((unit) => {
-                                unit.price = unit.USDprice;
+                                // unit.price = unit.USDprice;
                                 if (unit.priceSL) {
                                     unit.priceSL = unit.USDpriceSL;
+                                }
+                                if (unit.priceRiseBasePrise) {
+                                    unit.priceRiseBasePrise = unit.USDpriceRise;
+                                }
+                                if (unit.priceTilda) {
+                                    unit.priceTilda = unit.USDpriceTilda;
                                 }
                             });
                             this.#constantExpenses = this.#constantExpensesUSD;
                             break;
                         case 'KZT':
                             this.#units.forEach((unit) => {
-                                unit.price = unit.KZTprice;
+                                // unit.price = unit.KZTprice;
                                 if (unit.priceSL) {
                                     unit.priceSL = unit.KZTpriceSL;
+                                }
+                                if (unit.priceRiseBasePrise) {
+                                    unit.priceRiseBasePrise = unit.KZTpriceRise;
+                                }
+                                if (unit.priceTilda) {
+                                    unit.priceTilda = unit.KZTpriceTilda;
                                 }
                             })
                             this.#constantExpenses = this.#constantExpensesKZT;
                             break;
                         case 'RUB':
                             this.#units.forEach((unit) => {
-                                unit.price = unit.RUBprice;
+                                // unit.price = unit.RUBprice;
                                 if (unit.priceSL) {
                                     unit.priceSL = unit.RUBpriceSL;
+                                }
+                                if (unit.priceRiseBasePrise) {
+                                    unit.priceRiseBasePrise = unit.RUBpriceRise;
+                                }
+                                if (unit.priceTilda) {
+                                    unit.priceTilda = unit.RUBpriceTilda;
                                 }
                             })
                             this.#constantExpenses = this.#constantExpensesRUB;
@@ -480,7 +567,9 @@
                     return this.#units;
                 }
 
-                sendOrder = async (cart, userData) => {
+
+// TODO write new sendOrder
+                sendOrder = async (userData) => {
 
                     class Order {
                         constructor(email, units, totalPrice) {
@@ -491,9 +580,9 @@
                     }
 
                     class OrderedUnit {
-                        constructor(id, name, purePrice, priceWithExpenses) {
+                        constructor(id, innerName, purePrice, priceWithExpenses) {
                             this.id = id;
-                            this.name = name;
+                            this.name = innerName;
                             this.purePrice = purePrice;
                             this.priceWithExpenses = priceWithExpenses;
                         }
@@ -519,7 +608,6 @@
                 #data;
                 #cart;
                 #total;
-                #userData;
                 #slSwitch;
                 #tildaSwitch;
                 #designSwitch
@@ -538,35 +626,35 @@
                 }
 
                 oneUnitFullPriceFormula = (x) => {
-                    console.log('unit name = ' + x.name);
-                    console.log('unit.price = ' + x.price);
-                    console.log('unit.quantityInCart = ' + x.quantityInCart);
-                    console.log('data.getConstantExpenses = ' + this.#data.getConstantExpenses());
-                    console.log('numberOfPositions = ' + this.#numberOfPositions);
-                    return ((x.price * x.quantityInCart) + this.#data.getConstantExpenses() / this.#numberOfPositions) * (1 + +this.#data.getProfitMultiplier());
+                    if (this.#slSwitch && x.priceSL) {
+                        x.price = x.priceSL;
+                    }
+                    if (this.#tildaSwitch && !this.#slSwitch && x.priceTilda) {
+                        x.price = x.priceTilda;
+                    }
+                    if (!this.#slSwitch && !this.#tildaSwitch && x.priceRiseBasePrise) {
+                        x.price = x.priceRiseBasePrise;
+                    }
+                    return (x.price * x.quantityInCart) + this.#data.getConstantExpenses() * (x.quantityInCart / this.#numberOfPositions) * (1 + +this.#data.getProfitMultiplier());
+                }
+
+                getSLswitch = () => {
+                    return this.#slSwitch;
+                }
+
+                getTildaSwitch = () => {
+                    return this.#tildaSwitch;
                 }
 
                 slSwitchOn = () => {
                     this.#slSwitch = true;
                     this.#data.getUnits().forEach((unit) => {
                         if (unit.SLPossibility) {
-                            unit.name = unit.nameSL;
+                            unit.innerName = unit.nameSL;
                             unit.price = unit.priceSL;
                         }
                     })
                     this.setTotal();
-                }
-
-                designSwitchOn = () => {
-                    this.#designSwitch = true;
-                }
-
-                designSwitchOff = () => {
-                    this.#designSwitch = false;
-                }
-
-                getDesignSwitch = () => {
-                    return this.#designSwitch;
                 }
 
                 slSwitchOff = () => {
@@ -574,14 +662,14 @@
                     if (this.#tildaSwitch) {
                         this.#data.getUnits().forEach((unit) => {
                             if (unit.TildaPossibility) {
-                                unit.name = unit.nameTilda;
+                                unit.innerName = unit.nameTilda;
                                 unit.price = unit.priceTilda;
                             }
                         })
                     } else {
                         this.#data.getUnits().forEach((unit) => {
                             if (unit.RisePossibility) {
-                                unit.name = unit.nameRiseNameBase;
+                                unit.innerName = unit.nameRiseNameBase;
                                 unit.price = unit.priceRiseBasePrise;
                             }
                         })
@@ -589,11 +677,15 @@
                     this.setTotal();
                 }
 
+                getCurrency = () => {
+                    return this.#currency;
+                }
+
                 tildaSwitchOn = () => {
                     this.#tildaSwitch = true;
-                    this.#data.getUnits.forEach((unit) => {
+                    this.#data.getUnits().forEach((unit) => {
                         if (!this.#slSwitch && unit.TildaPossibility) {
-                            unit.name = unit.nameTilda;
+                            unit.innerName = unit.nameTilda;
                             unit.price = unit.priceTilda;
                         }
                     })
@@ -602,27 +694,17 @@
 
                 tildaSwitchOff = () => {
                     this.#tildaSwitch = false;
-                    this.#data.getUnits.forEach((unit) => {
+                    this.#data.getUnits().forEach((unit) => {
                         if (!this.#slSwitch && unit.TildaPossibility) {
-                            unit.name = unit.nameRiseNameBase;
+                            unit.innerName = unit.nameRiseNameBase;
                             unit.price = unit.priceRiseBasePrise;
                         }
                     })
                     this.setTotal();
                 }
 
-                // enterUserData = (userData) => {
-                //     this.#userData = userData;
-                //     return this.submit(this.#data.sendOrder);
-                // }
-
                 setTotal = () => {
-                    if (this.#designSwitch) {
-                        //TODO
-                        this.#total = 0
-                    } else {
-                        this.#total = 0;
-                    }
+                    this.#total = 0;
                     this.#data.getUnits().forEach((unit) => {
                         unit.fullPrice = this.oneUnitFullPriceFormula(unit);
                         if (unit.quantityInCart) {
@@ -669,6 +751,26 @@
                     return this.#data.getUnits();
                 }
 
+                addToCartById = (id) => {
+                    const unitIndex = this.getUnits().findIndex(unit => unit.id == id);
+                    this.addToCartByIndex(unitIndex);
+                }
+
+                addToCartByIndex = (index) => {
+                    this.quantityInCartIncrement(index);
+                }
+
+                removeFromCartById = (id) => {
+                    const unitIndex = this.getUnits().findIndex(unit => unit.id == id);
+                    this.removeFromCartByIndex(unitIndex);
+                }
+
+                removeFromCartByIndex = (index) => {
+                    this.setNumberOfPositions(this.#numberOfPositions - this.getUnits()[index].quantityInCart);
+                    this.getUnits()[index].quantityInCart = 0;
+                    // this.setTotal();
+                }
+
                 quantityInCartIncrement(index) {
                     this.#data.getUnits()[index].quantityInCart++;
                     this.#numberOfPositions++
@@ -683,23 +785,26 @@
                     this.#numberOfPositions = num;
                 }
 
-                getNumberOfPositions = () => {
-                    return this.#numberOfPositions;
-                }
-
                 setRublePrice = () => {
-                    this.#data.setCurrency('RUB');
+                    this.#currency = 'RUB';
+                    this.#data.setCurrency(this.#currency);
                     this.setTotal();
                 }
 
                 setDollarPrice = () => {
-                    this.#data.setCurrency('USD');
+                    this.#currency = 'USD';
+                    this.#data.setCurrency(this.#currency);
                     this.setTotal();
                 }
 
                 setTengePrice = () => {
-                    this.#data.setCurrency('KZT');
+                    this.#currency = 'KZT';
+                    this.#data.setCurrency(this.#currency);
                     this.setTotal();
+                }
+
+                sendOrder = async (data) => {
+                    await this.#data.sendOrder(data);
                 }
 
             };
@@ -719,25 +824,11 @@
                     this.trainerExampleLink = document.getElementById('trainerExampleLink');
                     this.calcHide = document.getElementById('calcHide');
                     this.SLYesButton.addEventListener('click', () => {
-                        this.SLYesButton.classList.remove('calcButton');
-                        this.SLYesButton.classList.add('calcButtonPressed');
-                        this.SLNoButton.classList.remove('calcButtonPressed');
-                        this.SLNoButton.classList.add('calcButton');
-                        this.chooseCourseText.style.display = 'inline';
-                        for (let chooseCourseButton of this.chooseCourseButtons) {
-                            chooseCourseButton.style.display = 'inline';
-                        }
+                        this.onYesVisual();
                         return this.onYes();
                     });
                     this.SLNoButton.addEventListener('click', () => {
-                        this.SLNoButton.classList.remove('calcButton');
-                        this.SLNoButton.classList.add('calcButtonPressed');
-                        this.SLYesButton.classList.remove('calcButtonPressed');
-                        this.SLYesButton.classList.add('calcButton');
-                        this.chooseCourseText.style.display = 'inline';
-                        for (let chooseCourseButton of this.chooseCourseButtons) {
-                            chooseCourseButton.style.display = 'inline';
-                        }
+                        this.onNoVisual();
                         return this.onNo();
                     });
                     this.longReadButton = document.getElementById('longReadButton');
@@ -796,8 +887,16 @@
                     this.dollarButton = document.getElementById('dollarButton');
                     this.dollarButton.addEventListener('click', this.onDollar);
                     this.tengeButton = document.getElementById('tengeButton');
-                    this.tengeButton.addEventListener('click', this.onTenge)
-
+                    this.tengeButton.addEventListener('click', this.onTenge);
+                    this.calcSubmitButton = document.getElementById('calcSubmitButton');
+                    this.calcSubmitButton.addEventListener('click', this.openModalWindow);
+                    this.userDataWindow = document.getElementById('userDataWindow');
+                    this.calcModalClose = document.getElementById('calcModalClose');
+                    this.calcModalClose.addEventListener('click', this.closeModalWindow);
+                    this.calcDark = document.getElementById('calcDark');
+                    // this.calcDark.addEventListener('click', this.closeModalWindow);
+                    this.calcUserForm = document.getElementById('calcUserForm');
+                    this.calcUserForm.addEventListener('submit', this.submitCalc);
                 }
 
                 openCalc = () => {
@@ -828,15 +927,30 @@
                     })
                 }
 
-                //TODO move the function to UseCases
-                selectFromUnitList = (e) => {
-                    if (e.target.checked) {
-                        this.#useCases.quantityInCartIncrement(e.target.dataset.index);
-                    } else {
-                        this.#useCases.setNumberOfPositions(this.#useCases.getNumberOfPositions() - this.#useCases.getUnits()[e.target.dataset.index].quantityInCart);
-                        this.#useCases.getUnits()[e.target.dataset.index].quantityInCart = 0;
+                selectFromUnitList = (event) => {
+                    const units = this.#useCases.getUnits();
+                    const unit = units[event.target.dataset.index];
+                    if (unit.toolSwitcher) {
+                        if (unit.toolSwitcher.trim().toLowerCase() == 'tilda') {
+                            for (let i = 0; i < units.length; i++) {
+                                if (units[i].quantityInCart && !units[i].TildaPossibility) {
+                                    alert(`Нельзя выбрать "${unit.name}", когда в корзину добавлен "${units[i].name}"`);
+                                    event.target.checked = !event.target.checked;
+                                    return;
+                                }
+                            }
+                        } else if (unit.toolSwitcher.trim().toLowerCase() == 'sl' && !unit.TildaPossibility && this.#useCases.getTildaSwitch()) {
+                            alert(`Нельзя выбрать "${unit.name}", когда в корзину добавлена "Верстка курса на Tilda"`);
+                            event.target.checked = !event.target.checked;
+                            return;
+                        }
                     }
-                    console.log(this.#useCases.getUnits()[e.target.dataset.index].quantityInCart);
+
+                    if (event.target.checked) {
+                        this.#useCases.addToCartByIndex(event.target.dataset.index);
+                    } else {
+                        this.#useCases.removeFromCartByIndex(event.target.dataset.index);
+                    }
                     this.#useCases.setTotal();
                     this.renderCart();
                 }
@@ -845,8 +959,20 @@
                     this.cartUnits.innerHTML = '';
                     this.cartPrices.innerHTML = '';
                     this.cartQuantity.innerHTML = '';
-                    if (this.#useCases.getDesignSwitch()) {
-
+                    let SLswitchers = 0;
+                    let tildaSwitchers = 0;
+                    let yesNoSwitcher = false;
+                    let currency = '';
+                    switch (this.#useCases.getCurrency()) {
+                        case 'RUB':
+                            currency = '₽';
+                            break;
+                        case 'USD':
+                            currency = '$';
+                            break;
+                        case 'KZT':
+                            currency = '₸';
+                            break;
                     }
                     this.#useCases.getUnits().forEach((unit, i) => {
                         if (unit.quantityInCart) {
@@ -865,15 +991,17 @@
                             inCartLinePrice.addEventListener('mouseleave', () => {
                             })
                             const textContentUnit = document.createTextNode(unit.name);
-                            const textContentPrice = document.createTextNode(unit.fullPrice.toFixed(2));
+                            const textContentPrice = document.createTextNode(unit.fullPrice.toFixed(2) + ' ' + currency);
                             const quantityWrapper = document.createElement('div');
-                            const plus = document.createElement('button');
-                            quantityWrapper.appendChild(plus);
-                            const textPlus = document.createTextNode('+');
-                            plus.appendChild(textPlus);
-                            plus.className = 'calcPlusMinus';
-                            plus.dataset.index = unit.index;
-                            plus.addEventListener('click', () => this.onPlus(unit.index));
+                            if (!unit.single) {
+                                const plus = document.createElement('button');
+                                quantityWrapper.appendChild(plus);
+                                const textPlus = document.createTextNode('+');
+                                plus.appendChild(textPlus);
+                                plus.className = 'calcPlusMinus';
+                                plus.dataset.index = unit.index;
+                                plus.addEventListener('click', () => this.onPlus(unit.index));
+                            }
                             const quantity = document.createElement('span');
                             quantityWrapper.appendChild(quantity);
                             const quantityText = document.createTextNode(' ' + unit.quantityInCart + ' ');
@@ -884,19 +1012,55 @@
                             minus.appendChild(textMinus);
                             minus.className = 'calcPlusMinus';
                             minus.dataset.index = unit.index;
-                            //TODO
                             minus.addEventListener('click', () => this.onMinus(unit.index));
                             inCartLineUnit.appendChild(textContentUnit);
                             inCartLinePrice.appendChild(textContentPrice);
                             this.cartUnits.appendChild(inCartLineUnit);
                             this.cartPrices.appendChild(inCartLinePrice);
                             this.cartQuantity.appendChild(quantityWrapper);
+                            if (unit.toolSwitcher) {
+                                if (unit.toolSwitcher.trim().toLowerCase() == 'sl') {
+                                    SLswitchers++;
+                                }
+                                if (unit.toolSwitcher.trim().toLowerCase() == 'tilda') {
+                                    tildaSwitchers++;
+                                }
+                            }
+                            if (unit.id == YES_NO_BUTTON_UNIT_ID) {
+                                yesNoSwitcher = true;
+                            }
                         }
                     })
+                    if (Boolean(SLswitchers) != this.#useCases.getSLswitch()) {
+                        if (this.#useCases.getSLswitch()) {
+                            this.#useCases.slSwitchOff();
+                        } else {
+                            this.#useCases.slSwitchOn();
+                        }
+                        this.renderCart();
+                    }
+                    if (Boolean(tildaSwitchers) != this.#useCases.getTildaSwitch()) {
+                        if (this.#useCases.getTildaSwitch()) {
+                            this.#useCases.tildaSwitchOff();
+                        } else {
+                            this.#useCases.tildaSwitchOn();
+                        }
+                        this.renderCart();
+                    }
+                    if (yesNoSwitcher) {
+                        this.onYesVisual();
+                    } else {
+                        this.onNoVisual();
+                    }
                     const totalPrice = document.getElementById('totalPrice');
-                    const textContentTotal = document.createTextNode(this.#useCases.getTotal().toFixed(2).toString());
+                    const textContentTotal = document.createTextNode(`${this.#useCases.getTotal().toFixed(2).toString()} ${currency}`);
                     totalPrice.innerHTML = '';
                     totalPrice.appendChild(textContentTotal);
+                    if (this.#useCases.getTotal()) {
+                        this.calcSubmitButton.disabled = false;
+                    } else {
+                        this.calcSubmitButton.disabled = true;
+                    }
                 };
 
                 onPlus = (index) => {
@@ -910,24 +1074,51 @@
                     const unit = this.#useCases.getUnits()[index];
                     if (unit.quantityInCart == 0) {
                         const check = document.getElementById(unit.id);
-                        check.checked = false;
+                        if (check) {
+                            check.checked = false;
+                        }
                     }
                     this.#useCases.setTotal();
                     this.renderCart();
                 }
 
                 onYes = () => {
-                    this.#useCases.slSwitchOn();
-                    this.#useCases.designSwitchOn();
+                    this.#useCases.addToCartById(YES_NO_BUTTON_UNIT_ID);
+                    this.renderUnitListWithFilters();
+                    this.#useCases.setTotal();
+                    this.renderCart();
+                }
+
+                onYesVisual = () => {
+                    this.SLYesButton.classList.remove('calcButton');
+                    this.SLYesButton.classList.add('calcButtonPressed');
+                    this.SLYesButton.disabled = true;
+                    this.SLNoButton.disabled = false;
+                    this.SLNoButton.classList.remove('calcButtonPressed');
+                    this.SLNoButton.classList.add('calcButton');
+                    this.chooseCourseText.style.display = 'inline';
+                    for (let chooseCourseButton of this.chooseCourseButtons) {
+                        chooseCourseButton.style.display = 'inline';
+                    }
+                }
+
+                onNo = () => {
+                    this.#useCases.removeFromCartById(YES_NO_BUTTON_UNIT_ID);
                     this.renderUnitListWithFilters();
                     this.renderCart();
                 }
 
-                onNo = () => {
-                    this.#useCases.slSwitchOff();
-                    this.#useCases.designSwitchOff();
-                    this.renderUnitListWithFilters();
-                    this.renderCart();
+                onNoVisual = () => {
+                    this.SLNoButton.classList.remove('calcButton');
+                    this.SLNoButton.classList.add('calcButtonPressed');
+                    this.SLNoButton.disabled = true;
+                    this.SLYesButton.disabled = false;
+                    this.SLYesButton.classList.remove('calcButtonPressed');
+                    this.SLYesButton.classList.add('calcButton');
+                    this.chooseCourseText.style.display = 'inline';
+                    for (let chooseCourseButton of this.chooseCourseButtons) {
+                        chooseCourseButton.style.display = 'inline';
+                    }
                 }
 
                 onRuble = () => {
@@ -959,6 +1150,28 @@
                     }
                 }
 
+                openModalWindow = () => {
+                    this.userDataWindow.style.display = 'block';
+                    this.calcDark.style.display = 'block';
+                }
+
+                closeModalWindow = () => {
+                    this.userDataWindow.style.display = 'none';
+                    this.calcDark.style.display = 'none';
+                }
+
+                submitCalc = async (event) => {
+                    event.preventDefault();
+                    const {elements} = this.calcUserForm;
+                    const data = Array.from(elements)
+                        .filter((item) => !!item.name)
+                        .map((element) => {
+                            const {name, value} = element
+                            return {name, value}
+                        })
+                    await this.#useCases.sendOrder(data);
+                    this.closeModalWindow();
+                }
 //TODO
                 static serverError = (e) => {
                     console.log(e);
@@ -1013,7 +1226,6 @@
                     const useCases = new UseCases(data);
                     const draw = new Draw(useCases);
                     draw.openCalc();
-                    // draw.createUnitList(data.getUnits());
                 }
                 try {
                     if (success) {
