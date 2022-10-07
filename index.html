@@ -280,13 +280,18 @@
             bottom: 0;
             left: 0;
             margin: auto;
+
         }
 
         #userDataWindow {
             display: none;
         }
 
-        #calcModalClose {
+        #thanksWindow {
+            display: none;
+        }
+
+        .calcModalClose {
             float: right;
             position: relative;
             top: 15px;
@@ -357,7 +362,7 @@
         </div>
         <div id="calcDark">
             <div id="userDataWindow" class="calcModalWindow">
-                <div id="calcModalClose">X</div>
+                <div id="calcModalClose1" class="calcModalClose">X</div>
                 <h5>Отправим полный курс на почту</h5>
                 <form id="calcUserForm">
                     <input type="email" name="email" placeholder="email" required>
@@ -366,6 +371,12 @@
                     <input type="submit" value="Оставить заявку">
                     <div>Нажатием на «Оставить заявку» подтверждаю согласие с обработкой персональный данных</div>
                 </form>
+                <h5>Можете нам написать</h5>
+            </div>
+            <div id="thanksWindow" class="calcModalWindow">
+                <div id="calcModalClose2" class="calcModalClose">X</div>
+                <h5>Спасибо за интерес к нашим курсам</h5>
+                <p>Наш специалист свяжется с вами и проконсультирует по выбранному курсу</p>
                 <h5>Можете нам написать</h5>
             </div>
         </div>
@@ -438,14 +449,6 @@
                     this.#usd = +rates.Valute.USD.Value;
                     this.#kzt = +rates.Valute.KZT.Value;
                     return true;
-                }
-
-                getUSDrate = () => {
-                    return this.#usd;
-                }
-
-                getKZTrate = () => {
-                    return this.#kzt;
                 }
 
                 setPrices = () => {
@@ -567,40 +570,33 @@
                     return this.#units;
                 }
 
-
-// TODO write new sendOrder
-                sendOrder = async (userData) => {
-
-                    class Order {
-                        constructor(email, units, totalPrice) {
-                            this.email = email
-                            this.units = units;
-                            this.totalPrice = totalPrice;
+                sendOrder = async (userData, total, currency) => {
+                    const dateNow = Date.now();
+                    const units = [];
+                    this.#units.forEach((unit) => {
+                        if (unit.quantityInCart) {
+                            units.push({
+                                id: unit.id,
+                                name: unit.innerName,
+                                nettPrice: `${unit.price.toFixed(2)} ${currency}`,
+                                grossPrice: `${unit.fullPrice.toFixed(2)} ${currency}`
+                            });
                         }
+                    });
+                    const order = {
+                        id: dateNow,
+                        date: new Date(dateNow).toLocaleDateString(),
+                        total: `${total.toFixed(2)} ${currency}`,
+                        units: units
                     }
-
-                    class OrderedUnit {
-                        constructor(id, innerName, purePrice, priceWithExpenses) {
-                            this.id = id;
-                            this.name = innerName;
-                            this.purePrice = purePrice;
-                            this.priceWithExpenses = priceWithExpenses;
-                        }
-                    }
-
-                    if (cart.length > 0) {
-                        let total = 0;
-                        const orderedUnits = cart.map((el) => {
-                            total += el.fullPrice;
-                            return new OrderedUnit(el.id, el.name, el.price.toFixed(2), el.fullPrice.toFixed(2));
-                        })
-                        const dto = new Order(userData, orderedUnits, total.toFixed(2));
-                        const response = await fetch(this.#url, {
-                            method: 'POST',
-                            mode: 'no-cors',
-                            body: JSON.stringify(dto)
-                        })
-                    }
+                    userData.forEach(obj => {
+                        Object.assign(order, {[obj.name]: obj.value});
+                    })
+                    const response = await fetch(this.#url, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        body: JSON.stringify(order)
+                    })
                 }
             };
 
@@ -766,9 +762,8 @@
                 }
 
                 removeFromCartByIndex = (index) => {
-                    this.setNumberOfPositions(this.#numberOfPositions - this.getUnits()[index].quantityInCart);
+                    this.#numberOfPositions = this.#numberOfPositions - this.getUnits()[index].quantityInCart;
                     this.getUnits()[index].quantityInCart = 0;
-                    // this.setTotal();
                 }
 
                 quantityInCartIncrement(index) {
@@ -779,10 +774,6 @@
                 quantityInCartDecrement(index) {
                     this.#data.getUnits()[index].quantityInCart--;
                     this.#numberOfPositions--;
-                }
-
-                setNumberOfPositions = (num) => {
-                    this.#numberOfPositions = num;
                 }
 
                 setRublePrice = () => {
@@ -803,10 +794,16 @@
                     this.setTotal();
                 }
 
-                sendOrder = async (data) => {
-                    await this.#data.sendOrder(data);
+                sendOrder = async (userData) => {
+                    await this.#data.sendOrder(userData, this.#total, this.#currency);
                 }
 
+                clearCart = () => {
+                    this.getUnits().forEach((unit) => {
+                        unit.quantityInCart = 0;
+                    })
+                    this.setTotal();
+                }
             };
 
             class Draw {
@@ -889,14 +886,17 @@
                     this.tengeButton = document.getElementById('tengeButton');
                     this.tengeButton.addEventListener('click', this.onTenge);
                     this.calcSubmitButton = document.getElementById('calcSubmitButton');
-                    this.calcSubmitButton.addEventListener('click', this.openModalWindow);
+                    this.calcSubmitButton.addEventListener('click', this.openModalWindow1);
                     this.userDataWindow = document.getElementById('userDataWindow');
-                    this.calcModalClose = document.getElementById('calcModalClose');
-                    this.calcModalClose.addEventListener('click', this.closeModalWindow);
+                    this.calcModalClose1 = document.getElementById('calcModalClose1');
+                    this.calcModalClose1.addEventListener('click', this.closeModalWindow1);
                     this.calcDark = document.getElementById('calcDark');
                     // this.calcDark.addEventListener('click', this.closeModalWindow);
                     this.calcUserForm = document.getElementById('calcUserForm');
                     this.calcUserForm.addEventListener('submit', this.submitCalc);
+                    this.calcModalClose2 = document.getElementById('calcModalClose2');
+                    this.calcModalClose2.addEventListener('click', this.closeModalWindow2);
+                    this.thanksWindow = document.getElementById('thanksWindow');
                 }
 
                 openCalc = () => {
@@ -1150,13 +1150,23 @@
                     }
                 }
 
-                openModalWindow = () => {
+                openModalWindow1 = () => {
                     this.userDataWindow.style.display = 'block';
                     this.calcDark.style.display = 'block';
                 }
 
-                closeModalWindow = () => {
+                openModalWindow2 = () => {
                     this.userDataWindow.style.display = 'none';
+                    this.thanksWindow.style.display = 'block';
+                }
+
+                closeModalWindow1 = () => {
+                    this.userDataWindow.style.display = 'none';
+                    this.calcDark.style.display = 'none';
+                }
+
+                closeModalWindow2 = () => {
+                    this.thanksWindow.style.display = 'none';
                     this.calcDark.style.display = 'none';
                 }
 
@@ -1169,48 +1179,15 @@
                             const {name, value} = element
                             return {name, value}
                         })
-                    await this.#useCases.sendOrder(data);
-                    this.closeModalWindow();
+                    this.openModalWindow2();
+                    this.#useCases.sendOrder(data);
+                    this.#useCases.clearCart();
+                    this.renderUnitListWithFilters();
+                    this.renderCart();
                 }
-//TODO
-                static serverError = (e) => {
-                    console.log(e);
+                static serverError = (error) => {
+                    console.log(error);
                 }
-
-//                 sendCart = () => {
-//                     const calcWrapper = document.getElementById('calcWrapper');
-//                     calcWrapper.classList.add('loadingCalc');
-//                     const cart = this.#useCases.enterUserData(prompt('Введите ваш телефон или e-mail', ''));
-//                     alert('Наш сотрудник свяжется с вами в ближайшее время');
-//                     calcWrapper.classList.remove('loadingCalc');
-//                     this.renderCart(cart);
-//                 }
-//
-//                 whatColumn = (e) => {
-//                     const el1 = e.target;
-//                     let el2;
-//                     const index = +el1.dataset.index;
-//                     if (el1.classList.contains('inCartLineUnit')) {
-//                         const cartPrices = document.querySelectorAll('.inCartLinePrice');
-//                         el2 = cartPrices.item(index + 1);
-//                     } else {
-//                         const cartUnits = document.querySelectorAll('.inCartLineUnit');
-//                         el2 = cartUnits.item(index + 1);
-//                     }
-//                     return [el1, el2];
-//                 }
-//
-//                 highlightLine = (e) => {
-//                     const [el1, el2] = this.whatColumn(e);
-//                     el1.classList.add('highlightUnit');
-//                     el2.classList.add('highlightUnit');
-//                 }
-//
-//                 removeHighlight = (e) => {
-//                     const [el1, el2] = this.whatColumn(e);
-//                     el1.classList.remove('highlightUnit');
-//                     el2.classList.remove('highlightUnit');
-//                 }
             };
 
             const run = async () => {
