@@ -118,6 +118,14 @@
             margin: 0;
         }
 
+        #SLYesButton:disabled {
+            color: black;
+        }
+
+        #SLNoButton:disabled {
+            color: black;
+        }
+
         .calcButton {
             background-color: rgba(255, 255, 255, 1);
             margin-top: 20px;
@@ -134,6 +142,18 @@
 
         .calcButtonPressed {
             background-color: rgba(255, 210, 0, 1);
+        }
+
+        #longReadButton:disabled {
+            color: black;
+        }
+
+        #videoCourseButton:disabled {
+            color: black;
+        }
+
+        #trainerButton:disabled {
+            color: black;
         }
 
         .chooseCourseButton {
@@ -156,6 +176,11 @@
         }
 
         .chooseCourseButtonSelected {
+            font-size: 20px;
+            width: 240px;
+            height: 46px;
+            border: 3px solid rgba(255, 210, 0, 1);
+            border-radius: 25px;
             background-color: rgba(255, 210, 0, 1);
         }
 
@@ -182,10 +207,13 @@
         }
 
         #calcCart {
+            margin-top: 20px;
             display: grid;
             align-items: center;
             grid-template-columns: 0.3fr 1.2fr 1.5fr 0.5fr 0.5fr 0.5fr;
             grid-template-rows: auto;
+            grid-column-gap: 10px;
+            grid-row-gap: 10px;
             grid-template-areas:
             "cartHeader cartHeader . . calcCurrencies ."
             ". unitList calcInCart unitQuantity unitPrice ."
@@ -195,6 +223,8 @@
 
         #cartHeader {
             grid-area: cartHeader;
+            font-size: 20px;
+            color: #8644D7;
         }
 
         #calcCurrencies {
@@ -204,6 +234,39 @@
 
         #unitList {
             grid-area: unitList;
+        }
+
+        .unitAtList {
+            width: 10px;
+            height: 11px;
+            border: 1px solid rgba(75, 80, 97, 1);
+            border-radius: 2px;
+        }
+
+        .unitAtList:checked:after {
+            position: relative;
+            left: -1px;
+            line-height: 0.9em;
+            display: flex;
+            box-sizing: content-box;
+            align-items: end;
+            width: 10px;
+            height: 11px;
+            border: 1px solid rgba(221, 221, 221, 1);
+            border-radius: 2px;
+            content: '\2713';
+            font-size: 20px;
+            font-weight: bold;
+            background-color: rgba(255, 255, 255, 1);
+            color: #8644D7;
+        }
+
+        .unitLabel {
+            margin-left: 12px;
+        }
+
+        .unitCheckboxWrapper {
+            margin-bottom: 12px;
         }
 
         #calcInCart {
@@ -833,12 +896,18 @@
                     this.trainerButton = document.getElementById('trainerButton');
                     this.longReadButton.addEventListener('click', () => {
                         this.#filter = 'LONGREAD';
+                        this.longReadButton.classList.remove('chooseCourseButton');
                         this.longReadButton.classList.remove('chooseCourseButtonNotSelected');
                         this.longReadButton.classList.add('chooseCourseButtonSelected');
-                        this.videoCourseButton.classList.remove('chooseCourseButtonSelected');
+                        this.longReadButton.disabled = true;
+                        this.videoCourseButton.classList.add('chooseCourseButton');
                         this.videoCourseButton.classList.add('chooseCourseButtonNotSelected');
-                        this.trainerButton.classList.remove('chooseCourseButtonSelected');
+                        this.videoCourseButton.classList.remove('chooseCourseButtonSelected');
+                        this.videoCourseButton.disabled = false;
+                        this.trainerButton.classList.add('chooseCourseButton');
                         this.trainerButton.classList.add('chooseCourseButtonNotSelected');
+                        this.trainerButton.classList.remove('chooseCourseButtonSelected');
+                        this.trainerButton.disabled = false;
                         this.longreadExampleLink.style.display = 'inline';
                         this.videoCourseExampleLink.style.display = 'none';
                         this.trainerExampleLink.style.display = 'none';
@@ -847,12 +916,18 @@
                     });
                     this.videoCourseButton.addEventListener('click', () => {
                         this.#filter = 'VIDEOCOURSE';
+                        this.videoCourseButton.classList.remove('chooseCourseButton');
                         this.videoCourseButton.classList.remove('chooseCourseButtonNotSelected');
                         this.videoCourseButton.classList.add('chooseCourseButtonSelected');
-                        this.longReadButton.classList.remove('chooseCourseButtonSelected');
+                        this.videoCourseButton.disabled = true;
+                        this.longReadButton.classList.add('chooseCourseButton');
                         this.longReadButton.classList.add('chooseCourseButtonNotSelected');
-                        this.trainerButton.classList.remove('chooseCourseButtonSelected');
+                        this.longReadButton.classList.remove('chooseCourseButtonSelected');
+                        this.longReadButton.disabled = false;
+                        this.trainerButton.classList.add('chooseCourseButton');
                         this.trainerButton.classList.add('chooseCourseButtonNotSelected');
+                        this.trainerButton.classList.remove('chooseCourseButtonSelected');
+                        this.trainerButton.disabled = false;
                         this.videoCourseExampleLink.style.display = 'inline';
                         this.longreadExampleLink.style.display = 'none';
                         this.trainerExampleLink.style.display = 'none';
@@ -861,12 +936,18 @@
                     });
                     this.trainerButton.addEventListener('click', () => {
                         this.#filter = 'TRAINER';
+                        this.trainerButton.classList.remove('chooseCourseButton');
                         this.trainerButton.classList.remove('chooseCourseButtonNotSelected');
                         this.trainerButton.classList.add('chooseCourseButtonSelected');
-                        this.longReadButton.classList.remove('chooseCourseButtonSelected');
+                        this.trainerButton.disabled = true;
+                        this.longReadButton.classList.add('chooseCourseButton');
                         this.longReadButton.classList.add('chooseCourseButtonNotSelected');
-                        this.videoCourseButton.classList.remove('chooseCourseButtonSelected');
+                        this.longReadButton.classList.remove('chooseCourseButtonSelected');
+                        this.longReadButton.disabled = false;
+                        this.videoCourseButton.classList.add('chooseCourseButton');
                         this.videoCourseButton.classList.add('chooseCourseButtonNotSelected');
+                        this.videoCourseButton.classList.remove('chooseCourseButtonSelected');
+                        this.videoCourseButton.disabled = false;
                         this.trainerExampleLink.style.display = 'inline';
                         this.longreadExampleLink.style.display = 'none';
                         this.videoCourseExampleLink.style.display = 'none';
@@ -878,7 +959,6 @@
                     this.cartUnits = document.getElementById('calcInCart');
                     this.cartQuantity = document.getElementById('unitQuantity');
                     this.cartPrices = document.getElementById('unitPrice');
-                    this.cartTotalPrice = document.getElementById('totalPrice');
                     this.rubleButton = document.getElementById('rubleButton');
                     this.rubleButton.addEventListener('click', this.onRuble);
                     this.dollarButton = document.getElementById('dollarButton');
@@ -891,7 +971,6 @@
                     this.calcModalClose1 = document.getElementById('calcModalClose1');
                     this.calcModalClose1.addEventListener('click', this.closeModalWindow1);
                     this.calcDark = document.getElementById('calcDark');
-                    // this.calcDark.addEventListener('click', this.closeModalWindow);
                     this.calcUserForm = document.getElementById('calcUserForm');
                     this.calcUserForm.addEventListener('submit', this.submitCalc);
                     this.calcModalClose2 = document.getElementById('calcModalClose2');
@@ -907,7 +986,8 @@
                 renderUnitList = (units) => {
                     this.unitList.innerHTML = '';
                     units.forEach((unit, i) => {
-                        const div = document.createElement('div')
+                        const div = document.createElement('div');
+                        div.className = 'unitCheckboxWrapper'
                         const input = document.createElement('input');
                         input.type = 'checkbox';
                         input.id = unit.id;
@@ -919,6 +999,7 @@
                         input.onchange = this.selectFromUnitList;
                         const label = document.createElement('label');
                         label.htmlFor = input.id;
+                        label.className = 'unitLabel'
                         const textContent = document.createTextNode(unit.name);
                         label.appendChild(textContent);
                         div.appendChild(input);
