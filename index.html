@@ -209,7 +209,7 @@
         #calcCart {
             margin-top: 20px;
             display: grid;
-            align-items: center;
+            /*align-items: center;*/
             grid-template-columns: 0.3fr 1.2fr 1.5fr 0.5fr 0.5fr 0.5fr;
             grid-template-rows: auto;
             grid-column-gap: 10px;
@@ -262,41 +262,107 @@
         }
 
         .unitLabel {
-            margin-left: 12px;
+            margin-left: 23px;
+            display: block;
+            position: relative;
+            top: -20px;
         }
 
         .unitCheckboxWrapper {
-            margin-bottom: 12px;
+            max-height: 45px;
         }
 
         #calcInCart {
             grid-area: calcInCart;
+            padding-top: 4px;
+        }
+
+        .inCartLineUnit {
+            height: 30px;
+            margin-bottom: 12px;
         }
 
         #unitQuantity {
             grid-area: unitQuantity;
         }
 
+        .quantityWrapper {
+            height: 30px;
+            margin-bottom: 12px;
+        }
+
         #unitPrice {
             grid-area: unitPrice;
+            padding-top: 4px;
+        }
+
+        .inCartLinePrice {
+            height: 30px;
+            margin-bottom: 12px;
+            font-weight: bold;
         }
 
         #totalPrice {
             grid-area: totalPrice;
+            color: #8644D7;
+        }
+
+        #totalPrice:after {
+            content: ' ИТОГО';
+            font-size: 10px;
         }
 
         #calcSubmitButton {
             grid-area: calcSubmitButton;
+            width: 228px;
+            height: 46px;
+            border-radius: 8px;
+            background-color: #FFD200;
+            color: #3D3D3C;
+            font-size: 14px;
+            font-weight: bold;
+            border: 0;
+        }
 
+        #calcSubmitButton:hover {
+            background-color: orange;
+            cursor: pointer;
+        }
+
+        #calcSubmitButton:active {
+            background-color: darkorange;
+        }
+
+        #calcSubmitButton:disabled {
+            background-color: rgba(221, 221, 221, 1);
+            cursor: default;
         }
 
         .calcPlusMinus {
             display: inline-block;
             border: 1px solid rgba(75, 80, 97, 1);
             background-color: rgba(255, 255, 255, 1);
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            font-weight: bold;
+        }
+        .calcPlus {
+            position: absolute;
+            margin-left: 8px;
+            padding-top: 3px;
+        }
+
+        .calcMinus {
+            margin-right: 8px;
+        }
+
+        .invisiblePlus {
+            display: inline-block;
+            visibility: hidden;
+            border: 1px;
             width: 20px;
             height: 20px;
-            border-radius: 50%;
         }
 
         .calcPlusMinus:hover {
@@ -330,9 +396,19 @@
             cursor: pointer;
         }
 
+        .selectedCurrencyButton {
+            font-weight: bold;
+        }
+
+        .selectedCurrencyButton:hover {
+            cursor: default;
+        }
+
         .calcModalWindow {
+            box-sizing: border-box;
             width: 280px;
             height: 336px;
+            padding: 24px 40px 24px 40px;
             background-color: rgba(255, 255, 255, 1);
             font-family: 'Montserrat', sans-serif;
             border-radius: 16px;
@@ -357,22 +433,95 @@
         .calcModalClose {
             float: right;
             position: relative;
-            top: 15px;
-            right: 20px;
+            top: -10px;
+            right: -20px;
+            font-weight: bold;
         }
 
-        #calcModalClose:hover {
+        .calcModalClose:hover {
             cursor: pointer;
+            color: red;
         }
 
         #calcDark {
             background: rgba(102, 102, 102, 0.5);
             width: 100%;
             height: 100%;
-            position: absolute;
+            position: fixed;
             top: 0;
             left: 0;
             display: none;
+        }
+
+        .headerAtModalWindow {
+            margin-top: 0;
+            margin-bottom: 10px;
+            display: inline-block;
+            float: left;
+        }
+
+        .bottomHeaderModal {
+            max-width: 100px;
+        }
+
+        .calcUserInput {
+            width: calc(100% - 5px);
+            height: 32px;
+            border-radius: 8px;
+            border: 1px solid rgba(152, 152, 152, 1);
+            color: black;
+            margin-bottom: 8px;
+        }
+
+        #userDataSubmitButton {
+            width: 100%;
+            height: 32px;
+            border-radius: 8px;
+            margin-bottom: 4px;
+            background-color: rgba(75, 80, 97, 1);
+            border: 0;
+            color: #F7F7F7;
+        }
+
+        #userDataSubmitButton:hover {
+            background-color: orange;
+            cursor: pointer;
+        }
+
+        #userDataSubmitButton:active {
+            background-color: darkorange;
+        }
+
+        .tinyModalWindowText {
+            font-size: 8px;
+            color: #989898;
+            margin-bottom: 15px;
+        }
+
+        .calcMessengerLink {
+            display: inline-block;
+            margin-right: 15px;
+            float: right;
+        }
+
+        .calcMessengerLink:hover {
+            cursor: pointer;
+        }
+
+        .calcMessengerImage {
+            width: 32px;
+            height: 32px;
+            border-radius: 5px;
+        }
+
+        .calcModalText {
+            font-size: 12px;
+        }
+
+        .messengerLinksWrapper {
+            position: absolute;
+            bottom: 0;
+            /*margin-bottom: 15px;*/
         }
 
     </style>
@@ -396,22 +545,22 @@
             <span id="chooseCourseText">Какой курс вам нужен?</span>
             <div id="longReadWrapper" class="buttonAndExampleWrapper">
                 <button class="chooseCourseButton" id="longReadButton">ЛОНГРИД</button>
-                <a id="longreadExampleLink" class="calcExampleLink">Посмотреть пример курса</a>
+                <a href="#" id="longreadExampleLink" class="calcExampleLink">Посмотреть пример курса</a>
             </div>
             <div id="videoCourseWrapper" class="buttonAndExampleWrapper">
                 <button class="chooseCourseButton" id="videoCourseButton">ВИДЕОКУРС</button>
-                <a id="videoCourseExampleLink" class="calcExampleLink">Посмотреть пример курса</a>
+                <a href="#" id="videoCourseExampleLink" class="calcExampleLink">Посмотреть пример курса</a>
             </div>
             <div id="trainerWrapper" class="buttonAndExampleWrapper">
                 <button class="chooseCourseButton" id="trainerButton">ТРЕНАЖЁР</button>
-                <a id="trainerExampleLink" class="calcExampleLink">Посмотреть пример курса</a>
+                <a href="#" id="trainerExampleLink" class="calcExampleLink">Посмотреть пример курса</a>
             </div>
         </div>
         <div id="calcHide">
             <div id="calcCart">
                 <span id="cartHeader">Выберите нужные блоки</span>
                 <div id="calcCurrencies">
-                    <span id="rubleButton" class="currencyButton">&#8381;</span>
+                    <span id="rubleButton" class="selectedCurrencyButton">&#8381;</span>
                     <span id="dollarButton" class="currencyButton">$</span>
                     <span id="tengeButton" class="currencyButton">&#8376;</span>
                 </div>
@@ -419,28 +568,47 @@
                 <div id="calcInCart"></div>
                 <div id="unitQuantity"></div>
                 <div id="unitPrice"></div>
-                <div id="totalPrice"></div>
+                <h3 id="totalPrice"></h3>
                 <button id="calcSubmitButton" disabled>Заказать курс</button>
             </div>
         </div>
         <div id="calcDark">
             <div id="userDataWindow" class="calcModalWindow">
                 <div id="calcModalClose1" class="calcModalClose">X</div>
-                <h5>Отправим полный курс на почту</h5>
+                <h5 class="headerAtModalWindow">Отправим полный курс на почту</h5>
                 <form id="calcUserForm">
-                    <input type="email" name="email" placeholder="email" required>
-                    <input type="tel" name="phone" placeholder="+7 999 999 99 99" required>
-                    <input type="text" name="name" placeholder="Как к вам обращаться?" required>
-                    <input type="submit" value="Оставить заявку">
-                    <div>Нажатием на «Оставить заявку» подтверждаю согласие с обработкой персональный данных</div>
+                    <input type="email" name="email" placeholder="email" class="calcUserInput" required>
+                    <input type="tel" name="phone" placeholder="+7 999 999 99 99" class="calcUserInput" required>
+                    <input type="text" name="name" placeholder="Как к вам обращаться?" class="calcUserInput" required>
+                    <input type="submit" value="Оставить заявку" id="userDataSubmitButton">
+                    <div class="tinyModalWindowText">Нажатием на «Оставить заявку» подтверждаю согласие с обработкой
+                        персональный данных
+                    </div>
                 </form>
-                <h5>Можете нам написать</h5>
+                <div class="messengerLinksWrapper">
+                    <h5 class="headerAtModalWindow bottomHeaderModal">Можете нам написать</h5>
+                    <a href="#" class="calcMessengerLink"><img class="calcMessengerImage"
+                                                               src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Telegram_logo.svg/768px-Telegram_logo.svg.png?20220101141644"
+                                                               alt="Telegram"></a>
+                    <a href="#" class="calcMessengerLink"><img class="calcMessengerImage"
+                                                               src="https://scontent.ftlv1-1.fna.fbcdn.net/v/t39.8562-6/147804628_465197098177571_1885468861198783508_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=6825c5&_nc_ohc=dcdOClAt_DkAX-vFVHc&_nc_ht=scontent.ftlv1-1.fna&oh=00_AT9Od5vsofZtwKxnolgMFi0M-gP5kEDmNdW4HM8nK5lY_Q&oe=63487B28"
+                                                               alt="WhatsApp"></a>
+                </div>
             </div>
             <div id="thanksWindow" class="calcModalWindow">
                 <div id="calcModalClose2" class="calcModalClose">X</div>
+
                 <h5>Спасибо за интерес к нашим курсам</h5>
-                <p>Наш специалист свяжется с вами и проконсультирует по выбранному курсу</p>
-                <h5>Можете нам написать</h5>
+                <p class="calcModalText">Наш специалист свяжется с вами и проконсультирует по выбранному курсу</p>
+                <div class="messengerLinksWrapper">
+                    <h5 class="headerAtModalWindow bottomHeaderModal">Можете нам написать</h5>
+                    <a href="#" class="calcMessengerLink"><img class="calcMessengerImage"
+                                                               src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Telegram_logo.svg/768px-Telegram_logo.svg.png?20220101141644"
+                                                               alt="Telegram"></a>
+                    <a href="#" class="calcMessengerLink"><img class="calcMessengerImage"
+                                                               src="https://scontent.ftlv1-1.fna.fbcdn.net/v/t39.8562-6/147804628_465197098177571_1885468861198783508_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=6825c5&_nc_ohc=dcdOClAt_DkAX-vFVHc&_nc_ht=scontent.ftlv1-1.fna&oh=00_AT9Od5vsofZtwKxnolgMFi0M-gP5kEDmNdW4HM8nK5lY_Q&oe=63487B28"
+                                                               alt="WhatsApp"></a>
+                </div>
             </div>
         </div>
     </div>
@@ -985,7 +1153,7 @@
 
                 renderUnitList = (units) => {
                     this.unitList.innerHTML = '';
-                    units.forEach((unit, i) => {
+                    units.forEach((unit) => {
                         const div = document.createElement('div');
                         div.className = 'unitCheckboxWrapper'
                         const input = document.createElement('input');
@@ -993,13 +1161,15 @@
                         input.id = unit.id;
                         input.dataset.index = unit.index;
                         input.className = 'unitAtList';
+                        input.title = unit.text;
                         if (unit.quantityInCart) {
                             input.checked = true;
                         }
                         input.onchange = this.selectFromUnitList;
                         const label = document.createElement('label');
                         label.htmlFor = input.id;
-                        label.className = 'unitLabel'
+                        label.className = 'unitLabel';
+                        label.title = unit.text;
                         const textContent = document.createTextNode(unit.name);
                         label.appendChild(textContent);
                         div.appendChild(input);
@@ -1055,45 +1225,46 @@
                             currency = '₸';
                             break;
                     }
-                    this.#useCases.getUnits().forEach((unit, i) => {
+                    this.#useCases.getUnits().forEach((unit) => {
                         if (unit.quantityInCart) {
                             const inCartLineUnit = document.createElement('div');
                             inCartLineUnit.className = 'inCartLineUnit';
                             inCartLineUnit.dataset.index = unit.index;
-                            inCartLineUnit.addEventListener('mouseover', () => {
-                            });
-                            inCartLineUnit.addEventListener('mouseleave', () => {
-                            })
+
                             const inCartLinePrice = document.createElement('div');
                             inCartLinePrice.dataset.index = unit.index;
                             inCartLinePrice.className = 'inCartLinePrice';
-                            inCartLinePrice.addEventListener('mouseover', () => {
-                            });
-                            inCartLinePrice.addEventListener('mouseleave', () => {
-                            })
+                            inCartLineUnit.title = unit.text;
+
                             const textContentUnit = document.createTextNode(unit.name);
                             const textContentPrice = document.createTextNode(unit.fullPrice.toFixed(2) + ' ' + currency);
+
                             const quantityWrapper = document.createElement('div');
+                            quantityWrapper.className = 'quantityWrapper';
+
+                            const minus = document.createElement('button');
+                            const textMinus = document.createTextNode('–');
+                            minus.appendChild(textMinus);
+                            minus.className = 'calcPlusMinus calcMinus';
+                            minus.dataset.index = unit.index;
+                            minus.addEventListener('click', () => this.onMinus(unit.index));
+
+                            const quantity = document.createElement('span');
+                            const quantityText = document.createTextNode(unit.quantityInCart);
+                            quantity.appendChild(quantityText);
+                            quantityWrapper.appendChild(minus);
+                            quantityWrapper.appendChild(quantity);
+
+                            const plus = document.createElement('button');
+                            plus.className = 'invisiblePlus';
                             if (!unit.single) {
-                                const plus = document.createElement('button');
-                                quantityWrapper.appendChild(plus);
                                 const textPlus = document.createTextNode('+');
                                 plus.appendChild(textPlus);
-                                plus.className = 'calcPlusMinus';
+                                plus.className = 'calcPlusMinus calcPlus';
                                 plus.dataset.index = unit.index;
                                 plus.addEventListener('click', () => this.onPlus(unit.index));
                             }
-                            const quantity = document.createElement('span');
-                            quantityWrapper.appendChild(quantity);
-                            const quantityText = document.createTextNode(' ' + unit.quantityInCart + ' ');
-                            quantity.appendChild(quantityText);
-                            const minus = document.createElement('button');
-                            quantityWrapper.appendChild(minus);
-                            const textMinus = document.createTextNode('-');
-                            minus.appendChild(textMinus);
-                            minus.className = 'calcPlusMinus';
-                            minus.dataset.index = unit.index;
-                            minus.addEventListener('click', () => this.onMinus(unit.index));
+                            quantityWrapper.appendChild(plus);
                             inCartLineUnit.appendChild(textContentUnit);
                             inCartLinePrice.appendChild(textContentPrice);
                             this.cartUnits.appendChild(inCartLineUnit);
@@ -1118,6 +1289,7 @@
                         } else {
                             this.#useCases.slSwitchOn();
                         }
+                        this.#useCases.setTotal();
                         this.renderCart();
                     }
                     if (Boolean(tildaSwitchers) != this.#useCases.getTildaSwitch()) {
@@ -1126,6 +1298,8 @@
                         } else {
                             this.#useCases.tildaSwitchOn();
                         }
+                        this.#useCases.setTotal();
+                        console.log(this.#useCases.getTotal())
                         this.renderCart();
                     }
                     if (yesNoSwitcher) {
@@ -1186,6 +1360,7 @@
                 onNo = () => {
                     this.#useCases.removeFromCartById(YES_NO_BUTTON_UNIT_ID);
                     this.renderUnitListWithFilters();
+                    this.#useCases.setTotal();
                     this.renderCart();
                 }
 
@@ -1203,16 +1378,34 @@
                 }
 
                 onRuble = () => {
+                    this.rubleButton.classList.remove('currencyButton');
+                    this.rubleButton.classList.add('selectedCurrencyButton');
+                    this.dollarButton.classList.remove('selectedCurrencyButton');
+                    this.dollarButton.classList.add('currencyButton');
+                    this.tengeButton.classList.remove('selectedCurrencyButton');
+                    this.tengeButton.classList.add('currencyButton');
                     this.#useCases.setRublePrice();
                     this.renderCart();
                 };
 
                 onDollar = () => {
+                    this.dollarButton.classList.remove('currencyButton');
+                    this.dollarButton.classList.add('selectedCurrencyButton');
+                    this.rubleButton.classList.remove('selectedCurrencyButton');
+                    this.rubleButton.classList.add('currencyButton');
+                    this.tengeButton.classList.remove('selectedCurrencyButton');
+                    this.tengeButton.classList.add('currencyButton');
                     this.#useCases.setDollarPrice();
                     this.renderCart();
                 }
 
                 onTenge = () => {
+                    this.tengeButton.classList.remove('currencyButton');
+                    this.tengeButton.classList.add('selectedCurrencyButton');
+                    this.rubleButton.classList.remove('selectedCurrencyButton');
+                    this.rubleButton.classList.add('currencyButton');
+                    this.dollarButton.classList.remove('selectedCurrencyButton');
+                    this.dollarButton.classList.add('currencyButton');
                     this.#useCases.setTengePrice();
                     this.renderCart();
                 }
