@@ -347,6 +347,7 @@
             border-radius: 50%;
             font-weight: bold;
         }
+
         .calcPlus {
             position: absolute;
             margin-left: 8px;
@@ -529,9 +530,9 @@
     <div id="calcWrapper">
 
         <h1 id="calcHeader">КАЛЬКУЛЯТОР КУРСА</h1>
-        <img src="https://downloader.disk.yandex.ru/preview/75ead0cec289444e37160f97fbed503e13b7560713b4b25ab4d6efcd9a5f06e7/6325ecbe/6BT_65iy4PXvu2PF0YpJ6D14QMkfvcNQtXs-2_Y00s8dlFBC17CHsnKS2hMMDK46hUoqW2j11FiUO_Ru2YXPJw%3D%3D?uid=0&filename=logo-04.png&disposition=inline&hash=&limit=0&content_type=image%2Fpng&owner_uid=0&tknv=v2&size=2048x2048"
-             alt="logo"
-             id="calcLogo">
+                <img src="https://downloader.disk.yandex.ru/preview/75ead0cec289444e37160f97fbed503e13b7560713b4b25ab4d6efcd9a5f06e7/6325ecbe/6BT_65iy4PXvu2PF0YpJ6D14QMkfvcNQtXs-2_Y00s8dlFBC17CHsnKS2hMMDK46hUoqW2j11FiUO_Ru2YXPJw%3D%3D?uid=0&filename=logo-04.png&disposition=inline&hash=&limit=0&content_type=image%2Fpng&owner_uid=0&tknv=v2&size=2048x2048"
+                     alt="logo"
+                     id="calcLogo">
         <br>
         <h3 id="calcSubHeader">ВЫБЕРИТЕ НУЖНЫЕ ВАМ ХАРАКТЕРИСТИКИ</h3>
         <br>
@@ -641,7 +642,10 @@
                 }
 
                 getFromAPI = async () => {
-                    this.#data = await this.fetchData(this.#url);
+                    this.#data = await this.fetchData(this.#url, {
+                        method: "GET",
+                        mode: "no-cors"
+                    });
                     this.#profitMultiplier = +this.#data[0][0].amount;
                     this.#constantExpenses = +this.#data[0][1].amount;
                     this.#constantExpensesPure = this.#constantExpenses;
@@ -690,7 +694,7 @@
                             } else if (unit.toolSwitcher.trim().toLowerCase() == 'tilda') {
                                 unit.price = unit.priceTilda;
                             } else {
-                                unit.price = unit.priceRiseBasePrise;
+                                unit.price = unit.priceRisePriceBase;
                             }
                         }
                         unit.RUBprice = unit.price;
@@ -703,10 +707,10 @@
                             unit.USDpriceSL = unit.RUBpriceSL / this.#usd;
                             unit.KZTpriceSL = unit.RUBpriceSL / this.#usd;
                         }
-                        if (unit.priceRiseBasePrise === '') {
-                            unit.priceRiseBasePrise = false;
+                        if (unit.priceRisePriceBase === '') {
+                            unit.priceRisePriceBase = false;
                         } else {
-                            unit.RUBpriceRise = unit.priceRiseBasePrise;
+                            unit.RUBpriceRise = unit.priceRisePriceBase;
                             unit.USDpriceRise = unit.RUBpriceRise / this.#usd;
                             unit.KZTpriceRise = unit.RUBpriceRise / this.#usd;
                         }
@@ -723,32 +727,15 @@
                     this.#constantExpensesKZT = this.#constantExpensesRUB / this.#kzt;
                 }
 
-                setSLPrices = (cur) => {
-                    this.#units.forEach((unit) => {
-                        if (unit.SLPossibility) {
-                            unit.price = unit.priceSL;
-                        }
-                    })
-                }
-
-                setRisePrices = () => {
-                    this.#units.forEach((unit) => {
-                        if (unit.priceSL) {
-                            unit.price = unit.priceRise;
-                        }
-                    })
-                }
-
                 setCurrency = (cur) => {
                     switch (cur) {
                         case 'USD':
                             this.#units.forEach((unit) => {
-                                // unit.price = unit.USDprice;
                                 if (unit.priceSL) {
                                     unit.priceSL = unit.USDpriceSL;
                                 }
-                                if (unit.priceRiseBasePrise) {
-                                    unit.priceRiseBasePrise = unit.USDpriceRise;
+                                if (unit.priceRisePriceBase) {
+                                    unit.priceRisePriceBase = unit.USDpriceRise;
                                 }
                                 if (unit.priceTilda) {
                                     unit.priceTilda = unit.USDpriceTilda;
@@ -758,12 +745,11 @@
                             break;
                         case 'KZT':
                             this.#units.forEach((unit) => {
-                                // unit.price = unit.KZTprice;
                                 if (unit.priceSL) {
                                     unit.priceSL = unit.KZTpriceSL;
                                 }
-                                if (unit.priceRiseBasePrise) {
-                                    unit.priceRiseBasePrise = unit.KZTpriceRise;
+                                if (unit.priceRisePriceBase) {
+                                    unit.priceRisePriceBase = unit.KZTpriceRise;
                                 }
                                 if (unit.priceTilda) {
                                     unit.priceTilda = unit.KZTpriceTilda;
@@ -773,12 +759,11 @@
                             break;
                         case 'RUB':
                             this.#units.forEach((unit) => {
-                                // unit.price = unit.RUBprice;
                                 if (unit.priceSL) {
                                     unit.priceSL = unit.RUBpriceSL;
                                 }
-                                if (unit.priceRiseBasePrise) {
-                                    unit.priceRiseBasePrise = unit.RUBpriceRise;
+                                if (unit.priceRisePriceBase) {
+                                    unit.priceRisePriceBase = unit.RUBpriceRise;
                                 }
                                 if (unit.priceTilda) {
                                     unit.priceTilda = unit.RUBpriceTilda;
@@ -816,7 +801,7 @@
                     });
                     const order = {
                         id: dateNow,
-                        date: new Date(dateNow).toLocaleDateString(),
+                        date: `${new Date(dateNow).toLocaleDateString()} ${new Date(dateNow).toLocaleTimeString()}`,
                         total: `${total.toFixed(2)} ${currency}`,
                         units: units
                     }
@@ -837,7 +822,6 @@
                 #total;
                 #slSwitch;
                 #tildaSwitch;
-                #designSwitch
                 #currency;
                 #numberOfPositions
 
@@ -847,7 +831,6 @@
                     this.#total = 0;
                     this.#slSwitch = false;
                     this.#tildaSwitch = false;
-                    this.#designSwitch = false;
                     this.#currency = 'RUB';
                     this.#numberOfPositions = 0;
                 }
@@ -859,10 +842,10 @@
                     if (this.#tildaSwitch && !this.#slSwitch && x.priceTilda) {
                         x.price = x.priceTilda;
                     }
-                    if (!this.#slSwitch && !this.#tildaSwitch && x.priceRiseBasePrise) {
-                        x.price = x.priceRiseBasePrise;
+                    if (!this.#slSwitch && !this.#tildaSwitch && x.priceRisePriceBase) {
+                        x.price = x.priceRisePriceBase;
                     }
-                    return (x.price * x.quantityInCart) + this.#data.getConstantExpenses() * (x.quantityInCart / this.#numberOfPositions) * (1 + +this.#data.getProfitMultiplier());
+                    return x.price * x.quantityInCart + this.#data.getConstantExpenses() * (x.quantityInCart / this.#numberOfPositions) * (1 + +this.#data.getProfitMultiplier());
                 }
 
                 getSLswitch = () => {
@@ -897,7 +880,7 @@
                         this.#data.getUnits().forEach((unit) => {
                             if (unit.RisePossibility) {
                                 unit.innerName = unit.nameRiseNameBase;
-                                unit.price = unit.priceRiseBasePrise;
+                                unit.price = unit.priceRisePriceBase;
                             }
                         })
                     }
@@ -924,7 +907,7 @@
                     this.#data.getUnits().forEach((unit) => {
                         if (!this.#slSwitch && unit.TildaPossibility) {
                             unit.innerName = unit.nameRiseNameBase;
-                            unit.price = unit.priceRiseBasePrise;
+                            unit.price = unit.priceRisePriceBase;
                         }
                     })
                     this.setTotal();
@@ -1003,8 +986,10 @@
                 }
 
                 quantityInCartDecrement(index) {
-                    this.#data.getUnits()[index].quantityInCart--;
-                    this.#numberOfPositions--;
+                    if (this.#data.getUnits()[index].quantityInCart > 0) {
+                        this.#data.getUnits()[index].quantityInCart--;
+                        this.#numberOfPositions--;
+                    }
                 }
 
                 setRublePrice = () => {
