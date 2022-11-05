@@ -11,7 +11,7 @@
             width: 1216px;
             border-radius: 16px;
             box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.1);
-            padding: 23px 40px 40px 23px;;
+            padding: 23px 40px 40px 23px;
         }
 
         #calcHeader {
@@ -224,6 +224,7 @@
             "servicesList servicesList . . calcSubmitButton calcSubmitButton"
         }
 
+
         #cartBackground {
             background-color: rgba(217, 217, 217, 0.2);
             border: 0;
@@ -353,15 +354,23 @@
             cursor: pointer;
         }
 
+        #servicesButton:hover {
+            cursor: pointer;
+            font-weight: bold;
+        }
+
         #calcServices {
             grid-area: calcServices;
         }
 
         #servicesList {
             position: absolute;
-            /*display: none;*/
+            display: none;
             grid-area: servicesList;
-            border: 1px solid rgba(75, 80, 97, 1);
+            background-color: rgba(255, 255, 255, 1);
+            border-radius: 16px;
+            box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.1);
+            padding: 25px 25px 2px 25px;
         }
 
         #totalPrice {
@@ -514,6 +523,7 @@
             top: 0;
             left: 0;
             display: none;
+            z-index: 1000;
         }
 
         .headerAtModalWindow {
@@ -1102,6 +1112,11 @@
 
                 constructor(useCases) {
                     this.#useCases = useCases;
+                    this.calc = document.getElementById('calcWrapper');
+                    this.calc.addEventListener('click', (event) => {
+                        if (!event.path.includes(this.servicesList) && !event.path.includes(this.servicesButton))
+                            this.servicesList.style.display = 'none';
+                    })
                     this.chooseCourseText = document.getElementById('chooseCourseText')
                     this.chooseCourseButtons = document.getElementsByClassName('chooseCourseButton');
                     this.SLYesButton = document.getElementById('SLYesButton');
@@ -1201,6 +1216,7 @@
                     this.servicesButton = document.getElementById('servicesButton');
                     this.servicesButton.addEventListener('click', () => {
                         this.renderServicesList();
+                        this.servicesList.style.display = 'block';
                     });
                     this.calcSubmitButton = document.getElementById('calcSubmitButton');
                     this.servicesList = document.getElementById('servicesList');
@@ -1209,6 +1225,15 @@
                     this.calcModalClose1 = document.getElementById('calcModalClose1');
                     this.calcModalClose1.addEventListener('click', this.closeModalWindow1);
                     this.calcDark = document.getElementById('calcDark');
+                    this.calcDark.addEventListener('click', (event) => {
+                        if (event.target.id == 'calcDark') {
+                            this.userDataWindow.style.display = 'none';
+                            this.calcDark.style.display = 'none';
+                        } else if (event.target.id == 'calcDark') {
+                            this.thanksWindow.style.display = 'none';
+                            this.calcDark.style.display = 'none';
+                        }
+                    })
                     this.calcUserForm = document.getElementById('calcUserForm');
                     this.calcUserForm.addEventListener('submit', this.submitCalc);
                     this.calcModalClose2 = document.getElementById('calcModalClose2');
@@ -1217,8 +1242,7 @@
                 }
 
                 openCalc = () => {
-                    const calc = document.getElementById('calcWrapper');
-                    calc.style.display = 'block';
+                    this.calc.style.display = 'block';
                 }
 
                 createInputWithoutID = (unit) => {
@@ -1429,7 +1453,6 @@
                     const textContentTotal = document.createTextNode(`${this.#useCases.getTotal().toFixed(2).toString()} ${currency}`);
                     totalPrice.innerHTML = '';
                     totalPrice.appendChild(textContentTotal);
-                    //TODO background on first load with Yes
                     if (this.#useCases.getTotal()) {
                         this.calcSubmitButton.disabled = false;
                         this.totalPriceOrderAndServicesButton.style.display = "grid";
