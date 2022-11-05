@@ -1,11 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Calc</title>
-</head>
-<body>
 <div>
+    <meta charset="UTF-8">
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300&family=Pathway+Gothic+One&display=swap');
 
@@ -209,16 +204,35 @@
         #calcCart {
             margin-top: 20px;
             display: grid;
-            /*align-items: center;*/
             grid-template-columns: 0.3fr 1.2fr 1.5fr 0.5fr 0.5fr 0.5fr;
             grid-template-rows: auto;
             grid-column-gap: 10px;
             grid-row-gap: 10px;
             grid-template-areas:
-            "cartHeader cartHeader . . calcCurrencies ."
-            ". unitList calcInCart unitQuantity unitPrice ."
-            ". . . . totalPrice totalPrice"
-            ". . . . calcSubmitButton calcSubmitButton"
+            "cartHeader cartHeader cartBackground . calcCurrencies ."
+            ". unitList calcInCart unitQuantity unitPrice deleteUnitColumn"
+        }
+
+        #totalPriceOrderAndServicesButton {
+            display: none;
+            grid-template-columns: 0.3fr 1.2fr 1.5fr 0.5fr 0.5fr 0.5fr;
+            grid-template-rows: auto;
+            grid-column-gap: 10px;
+            grid-row-gap: 10px;
+            grid-template-areas:
+            "calcServices calcServices . . totalPrice totalPrice"
+            "servicesList servicesList . . calcSubmitButton calcSubmitButton"
+        }
+
+        #cartBackground {
+            background-color: rgba(217, 217, 217, 0.2);
+            border: 0;
+            border-radius: 16px;
+            grid-area: cartBackground;
+            position: absolute;
+            z-index: 0;
+            left: 436px;
+            width: 781px;
         }
 
         #cartHeader {
@@ -229,11 +243,14 @@
 
         #calcCurrencies {
             grid-area: calcCurrencies;
+            padding-top: 10px;
             text-align: center;
+            z-index: 1;
         }
 
         #unitList {
             grid-area: unitList;
+            z-index: 1;
         }
 
         .unitAtList {
@@ -274,32 +291,77 @@
 
         #calcInCart {
             grid-area: calcInCart;
-            padding-top: 4px;
+            padding-left: 40px;
+            z-index: 1;
+            font-size: 12px;
         }
 
         .inCartLineUnit {
-            height: 30px;
             margin-bottom: 12px;
+        }
+
+        .quantityWrapper {
+            box-sizing: border-box;
+            padding-top: 1px;
+            margin-bottom: 12px;
+        }
+
+        .inCartLinePrice {
+            box-sizing: border-box;
+            padding-top: 4px;
+            margin-bottom: 12px;
+            font-weight: bold;
+        }
+
+        .deleteImgWrapper {
+            box-sizing: border-box;
+            padding-top: 4px;
+            margin-bottom: 12px;
+        }
+
+        .deleteIcon {
+            box-sizing: border-box;
+            margin-bottom: 12px;
+        }
+
+        .unitInCartHeader {
+            color: #4B5061;
+            z-index: 1;
         }
 
         #unitQuantity {
             grid-area: unitQuantity;
-        }
-
-        .quantityWrapper {
-            height: 30px;
-            margin-bottom: 12px;
+            z-index: 1;
         }
 
         #unitPrice {
             grid-area: unitPrice;
-            padding-top: 4px;
+            z-index: 1;
         }
 
-        .inCartLinePrice {
-            height: 30px;
-            margin-bottom: 12px;
-            font-weight: bold;
+        #deleteUnitColumn {
+            grid-area: deleteUnitColumn;
+            z-index: 1;
+        }
+
+        .deleteImg {
+            display: block;
+            height: 20px;
+        }
+
+        .deleteImg:hover {
+            cursor: pointer;
+        }
+
+        #calcServices {
+            grid-area: calcServices;
+        }
+
+        #servicesList {
+            position: absolute;
+            /*display: none;*/
+            grid-area: servicesList;
+            border: 1px solid rgba(75, 80, 97, 1);
         }
 
         #totalPrice {
@@ -530,9 +592,9 @@
     <div id="calcWrapper">
 
         <h1 id="calcHeader">КАЛЬКУЛЯТОР КУРСА</h1>
-                <img src="https://downloader.disk.yandex.ru/preview/75ead0cec289444e37160f97fbed503e13b7560713b4b25ab4d6efcd9a5f06e7/6325ecbe/6BT_65iy4PXvu2PF0YpJ6D14QMkfvcNQtXs-2_Y00s8dlFBC17CHsnKS2hMMDK46hUoqW2j11FiUO_Ru2YXPJw%3D%3D?uid=0&filename=logo-04.png&disposition=inline&hash=&limit=0&content_type=image%2Fpng&owner_uid=0&tknv=v2&size=2048x2048"
-                     alt="logo"
-                     id="calcLogo">
+        <img src="https://downloader.disk.yandex.ru/preview/75ead0cec289444e37160f97fbed503e13b7560713b4b25ab4d6efcd9a5f06e7/6325ecbe/6BT_65iy4PXvu2PF0YpJ6D14QMkfvcNQtXs-2_Y00s8dlFBC17CHsnKS2hMMDK46hUoqW2j11FiUO_Ru2YXPJw%3D%3D?uid=0&filename=logo-04.png&disposition=inline&hash=&limit=0&content_type=image%2Fpng&owner_uid=0&tknv=v2&size=2048x2048"
+             alt="logo"
+             id="calcLogo">
         <br>
         <h3 id="calcSubHeader">ВЫБЕРИТЕ НУЖНЫЕ ВАМ ХАРАКТЕРИСТИКИ</h3>
         <br>
@@ -565,35 +627,46 @@
                     <span id="dollarButton" class="currencyButton">$</span>
                     <span id="tengeButton" class="currencyButton">&#8376;</span>
                 </div>
+                <div id="cartBackground"></div>
                 <form id="unitList"></form>
                 <div id="calcInCart"></div>
                 <div id="unitQuantity"></div>
                 <div id="unitPrice"></div>
+                <div id="deleteUnitColumn"></div>
+            </div>
+            <div id="totalPriceOrderAndServicesButton">
+                <div id="calcServices">
+                    <p id="servicesButton">Добавить услуги ˅</p>
+                    <div id="servicesList">
+
+                    </div>
+                </div>
                 <h3 id="totalPrice"></h3>
                 <button id="calcSubmitButton" disabled>Заказать курс</button>
             </div>
-        </div>
-        <div id="calcDark">
-            <div id="userDataWindow" class="calcModalWindow">
-                <div id="calcModalClose1" class="calcModalClose">X</div>
-                <h5 class="headerAtModalWindow">Отправим полный курс на почту</h5>
-                <form id="calcUserForm">
-                    <input type="email" name="email" placeholder="email" class="calcUserInput" required>
-                    <input type="tel" name="phone" placeholder="+7 999 999 99 99" class="calcUserInput" required>
-                    <input type="text" name="name" placeholder="Как к вам обращаться?" class="calcUserInput" required>
-                    <input type="submit" value="Оставить заявку" id="userDataSubmitButton">
-                    <div class="tinyModalWindowText">Нажатием на «Оставить заявку» подтверждаю согласие с обработкой
-                        персональный данных
+            <div id="calcDark">
+                <div id="userDataWindow" class="calcModalWindow">
+                    <div id="calcModalClose1" class="calcModalClose">X</div>
+                    <h5 class="headerAtModalWindow">Отправим полный курс на почту</h5>
+                    <form id="calcUserForm">
+                        <input type="email" name="email" placeholder="email" class="calcUserInput" required>
+                        <input type="tel" name="phone" placeholder="+7 999 999 99 99" class="calcUserInput" required>
+                        <input type="text" name="name" placeholder="Как к вам обращаться?" class="calcUserInput"
+                               required>
+                        <input type="submit" value="Оставить заявку" id="userDataSubmitButton">
+                        <div class="tinyModalWindowText">Нажатием на «Оставить заявку» подтверждаю согласие с обработкой
+                            персональный данных
+                        </div>
+                    </form>
+                    <div class="messengerLinksWrapper">
+                        <h5 class="headerAtModalWindow bottomHeaderModal">Можете нам написать</h5>
+                        <a href="#" class="calcMessengerLink"><img class="calcMessengerImage"
+                                                                   src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Telegram_logo.svg/768px-Telegram_logo.svg.png?20220101141644"
+                                                                   alt="Telegram"></a>
+                        <a href="#" class="calcMessengerLink"><img class="calcMessengerImage"
+                                                                   src="https://scontent.ftlv1-1.fna.fbcdn.net/v/t39.8562-6/147804628_465197098177571_1885468861198783508_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=6825c5&_nc_ohc=dcdOClAt_DkAX-vFVHc&_nc_ht=scontent.ftlv1-1.fna&oh=00_AT9Od5vsofZtwKxnolgMFi0M-gP5kEDmNdW4HM8nK5lY_Q&oe=63487B28"
+                                                                   alt="WhatsApp"></a>
                     </div>
-                </form>
-                <div class="messengerLinksWrapper">
-                    <h5 class="headerAtModalWindow bottomHeaderModal">Можете нам написать</h5>
-                    <a href="#" class="calcMessengerLink"><img class="calcMessengerImage"
-                                                               src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Telegram_logo.svg/768px-Telegram_logo.svg.png?20220101141644"
-                                                               alt="Telegram"></a>
-                    <a href="#" class="calcMessengerLink"><img class="calcMessengerImage"
-                                                               src="https://scontent.ftlv1-1.fna.fbcdn.net/v/t39.8562-6/147804628_465197098177571_1885468861198783508_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=6825c5&_nc_ohc=dcdOClAt_DkAX-vFVHc&_nc_ht=scontent.ftlv1-1.fna&oh=00_AT9Od5vsofZtwKxnolgMFi0M-gP5kEDmNdW4HM8nK5lY_Q&oe=63487B28"
-                                                               alt="WhatsApp"></a>
                 </div>
             </div>
             <div id="thanksWindow" class="calcModalWindow">
@@ -658,6 +731,7 @@
                         unit.longread = +unit.longread;
                         unit.videocourse = +unit.videocourse;
                         unit.trainer = +unit.trainer;
+                        unit.services = +unit.services;
                         unit.RisePossibility = +unit.RisePossibility;
                         unit.SLPossibility = +unit.SLPossibility;
                         unit.TildaPossibility = +unit.TildaPossibility;
@@ -845,7 +919,7 @@
                     if (!this.#slSwitch && !this.#tildaSwitch && x.priceRisePriceBase) {
                         x.price = x.priceRisePriceBase;
                     }
-                    return x.price * x.quantityInCart + this.#data.getConstantExpenses() * (x.quantityInCart / this.#numberOfPositions) * (1 + +this.#data.getProfitMultiplier());
+                    return (x.price * x.quantityInCart + this.#data.getConstantExpenses() * (x.quantityInCart / this.#numberOfPositions)) * (1 + +this.#data.getProfitMultiplier());
                 }
 
                 getSLswitch = () => {
@@ -1066,6 +1140,7 @@
                         this.trainerExampleLink.style.display = 'none';
                         this.renderUnitList(this.#useCases.longreadFilter());
                         this.calcHide.style.display = 'block';
+                        this.renderCart();
                     });
                     this.videoCourseButton.addEventListener('click', () => {
                         this.#filter = 'VIDEOCOURSE';
@@ -1086,6 +1161,7 @@
                         this.trainerExampleLink.style.display = 'none';
                         this.renderUnitList(this.#useCases.videocourseFilter());
                         this.calcHide.style.display = 'block';
+                        this.renderCart();
                     });
                     this.trainerButton.addEventListener('click', () => {
                         this.#filter = 'TRAINER';
@@ -1106,19 +1182,28 @@
                         this.videoCourseExampleLink.style.display = 'none';
                         this.renderUnitList(this.#useCases.trainerFilter());
                         this.calcHide.style.display = 'block';
+                        this.renderCart();
                     });
 
+                    this.cartBackground = document.getElementById('cartBackground');
                     this.unitList = document.getElementById('unitList');
                     this.cartUnits = document.getElementById('calcInCart');
                     this.cartQuantity = document.getElementById('unitQuantity');
                     this.cartPrices = document.getElementById('unitPrice');
+                    this.deleteUnitColumn = document.getElementById('deleteUnitColumn');
                     this.rubleButton = document.getElementById('rubleButton');
                     this.rubleButton.addEventListener('click', this.onRuble);
                     this.dollarButton = document.getElementById('dollarButton');
                     this.dollarButton.addEventListener('click', this.onDollar);
                     this.tengeButton = document.getElementById('tengeButton');
                     this.tengeButton.addEventListener('click', this.onTenge);
+                    this.totalPriceOrderAndServicesButton = document.getElementById('totalPriceOrderAndServicesButton');
+                    this.servicesButton = document.getElementById('servicesButton');
+                    this.servicesButton.addEventListener('click', () => {
+                        this.renderServicesList();
+                    });
                     this.calcSubmitButton = document.getElementById('calcSubmitButton');
+                    this.servicesList = document.getElementById('servicesList');
                     this.calcSubmitButton.addEventListener('click', this.openModalWindow1);
                     this.userDataWindow = document.getElementById('userDataWindow');
                     this.calcModalClose1 = document.getElementById('calcModalClose1');
@@ -1136,30 +1221,57 @@
                     calc.style.display = 'block';
                 }
 
+                createInputWithoutID = (unit) => {
+                    const input = document.createElement('input');
+                    input.type = 'checkbox';
+                    input.dataset.index = unit.index;
+                    input.className = 'unitAtList';
+                    input.title = unit.text;
+                    input.onchange = this.selectFromUnitList;
+                    if (unit.quantityInCart) {
+                        input.checked = true;
+                    }
+                    return input;
+                }
+                createLabelWithoutHtmlFor = (unit) => {
+                    const label = document.createElement('label');
+                    label.className = 'unitLabel';
+                    label.title = unit.text;
+                    const textContent = document.createTextNode(unit.name);
+                    label.appendChild(textContent);
+                    return label;
+                }
+
                 renderUnitList = (units) => {
                     this.unitList.innerHTML = '';
                     units.forEach((unit) => {
                         const div = document.createElement('div');
-                        div.className = 'unitCheckboxWrapper'
-                        const input = document.createElement('input');
-                        input.type = 'checkbox';
+                        div.className = 'unitCheckboxWrapper';
+                        const input = this.createInputWithoutID(unit);
                         input.id = unit.id;
-                        input.dataset.index = unit.index;
-                        input.className = 'unitAtList';
-                        input.title = unit.text;
-                        if (unit.quantityInCart) {
-                            input.checked = true;
-                        }
-                        input.onchange = this.selectFromUnitList;
-                        const label = document.createElement('label');
+                        const label = this.createLabelWithoutHtmlFor(unit);
                         label.htmlFor = input.id;
-                        label.className = 'unitLabel';
-                        label.title = unit.text;
-                        const textContent = document.createTextNode(unit.name);
-                        label.appendChild(textContent);
                         div.appendChild(input);
                         div.appendChild(label);
-                        this.unitList.appendChild(div)
+                        this.unitList.appendChild(div);
+                    });
+                }
+
+                renderServicesList = () => {
+                    const units = this.#useCases.getUnits();
+                    this.servicesList.innerHTML = '';
+                    units.forEach((unit) => {
+                        if (unit.services) {
+                            const div = document.createElement('div');
+                            div.className = 'unitCheckboxWrapper';
+                            const input = this.createInputWithoutID(unit);
+                            input.id = `${unit.id}S`;
+                            const label = this.createLabelWithoutHtmlFor(unit);
+                            label.htmlFor = input.id;
+                            div.appendChild(input);
+                            div.appendChild(label);
+                            this.servicesList.appendChild(div);
+                        }
                     })
                 }
 
@@ -1188,6 +1300,8 @@
                         this.#useCases.removeFromCartByIndex(event.target.dataset.index);
                     }
                     this.#useCases.setTotal();
+                    this.renderUnitListWithFilters();
+                    this.renderServicesList();
                     this.renderCart();
                 }
 
@@ -1195,10 +1309,11 @@
                     this.cartUnits.innerHTML = '';
                     this.cartPrices.innerHTML = '';
                     this.cartQuantity.innerHTML = '';
+                    this.deleteUnitColumn.innerHTML = '';
                     let SLswitchers = 0;
                     let tildaSwitchers = 0;
                     let yesNoSwitcher = false;
-                    let currency = '';
+                    let currency;
                     switch (this.#useCases.getCurrency()) {
                         case 'RUB':
                             currency = '₽';
@@ -1210,36 +1325,32 @@
                             currency = '₸';
                             break;
                     }
+                    let cartTotalHeight = 34;
                     this.#useCases.getUnits().forEach((unit) => {
                         if (unit.quantityInCart) {
                             const inCartLineUnit = document.createElement('div');
                             inCartLineUnit.className = 'inCartLineUnit';
                             inCartLineUnit.dataset.index = unit.index;
-
+                            inCartLineUnit.id = `unitNameInCart${unit.id}`;
                             const inCartLinePrice = document.createElement('div');
                             inCartLinePrice.dataset.index = unit.index;
                             inCartLinePrice.className = 'inCartLinePrice';
-                            inCartLineUnit.title = unit.text;
-
-                            const textContentUnit = document.createTextNode(unit.name);
+                            inCartLinePrice.id = `unitPriceInCart${unit.id}`;
                             const textContentPrice = document.createTextNode(unit.fullPrice.toFixed(2) + ' ' + currency);
-
                             const quantityWrapper = document.createElement('div');
                             quantityWrapper.className = 'quantityWrapper';
-
+                            quantityWrapper.id = `quantityInCart${unit.id}`;
                             const minus = document.createElement('button');
                             const textMinus = document.createTextNode('–');
                             minus.appendChild(textMinus);
                             minus.className = 'calcPlusMinus calcMinus';
                             minus.dataset.index = unit.index;
                             minus.addEventListener('click', () => this.onMinus(unit.index));
-
                             const quantity = document.createElement('span');
                             const quantityText = document.createTextNode(unit.quantityInCart);
                             quantity.appendChild(quantityText);
                             quantityWrapper.appendChild(minus);
                             quantityWrapper.appendChild(quantity);
-
                             const plus = document.createElement('button');
                             plus.className = 'invisiblePlus';
                             if (!unit.single) {
@@ -1250,11 +1361,28 @@
                                 plus.addEventListener('click', () => this.onPlus(unit.index));
                             }
                             quantityWrapper.appendChild(plus);
-                            inCartLineUnit.appendChild(textContentUnit);
+                            inCartLineUnit.innerHTML = `
+                                <span class="unitInCartHeader">
+                                    <b>${unit.name}</b>
+                                </span>
+                                <br>
+                                <span class="unitInCartText">${unit.text}</span>
+                            `;
+                            const deleteImg = document.createElement('img');
+                            deleteImg.src = 'https://img.icons8.com/pastel-glyph/344/trash.png';
+                            deleteImg.alt = 'delete';
+                            deleteImg.className = 'deleteImg';
+                            deleteImg.dataset.index = unit.index;
+                            deleteImg.addEventListener('click', () =>
+                                this.deleteUnit(unit.index));
+                            const deleteImgWrapper = document.createElement('div');
+                            deleteImgWrapper.className = 'deleteImgWrapper';
                             inCartLinePrice.appendChild(textContentPrice);
                             this.cartUnits.appendChild(inCartLineUnit);
                             this.cartPrices.appendChild(inCartLinePrice);
                             this.cartQuantity.appendChild(quantityWrapper);
+                            deleteImgWrapper.appendChild(deleteImg);
+                            this.deleteUnitColumn.appendChild(deleteImgWrapper);
                             if (unit.toolSwitcher) {
                                 if (unit.toolSwitcher.trim().toLowerCase() == 'sl') {
                                     SLswitchers++;
@@ -1266,6 +1394,12 @@
                             if (unit.id == YES_NO_BUTTON_UNIT_ID) {
                                 yesNoSwitcher = true;
                             }
+                            const unitHeight = inCartLineUnit.offsetHeight;
+                            cartTotalHeight = cartTotalHeight + unitHeight + 12;
+                            const unitInCartHeight = unitHeight + 'px';
+                            inCartLinePrice.style.height = unitInCartHeight;
+                            quantityWrapper.style.height = unitInCartHeight;
+                            deleteImgWrapper.style.height = unitInCartHeight;
                         }
                     })
                     if (Boolean(SLswitchers) != this.#useCases.getSLswitch()) {
@@ -1284,7 +1418,6 @@
                             this.#useCases.tildaSwitchOn();
                         }
                         this.#useCases.setTotal();
-                        console.log(this.#useCases.getTotal())
                         this.renderCart();
                     }
                     if (yesNoSwitcher) {
@@ -1296,12 +1429,25 @@
                     const textContentTotal = document.createTextNode(`${this.#useCases.getTotal().toFixed(2).toString()} ${currency}`);
                     totalPrice.innerHTML = '';
                     totalPrice.appendChild(textContentTotal);
+                    //TODO background on first load with Yes
                     if (this.#useCases.getTotal()) {
                         this.calcSubmitButton.disabled = false;
+                        this.totalPriceOrderAndServicesButton.style.display = "grid";
+                        this.cartBackground.style.display = 'block';
+                        this.cartBackground.style.height = cartTotalHeight + 25 + 'px';
                     } else {
+                        this.cartBackground.style.display = 'none';
                         this.calcSubmitButton.disabled = true;
                     }
                 };
+
+                deleteUnit = (index) => {
+                    this.#useCases.removeFromCartByIndex(index);
+                    this.#useCases.setTotal();
+                    this.renderUnitListWithFilters();
+                    this.renderCart();
+                    this.renderServicesList();
+                }
 
                 onPlus = (index) => {
                     this.#useCases.quantityInCartIncrement(index);
@@ -1311,22 +1457,18 @@
 
                 onMinus = (index) => {
                     this.#useCases.quantityInCartDecrement(index);
-                    const unit = this.#useCases.getUnits()[index];
-                    if (unit.quantityInCart == 0) {
-                        const check = document.getElementById(unit.id);
-                        if (check) {
-                            check.checked = false;
-                        }
-                    }
                     this.#useCases.setTotal();
+                    this.renderUnitListWithFilters();
                     this.renderCart();
+                    this.renderServicesList();
                 }
 
                 onYes = () => {
                     this.#useCases.addToCartById(YES_NO_BUTTON_UNIT_ID);
-                    this.renderUnitListWithFilters();
                     this.#useCases.setTotal();
+                    this.renderUnitListWithFilters();
                     this.renderCart();
+                    this.renderServicesList();
                 }
 
                 onYesVisual = () => {
@@ -1347,6 +1489,7 @@
                     this.renderUnitListWithFilters();
                     this.#useCases.setTotal();
                     this.renderCart();
+                    this.renderServicesList();
                 }
 
                 onNoVisual = () => {
@@ -1481,5 +1624,5 @@
 
     </script>
 </div>
-</body>
-</html>
+
+
