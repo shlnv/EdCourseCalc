@@ -1,3 +1,4 @@
+<html>
 <div>
     <meta charset="UTF-8">
 
@@ -5,13 +6,27 @@
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300&family=Pathway+Gothic+One&display=swap');
 
         #calcWrapper {
-            display: none;
             background-color: rgba(255, 255, 255, 1);
             font-family: 'Montserrat', sans-serif;
             width: 1216px;
             border-radius: 16px;
             box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.1);
             padding: 23px 40px 40px 23px;
+            transform-origin: top;
+            transition: transform 500ms ease-out;
+        }
+
+        .calcVisible {
+            position: static;
+            visibility: visible;
+            transform: scaleY(1);
+        }
+
+
+        .calcHidden {
+            position: absolute;
+            visibility: hidden;
+            transform: scaleY(0);
         }
 
         #calcHeader {
@@ -88,9 +103,11 @@
         }
 
         #chooseCourseText {
-            display: none;
+            /*display: none;*/
             grid-area: text2;
             font-size: 20px;
+            transform-origin: top;
+            transition: transform 500ms ease-out;
         }
 
         #SLYesButton {
@@ -152,13 +169,15 @@
         }
 
         .chooseCourseButton {
-            display: none;
+            /*display: none;*/
             font-size: 20px;
             width: 240px;
             height: 46px;
             border: 3px solid rgba(255, 210, 0, 1);
             border-radius: 25px;
             background-color: rgba(255, 255, 255, 1);
+            transform-origin: top;
+            transition: transform 500ms ease-out;
         }
 
         .chooseCourseButton:hover {
@@ -448,7 +467,9 @@
         }
 
         #calcHide {
-            display: none;
+            transform-origin: top;
+            transition: transform 500ms ease-out;
+            /*display: none;*/
         }
 
         #rubleButton {
@@ -517,11 +538,11 @@
 
         #calcDark {
             background: rgba(102, 102, 102, 0.5);
-            width: 100%;
+            position: absolute;
             height: 100%;
-            position: fixed;
-            top: 0;
+            width: 100%;
             left: 0;
+            top: 0;
             display: none;
             z-index: 1000;
         }
@@ -598,8 +619,29 @@
         }
 
     </style>
-
-    <div id="calcWrapper">
+    <div>
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad asperiores atque beatae cupiditate dolorem dolorum
+        illum iusto repellat, repudiandae, totam voluptas voluptate! Adipisci animi aspernatur assumenda cumque
+        doloremque
+        error esse est et expedita incidunt, inventore iusto libero minima nam numquam quae, quas qui quisquam quo,
+        reiciendis rem rerum sapiente sequi similique voluptates. Ab asperiores cum delectus eaque enim mollitia
+        necessitatibus obcaecati qui rem suscipit veritatis voluptas, voluptatum. Ab accusamus ad aspernatur blanditiis
+        corporis cum dignissimos harum id iure iusto minima molestias necessitatibus perferendis quas, quidem, quis,
+        reprehenderit sequi soluta temporibus voluptas? Beatae delectus dolores ex hic maiores necessitatibus nihil vel
+        voluptatem. Cum error explicabo nesciunt odit quibusdam sapiente sint vero. Adipisci animi consequatur, debitis
+        deleniti dolore facilis harum impedit odit omnis perferendis quae, repudiandae, sequi voluptatibus! Accusantium
+        aliquam, beatae consectetur deserunt dolorum ducimus ex facere harum, illo illum iusto minus modi quae,
+        quibusdam
+        quod soluta tenetur. Architecto at dignissimos dolorum id itaque, magnam officia quas quisquam velit voluptate!
+        Alias aspernatur blanditiis eveniet modi nesciunt nulla omnis pariatur reiciendis? Ad architecto autem beatae
+        cum
+        dignissimos dolore dolores doloribus dolorum eum exercitationem explicabo facere facilis fugiat illum iure
+        labore
+        magnam minus nihil nulla officia optio quaerat quam quas quasi reiciendis rem saepe, soluta suscipit tempora
+        tempore
+        under
+    </div>
+    <div id="calcWrapper" class="calcHidden">
 
         <h1 id="calcHeader">КАЛЬКУЛЯТОР КУРСА</h1>
         <img src="https://downloader.disk.yandex.ru/preview/75ead0cec289444e37160f97fbed503e13b7560713b4b25ab4d6efcd9a5f06e7/6325ecbe/6BT_65iy4PXvu2PF0YpJ6D14QMkfvcNQtXs-2_Y00s8dlFBC17CHsnKS2hMMDK46hUoqW2j11FiUO_Ru2YXPJw%3D%3D?uid=0&filename=logo-04.png&disposition=inline&hash=&limit=0&content_type=image%2Fpng&owner_uid=0&tknv=v2&size=2048x2048"
@@ -615,21 +657,21 @@
                 <button id="SLNoButton" class="calcButton">НЕТ</button>
             </div>
             <div class="calcGridGap"></div>
-            <span id="chooseCourseText">Какой курс вам нужен?</span>
+            <span id="chooseCourseText" class="calcHidden">Какой курс вам нужен?</span>
             <div id="longReadWrapper" class="buttonAndExampleWrapper">
-                <button class="chooseCourseButton" id="longReadButton">ЛОНГРИД</button>
+                <button class="chooseCourseButton calcHidden" id="longReadButton">ЛОНГРИД</button>
                 <a href="#" id="longreadExampleLink" class="calcExampleLink">Посмотреть пример курса</a>
             </div>
             <div id="videoCourseWrapper" class="buttonAndExampleWrapper">
-                <button class="chooseCourseButton" id="videoCourseButton">ВИДЕОКУРС</button>
+                <button class="chooseCourseButton calcHidden" id="videoCourseButton">ВИДЕОКУРС</button>
                 <a href="#" id="videoCourseExampleLink" class="calcExampleLink">Посмотреть пример курса</a>
             </div>
             <div id="trainerWrapper" class="buttonAndExampleWrapper">
-                <button class="chooseCourseButton" id="trainerButton">ТРЕНАЖЁР</button>
+                <button class="chooseCourseButton calcHidden" id="trainerButton">ТРЕНАЖЁР</button>
                 <a href="#" id="trainerExampleLink" class="calcExampleLink">Посмотреть пример курса</a>
             </div>
         </div>
-        <div id="calcHide">
+        <div id="calcHide" class="calcHidden">
             <div id="calcCart">
                 <span id="cartHeader">Выберите нужные блоки</span>
                 <div id="calcCurrencies">
@@ -696,7 +738,21 @@
             </div>
         </div>
     </div>
-
+    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut blanditiis dolorum ea ex illum officia quo! Architecto
+    beatae, debitis explicabo illo magnam minima nemo numquam quia sapiente sequi. Aliquam amet cumque debitis
+    dignissimos error esse exercitationem id illum impedit, laboriosam magni nemo quasi voluptates. Ad asperiores
+    cupiditate debitis delectus dolorem ducimus et expedita harum hic, libero minima provident, quaerat quidem quod
+    reiciendis similique sunt, voluptatem! Accusantium alias aspernatur assumenda at atque, aut autem consequuntur
+    debitis dicta distinctio dolorem dolores ea enim et exercitationem fuga hic id laudantium molestias necessitatibus
+    nesciunt nobis perferendis placeat possimus quae quam quis quisquam quod recusandae rem soluta vitae voluptas
+    voluptate. Asperiores expedita laborum minus nemo placeat quo veniam. Eum exercitationem inventore iusto laborum
+    nihil nostrum nulla quos repellendus ut voluptatibus! Accusamus consectetur delectus voluptatibus. Accusamus,
+    adipisci debitis dolor dolores dolorum expedita, explicabo id ipsa ipsum iste laudantium maiores minima nam natus
+    nihil pariatur quidem similique sit tempore ullam vel velit voluptates. A corporis cum ex iure rem repudiandae
+    temporibus! Aliquam aspernatur culpa cupiditate debitis delectus deleniti doloremque dolores dolorum eaque eius eos
+    error esse expedita, harum nam necessitatibus odit porro praesentium quas quia, quos soluta suscipit temporibus
+    velit veniam veritatis vero voluptate. Ab accusamus accusantium alias aliquam amet architecto at aut cum cumque
+    debitis
     <script>
         console.log(window.navigator.userAgent);
 
@@ -1112,6 +1168,7 @@
 
                 constructor(useCases) {
                     this.#useCases = useCases;
+                    this.html = document.getElementsByTagName('html');
                     this.calc = document.getElementById('calcWrapper');
                     this.calc.addEventListener('click', (event) => {
                         if (!event.path.includes(this.servicesList) && !event.path.includes(this.servicesButton))
@@ -1154,7 +1211,9 @@
                         this.videoCourseExampleLink.style.display = 'none';
                         this.trainerExampleLink.style.display = 'none';
                         this.renderUnitList(this.#useCases.longreadFilter());
-                        this.calcHide.style.display = 'block';
+                        // this.calcHide.style.display = 'block';
+                        this.calcHide.classList.remove('calcHidden');
+                        this.calcHide.classList.add('calcVisible');
                         this.renderCart();
                     });
                     this.videoCourseButton.addEventListener('click', () => {
@@ -1175,7 +1234,9 @@
                         this.longreadExampleLink.style.display = 'none';
                         this.trainerExampleLink.style.display = 'none';
                         this.renderUnitList(this.#useCases.videocourseFilter());
-                        this.calcHide.style.display = 'block';
+                        // this.calcHide.style.display = 'block';
+                        this.calcHide.classList.remove('calcHidden');
+                        this.calcHide.classList.add('calcVisible');
                         this.renderCart();
                     });
                     this.trainerButton.addEventListener('click', () => {
@@ -1196,7 +1257,9 @@
                         this.longreadExampleLink.style.display = 'none';
                         this.videoCourseExampleLink.style.display = 'none';
                         this.renderUnitList(this.#useCases.trainerFilter());
-                        this.calcHide.style.display = 'block';
+                        // this.calcHide.style.display = 'block';
+                        this.calcHide.classList.remove('calcHidden');
+                        this.calcHide.classList.add('calcVisible');
                         this.renderCart();
                     });
 
@@ -1242,7 +1305,8 @@
                 }
 
                 openCalc = () => {
-                    this.calc.style.display = 'block';
+                    this.calc.classList.remove('calcHidden');
+                    this.calc.classList.add('calcVisible');
                 }
 
                 createInputWithoutID = (unit) => {
@@ -1501,9 +1565,11 @@
                     this.SLNoButton.disabled = false;
                     this.SLNoButton.classList.remove('calcButtonPressed');
                     this.SLNoButton.classList.add('calcButton');
-                    this.chooseCourseText.style.display = 'inline';
+                    this.chooseCourseText.classList.remove('calcHidden');
+                    this.chooseCourseText.classList.add('calcVisible');
                     for (let chooseCourseButton of this.chooseCourseButtons) {
-                        chooseCourseButton.style.display = 'inline';
+                        chooseCourseButton.classList.remove('calcHidden');
+                        chooseCourseButton.classList.add('calcVisible');
                     }
                 }
 
@@ -1522,9 +1588,11 @@
                     this.SLYesButton.disabled = false;
                     this.SLYesButton.classList.remove('calcButtonPressed');
                     this.SLYesButton.classList.add('calcButton');
-                    this.chooseCourseText.style.display = 'inline';
+                    this.chooseCourseText.classList.remove('calcHidden');
+                    this.chooseCourseText.classList.add('calcVisible');
                     for (let chooseCourseButton of this.chooseCourseButtons) {
-                        chooseCourseButton.style.display = 'inline';
+                        chooseCourseButton.classList.remove('calcHidden');
+                        chooseCourseButton.classList.add('calcVisible');
                     }
                 }
 
@@ -1647,5 +1715,6 @@
 
     </script>
 </div>
+</html>
 
 
