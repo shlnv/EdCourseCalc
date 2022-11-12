@@ -63,9 +63,11 @@
             margin-bottom: 20px;
             color: rgba(75, 80, 97, 1);
             letter-spacing: .15rem;
+            font-weight: 400;
         }
 
         #SLAndCourseSwitchWrapper {
+            margin-top: 20px;
             font-size: 0;
             display: grid;
             align-items: center;
@@ -97,10 +99,17 @@
 
         #SLChoiceText {
             grid-area: text1;
-            font-size: 20px;
-            font-weight: 600;
             color: rgba(75, 80, 97, 1);
-            width: 347px;
+        }
+
+        #SLChoiceTextHeader {
+            font-weight: 600;
+            font-size: 20px;
+        }
+
+        #SLChoiceTextText {
+            font-size: 12px;
+            font-weight: 300;
         }
 
         #SLChoiceButtonsWrapper {
@@ -124,7 +133,7 @@
         #SLYesButton {
             display: inline-block;
             font-size: 20px;
-            width: 120px;
+            width: 121px;
             height: 46px;
             border: 3px solid rgba(255, 210, 0, 1);
             border-radius: 25px 0 0 25px;
@@ -132,9 +141,11 @@
         }
 
         #SLNoButton {
+            position: relative;
+            left: -2px;
             display: inline-block;
             font-size: 20px;
-            width: 120px;
+            width: 121px;
             height: 46px;
             border: 3px solid rgba(255, 210, 0, 1);
             border-radius: 0 25px 25px 0;
@@ -142,29 +153,33 @@
         }
 
         #SLYesButton:disabled {
-            color: black;
+            color: #4B5061;
         }
 
         #SLNoButton:disabled {
-            color: black;
+            color: #4B5061;
         }
 
         .calcButton {
+            font-family: Montserrat;
+            color: #4B5061;
             background-color: rgba(255, 255, 255, 1);
             margin-top: 20px;
         }
 
         .calcButton:hover {
-            background-color: orange;
+            background-color: #FFD200;
             cursor: pointer;
         }
 
-        .calcButton:active {
-            background-color: darkorange;
-        }
+        /*.calcButton:active {*/
+        /*    background-color: darkorange;*/
+        /*}*/
 
         .calcButtonPressed {
-            background-color: rgba(255, 210, 0, 1);
+            font-family: Montserrat;
+            color: #4B5061;
+            background-color: #FFD200;
         }
 
         #longReadButton:disabled {
@@ -180,8 +195,9 @@
         }
 
         .chooseCourseButton {
-            /*display: none;*/
             font-size: 20px;
+            font-family: Montserrat;
+            color: #4B5061;
             width: 240px;
             height: 46px;
             border: 3px solid rgba(255, 210, 0, 1);
@@ -192,15 +208,18 @@
         }
 
         .chooseCourseButton:hover {
-            background-color: orange;
+
+            background-color: #FFD200;
             cursor: pointer;
         }
 
-        .chooseCourseButton:active {
-            background-color: darkorange;
-        }
+        /*.chooseCourseButton:active {*/
+        /*    background-color: darkorange;*/
+        /*}*/
 
         .chooseCourseButtonSelected {
+            font-family: Montserrat;
+            color: #4B5061;
             font-size: 20px;
             width: 240px;
             height: 46px;
@@ -234,7 +253,7 @@
         #calcCart {
             margin-top: 20px;
             display: grid;
-            grid-template-columns: 0.3fr 1.2fr 1.5fr 0.5fr 0.5fr 0.5fr;
+            grid-template-columns: 0.3fr 1.2fr 2.1fr 0.3fr 0.4fr 0.2fr;
             grid-template-rows: auto;
             grid-column-gap: 10px;
             grid-row-gap: 10px;
@@ -332,6 +351,7 @@
 
         .inCartLineUnit {
             margin-bottom: 12px;
+            padding-left: 25px;
         }
 
         .quantityWrapper {
@@ -342,9 +362,11 @@
 
         .inCartLinePrice {
             box-sizing: border-box;
+            color: #4B5061;
             padding-top: 4px;
             margin-bottom: 12px;
-            font-weight: bold;
+            font-weight: 700;
+            font-size: 16px;
         }
 
         .deleteImgWrapper {
@@ -445,7 +467,8 @@
 
         .calcPlusMinus {
             display: inline-block;
-            border: 1px solid rgba(75, 80, 97, 1);
+            border: 1px solid #4B5061;
+            color: #4B5061;
             background-color: rgba(255, 255, 255, 1);
             width: 25px;
             height: 25px;
@@ -474,6 +497,7 @@
         .calcPlusMinus:hover {
             cursor: pointer;
             color: rgba(134, 68, 215, 1);
+            border: 1px solid rgba(134, 68, 215, 1);
         }
 
         .calcPlusMinus:active {
@@ -500,11 +524,17 @@
             float: right;
         }
 
+        .currencyButton {
+            color: #4B5061;
+        }
+
         .currencyButton:hover {
             cursor: pointer;
+            color: rgba(134, 68, 215, 1);
         }
 
         .selectedCurrencyButton {
+            color: #4B5061;
             font-weight: bold;
         }
 
@@ -631,7 +661,6 @@
         .messengerLinksWrapper {
             position: absolute;
             bottom: 0;
-            /*margin-bottom: 15px;*/
         }
 
     </style>
@@ -687,7 +716,11 @@
         <h3 id="calcSubHeader">ВЫБЕРИТЕ НУЖНЫЕ ВАМ ХАРАКТЕРИСТИКИ</h3>
         <br>
         <div id="SLAndCourseSwitchWrapper">
-            <span id="SLChoiceText">Ваш курс будет интерактивным?</span>
+            <div id="SLChoiceText">
+                <span id="SLChoiceTextHeader">Ваш курс будет интерактивным?</span>
+                <br>
+                <span id="SLChoiceTextText">Нелинейная логика прохождения,<br>взаимодействие с учеником</span>
+            </div>
             <div id="SLChoiceButtonsWrapper">
                 <button id="SLYesButton" class="calcButton">ДА</button>
                 <button id="SLNoButton" class="calcButton">НЕТ</button>
