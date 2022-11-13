@@ -66,18 +66,7 @@
             font-weight: 400;
         }
 
-        #SLAndCourseSwitchWrapper {
-            margin-top: 20px;
-            font-size: 0;
-            display: grid;
-            align-items: center;
-            grid-template-columns: 1.5fr 1fr 1fr 1fr;
-            grid-template-rows: auto;
-            grid-template-areas:
-            "text1 buttons1 . ."
-            "gap . . ."
-            "text2 longReadWrapper videoCourseWrapper trainerWrapper";
-        }
+
 
         .buttonAndExampleWrapper {
             display: inline;
@@ -250,16 +239,50 @@
             color: rgba(75, 80, 97, 1);
         }
 
+/*========================GRIDS=========================*/
+
+        #SLAndCourseSwitchWrapper {
+            margin-top: 20px;
+            font-size: 0;
+            display: grid;
+            align-items: center;
+            grid-template-columns: 1.5fr 1fr 1fr 1fr;
+            grid-column-gap: 10px;
+            grid-row-gap: 10px;
+            grid-template-rows: auto;
+            grid-template-areas:
+            "text1 buttons1 . ."
+            "gap . . ."
+            "text2 longReadWrapper videoCourseWrapper trainerWrapper";
+        }
+
         #calcCart {
             margin-top: 20px;
+            padding-right: 24px;
             display: grid;
-            grid-template-columns: 0.3fr 1.2fr 2.1fr 0.3fr 0.4fr 0.2fr;
+            grid-template-columns: 1fr 2fr;
             grid-template-rows: auto;
             grid-column-gap: 10px;
             grid-row-gap: 10px;
             grid-template-areas:
-            "cartHeader cartHeader cartBackground . calcCurrencies ."
-            "unitList unitList calcInCart unitQuantity unitPrice deleteUnitColumn"
+            "calcUnits cartBackground";
+        }
+
+        #cartBackground {
+            background-color: rgba(217, 217, 217, 0.2);
+            border: 0;
+            border-radius: 16px;
+            /*max-height: 100%;*/
+            grid-area: cartBackground;
+            display: grid;
+            grid-template-columns: 3fr 1fr 1fr 0.5fr;
+            grid-template-rows: auto;
+            grid-column-gap: 10px;
+            grid-row-gap: 10px;
+            grid-template-areas:
+            ". . . calcCurrencies"
+            "calcInCart unitQuantity unitPrice deleteUnitColumn"
+            ". . totalPrice totalPrice"
         }
 
         #totalPriceOrderAndServicesButton {
@@ -269,26 +292,19 @@
             grid-column-gap: 10px;
             grid-row-gap: 10px;
             grid-template-areas:
-            "calcServices calcServices . . totalPrice totalPrice"
+            "calcServices calcServices . . . ."
             "servicesList servicesList . . calcSubmitButton calcSubmitButton";
             transform-origin: top;
             transition: transform 500ms ease-out;
         }
 
+/*=======================================================================================*/
 
-        #cartBackground {
-            background-color: rgba(217, 217, 217, 0.2);
-            border: 0;
-            border-radius: 16px;
-            grid-area: cartBackground;
-            position: absolute;
-            z-index: 0;
-            left: 406px;
-            width: 779px;
+        #calcUnits {
+            grid-area: calcUnits;
         }
 
         #cartHeader {
-            grid-area: cartHeader;
             font-size: 20px;
             font-weight: 600;
             color: #8644D7;
@@ -298,12 +314,11 @@
             grid-area: calcCurrencies;
             padding-top: 10px;
             text-align: center;
-            z-index: 1;
+            /*z-index: 1;*/
         }
 
         #unitList {
-            grid-area: unitList;
-            z-index: 1;
+            /*z-index: 1;*/
         }
 
         .unitAtList {
@@ -345,7 +360,7 @@
         #calcInCart {
             grid-area: calcInCart;
             padding-left: 35px;
-            z-index: 1;
+            /*z-index: 1;*/
             font-size: 12px;
         }
 
@@ -382,22 +397,22 @@
 
         .unitInCartHeader {
             color: #4B5061;
-            z-index: 1;
+            /*z-index: 1;*/
         }
 
         #unitQuantity {
             grid-area: unitQuantity;
-            z-index: 1;
+            /*z-index: 1;*/
         }
 
         #unitPrice {
             grid-area: unitPrice;
-            z-index: 1;
+            /*z-index: 1;*/
         }
 
         #deleteUnitColumn {
             grid-area: deleteUnitColumn;
-            z-index: 1;
+            /*z-index: 1;*/
         }
 
         .deleteImg {
@@ -742,25 +757,29 @@
         </div>
         <div id="calcHide" class="calcHidden">
             <div id="calcCart">
-                <span id="cartHeader">Выберите нужные блоки</span>
-                <div id="calcCurrencies">
-                    <span id="rubleButton" class="selectedCurrencyButton">&#8381;</span>
-                    <span id="dollarButton" class="currencyButton">$</span>
-                    <span id="tengeButton" class="currencyButton">&#8376;</span>
+                <div id="calcUnits">
+                    <div id="cartHeader">Выберите нужные блоки</div>
+                    <form id="unitList"></form>
                 </div>
-                <div id="cartBackground"></div>
-                <form id="unitList"></form>
-                <div id="calcInCart"></div>
-                <div id="unitQuantity"></div>
-                <div id="unitPrice"></div>
-                <div id="deleteUnitColumn"></div>
+                <div id="cartBackground">
+                    <div id="calcCurrencies">
+                        <span id="rubleButton" class="selectedCurrencyButton">&#8381;</span>
+                        <span id="dollarButton" class="currencyButton">$</span>
+                        <span id="tengeButton" class="currencyButton">&#8376;</span>
+                    </div>
+                    <div id="calcInCart"></div>
+                    <div id="unitQuantity"></div>
+                    <div id="unitPrice"></div>
+                    <div id="deleteUnitColumn"></div>
+                    <h3 id="totalPrice"></h3>
+                </div>
             </div>
             <div id="totalPriceOrderAndServicesButton" class="calcHidden">
                 <div id="calcServices">
                     <p id="servicesButton">Добавить услуги ˅</p>
                     <div id="servicesList" class="additionalServicesHidden"></div>
                 </div>
-                <h3 id="totalPrice"></h3>
+
                 <button id="calcSubmitButton" disabled>Заказать курс</button>
             </div>
         </div>
@@ -1448,7 +1467,6 @@
                             minus.appendChild(textMinus);
                             minus.className = 'calcPlusMinus calcMinus';
                             minus.dataset.index = unit.index;
-                            minus.addEventListener('click', () => this.onMinus(unit.index));
                             const quantity = document.createElement('span');
                             const quantityText = document.createTextNode(unit.quantityInCart);
                             quantity.appendChild(quantityText);
@@ -1536,8 +1554,8 @@
                         this.calcSubmitButton.disabled = false;
                         this.totalPriceOrderAndServicesButton.classList.remove('calcHidden');
                         this.totalPriceOrderAndServicesButton.classList.add('calcVisible');
-                        this.cartBackground.style.display = 'block';
-                        this.cartBackground.style.height = cartTotalHeight + 25 + 'px';
+                        this.cartBackground.style.display = 'grid';
+                        // this.cartBackground.style.height = cartTotalHeight + 25 + 'px';
                     } else {
                         this.cartBackground.style.display = 'none';
                         this.calcSubmitButton.disabled = true;
