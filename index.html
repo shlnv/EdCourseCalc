@@ -259,7 +259,7 @@
             grid-row-gap: 10px;
             grid-template-areas:
             "cartHeader cartHeader cartBackground . calcCurrencies ."
-            ". unitList calcInCart unitQuantity unitPrice deleteUnitColumn"
+            "unitList unitList calcInCart unitQuantity unitPrice deleteUnitColumn"
         }
 
         #totalPriceOrderAndServicesButton {
@@ -283,8 +283,8 @@
             grid-area: cartBackground;
             position: absolute;
             z-index: 0;
-            left: 436px;
-            width: 781px;
+            left: 406px;
+            width: 779px;
         }
 
         #cartHeader {
@@ -344,14 +344,14 @@
 
         #calcInCart {
             grid-area: calcInCart;
-            padding-left: 40px;
+            padding-left: 35px;
             z-index: 1;
             font-size: 12px;
         }
 
         .inCartLineUnit {
             margin-bottom: 12px;
-            padding-left: 25px;
+            /*padding-left: 25px;*/
         }
 
         .quantityWrapper {
