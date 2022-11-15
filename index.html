@@ -1,3 +1,11 @@
+<div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab deserunt dignissimos dolor fuga illo ipsum neque,
+    nulla officiis provident suscipit! Blanditiis consequatur inventore libero mollitia, quos similique vel! Laborum,
+    voluptate voluptates? Accusamus, dolores et iusto nobis optio quaerat qui vel! Doloribus enim tempora voluptas. Ab
+    aperiam cum iure odit omnis perferendis repudiandae suscipit? Aut, esse, facilis. Beatae dolores eum ipsam officiis
+    quas. Accusantium asperiores ex molestias, mollitia non tenetur vel. A, alias aut dolores doloribus earum, error est
+    eum excepturi exercitationem expedita nam nostrum nulla quisquam quos, recusandae rem velit veritatis voluptates!
+    Accusamus asperiores dolore facilis id nemo officiis quibusdam.
+</div>
 <div>
     <meta charset="UTF-8">
 
@@ -67,7 +75,6 @@
         }
 
 
-
         .buttonAndExampleWrapper {
             display: inline;
             width: 240px;
@@ -91,32 +98,12 @@
             color: rgba(75, 80, 97, 1);
         }
 
-        #SLChoiceTextHeader {
-            font-weight: 600;
-            font-size: 20px;
-        }
-
-        #SLChoiceTextText {
-            font-size: 12px;
-            font-weight: 300;
-        }
-
         #SLChoiceButtonsWrapper {
             grid-area: buttons1;
         }
 
         .calcGridGap {
             grid-area: gap;
-            height: 25px;
-        }
-
-        #chooseCourseText {
-            grid-area: text2;
-            color: rgba(75, 80, 97, 1);
-            font-size: 20px;
-            font-weight: 600;
-            transform-origin: top;
-            transition: transform 100ms ease-out;
         }
 
         #SLYesButton {
@@ -161,10 +148,6 @@
             cursor: pointer;
         }
 
-        /*.calcButton:active {*/
-        /*    background-color: darkorange;*/
-        /*}*/
-
         .calcButtonPressed {
             font-family: Montserrat;
             color: #4B5061;
@@ -202,10 +185,6 @@
             cursor: pointer;
         }
 
-        /*.chooseCourseButton:active {*/
-        /*    background-color: darkorange;*/
-        /*}*/
-
         .chooseCourseButtonSelected {
             font-family: Montserrat;
             color: #4B5061;
@@ -239,8 +218,6 @@
             color: rgba(75, 80, 97, 1);
         }
 
-/*========================GRIDS=========================*/
-
         #SLAndCourseSwitchWrapper {
             margin-top: 20px;
             font-size: 0;
@@ -265,60 +242,81 @@
             grid-column-gap: 10px;
             grid-row-gap: 10px;
             grid-template-areas:
-            "calcUnits cartBackground";
+            "calcUnits cartGridContainer";
+        }
+
+        #cartGridContainer {
+            grid-area: cartGridContainer;
         }
 
         #cartBackground {
             background-color: rgba(217, 217, 217, 0.2);
             border: 0;
             border-radius: 16px;
-            /*max-height: 100%;*/
-            grid-area: cartBackground;
+            max-height: inherit;
+            overflow-y: auto;
             display: grid;
             grid-template-columns: 3fr 1fr 1fr 0.5fr;
-            grid-template-rows: auto;
+            grid-template-rows: min-content;
             grid-column-gap: 10px;
             grid-row-gap: 10px;
             grid-template-areas:
-            ". . . calcCurrencies"
+            ". . calcCurrencies ."
             "calcInCart unitQuantity unitPrice deleteUnitColumn"
             ". . totalPrice totalPrice"
         }
-
-        #totalPriceOrderAndServicesButton {
-            display: grid;
-            grid-template-columns: 0.3fr 1.2fr 1.5fr 0.5fr 0.5fr 0.5fr;
-            grid-template-rows: auto;
-            grid-column-gap: 10px;
-            grid-row-gap: 10px;
-            grid-template-areas:
-            "calcServices calcServices . . . ."
-            "servicesList servicesList . . calcSubmitButton calcSubmitButton";
-            transform-origin: top;
-            transition: transform 500ms ease-out;
-        }
-
-/*=======================================================================================*/
 
         #calcUnits {
             grid-area: calcUnits;
         }
 
-        #cartHeader {
+        #SLChoiceTextHeader {
+            font-weight: 600;
+            font-size: 20px;
+        }
+
+        #SLChoiceTextText {
+            font-size: 12px;
+            font-weight: 300;
+        }
+
+        #chooseCourseText {
+            grid-area: text2;
+            color: rgba(75, 80, 97, 1);
             font-size: 20px;
             font-weight: 600;
-            color: #8644D7;
+            transform-origin: top;
+            transition: transform 100ms ease-out;
+        }
+
+        #cartHeader {
+            margin-bottom: 25px;
+            font-size: 20px;
+            font-weight: 600;
+            color: rgba(75, 80, 97, 1);
+        }
+
+        #calcServices {
+            grid-area: calcServices;
+        }
+
+        #servicesButton:hover {
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .calcLeftHeaders {
+            /*TODO class for all headers including servicesButton*/
         }
 
         #calcCurrencies {
             grid-area: calcCurrencies;
-            padding-top: 10px;
+            padding-top: 25px;
             text-align: center;
-            /*z-index: 1;*/
         }
 
         #unitList {
-            /*z-index: 1;*/
+            padding-left: 20px;
         }
 
         .unitAtList {
@@ -359,17 +357,17 @@
 
         #calcInCart {
             grid-area: calcInCart;
-            padding-left: 35px;
+            padding-left: 45px;
             /*z-index: 1;*/
             font-size: 12px;
         }
 
         .inCartLineUnit {
             margin-bottom: 12px;
-            /*padding-left: 25px;*/
         }
 
         .quantityWrapper {
+            width: 120px;
             box-sizing: border-box;
             padding-top: 1px;
             margin-bottom: 12px;
@@ -402,17 +400,14 @@
 
         #unitQuantity {
             grid-area: unitQuantity;
-            /*z-index: 1;*/
         }
 
         #unitPrice {
             grid-area: unitPrice;
-            /*z-index: 1;*/
         }
 
         #deleteUnitColumn {
             grid-area: deleteUnitColumn;
-            /*z-index: 1;*/
         }
 
         .deleteImg {
@@ -424,28 +419,17 @@
             cursor: pointer;
         }
 
-        #servicesButton:hover {
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        #calcServices {
-            grid-area: calcServices;
-        }
-
         #servicesList {
-            position: absolute;
-            grid-area: servicesList;
+            padding-left: 20px;
             background-color: rgba(255, 255, 255, 1);
-            border-radius: 16px;
-            box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.1);
-            padding: 25px 25px 2px 25px;
             transform-origin: top;
             transition: transform 500ms ease-out;
         }
 
         #totalPrice {
             grid-area: totalPrice;
+            margin-top: 0;
+            margin-bottom: 30px;
             color: #8644D7;
         }
 
@@ -455,8 +439,9 @@
         }
 
         #calcSubmitButton {
-            grid-area: calcSubmitButton;
-            width: 228px;
+            margin-top: 18px;
+            float: right;
+            width: 240px;
             height: 46px;
             border-radius: 8px;
             background-color: #FFD200;
@@ -464,6 +449,8 @@
             font-size: 14px;
             font-weight: bold;
             border: 0;
+            transform-origin: top;
+            transition: transform 500ms ease-out;
         }
 
         #calcSubmitButton:hover {
@@ -492,13 +479,11 @@
         }
 
         .calcPlus {
-            position: absolute;
-            margin-left: 8px;
-            padding-top: 3px;
+            float: right;
         }
 
         .calcMinus {
-            margin-right: 8px;
+            float: left;
         }
 
         .invisiblePlus {
@@ -520,10 +505,13 @@
             color: blue;
         }
 
+        .betweenPlusMinus {
+            margin-left: 31px;
+        }
+
         #calcHide {
             transform-origin: top;
             transition: transform 500ms ease-out;
-            /*display: none;*/
         }
 
         #rubleButton {
@@ -759,28 +747,27 @@
             <div id="calcCart">
                 <div id="calcUnits">
                     <div id="cartHeader">Выберите нужные блоки</div>
-                    <form id="unitList"></form>
-                </div>
-                <div id="cartBackground">
-                    <div id="calcCurrencies">
-                        <span id="rubleButton" class="selectedCurrencyButton">&#8381;</span>
-                        <span id="dollarButton" class="currencyButton">$</span>
-                        <span id="tengeButton" class="currencyButton">&#8376;</span>
+                    <div id="unitList"></div>
+                    <div id="calcServices">
+                        <p id="servicesButton">Добавить услуги ˅</p>
+                        <div id="servicesList" class="additionalServicesHidden"></div>
                     </div>
-                    <div id="calcInCart"></div>
-                    <div id="unitQuantity"></div>
-                    <div id="unitPrice"></div>
-                    <div id="deleteUnitColumn"></div>
-                    <h3 id="totalPrice"></h3>
                 </div>
-            </div>
-            <div id="totalPriceOrderAndServicesButton" class="calcHidden">
-                <div id="calcServices">
-                    <p id="servicesButton">Добавить услуги ˅</p>
-                    <div id="servicesList" class="additionalServicesHidden"></div>
+                <div id="cartGridContainer">
+                    <div id="cartBackground">
+                        <div id="calcCurrencies">
+                            <span id="rubleButton" class="selectedCurrencyButton">&#8381;</span>
+                            <span id="dollarButton" class="currencyButton">$</span>
+                            <span id="tengeButton" class="currencyButton">&#8376;</span>
+                        </div>
+                        <div id="calcInCart"></div>
+                        <div id="unitQuantity"></div>
+                        <div id="unitPrice"></div>
+                        <div id="deleteUnitColumn"></div>
+                        <h3 id="totalPrice"></h3>
+                    </div>
+                    <button id="calcSubmitButton" class="calcHidden">Заказать курс</button>
                 </div>
-
-                <button id="calcSubmitButton" disabled>Заказать курс</button>
             </div>
         </div>
     </div>
@@ -1299,6 +1286,7 @@
 
                     this.cartBackground = document.getElementById('cartBackground');
                     this.unitList = document.getElementById('unitList');
+                    this.calcUnits = document.getElementById('calcUnits');
                     this.cartUnits = document.getElementById('calcInCart');
                     this.cartQuantity = document.getElementById('unitQuantity');
                     this.cartPrices = document.getElementById('unitPrice');
@@ -1309,7 +1297,6 @@
                     this.dollarButton.addEventListener('click', this.onDollar);
                     this.tengeButton = document.getElementById('tengeButton');
                     this.tengeButton.addEventListener('click', this.onTenge);
-                    this.totalPriceOrderAndServicesButton = document.getElementById('totalPriceOrderAndServicesButton');
                     this.servicesButton = document.getElementById('servicesButton');
                     this.servicesButton.addEventListener('click', () => {
                         this.renderServicesList();
@@ -1373,6 +1360,8 @@
                         input.id = unit.id;
                         const label = this.createLabelWithoutHtmlFor(unit);
                         label.htmlFor = input.id;
+                        if (input.checked)
+                            label.style.color = 'rgba(134, 68, 215, 1)'
                         div.appendChild(input);
                         div.appendChild(label);
                         this.unitList.appendChild(div);
@@ -1447,7 +1436,6 @@
                             currency = '₸';
                             break;
                     }
-                    let cartTotalHeight = 34;
                     this.#useCases.getUnits().forEach((unit) => {
                         if (unit.quantityInCart) {
                             const inCartLineUnit = document.createElement('div');
@@ -1467,7 +1455,9 @@
                             minus.appendChild(textMinus);
                             minus.className = 'calcPlusMinus calcMinus';
                             minus.dataset.index = unit.index;
+                            minus.addEventListener('click', () => this.onMinus(unit.index));
                             const quantity = document.createElement('span');
+                            quantity.className = 'betweenPlusMinus'
                             const quantityText = document.createTextNode(unit.quantityInCart);
                             quantity.appendChild(quantityText);
                             quantityWrapper.appendChild(minus);
@@ -1516,7 +1506,6 @@
                                 yesNoSwitcher = true;
                             }
                             const unitHeight = inCartLineUnit.offsetHeight;
-                            cartTotalHeight = cartTotalHeight + unitHeight + 12;
                             const unitInCartHeight = unitHeight + 'px';
                             inCartLinePrice.style.height = unitInCartHeight;
                             quantityWrapper.style.height = unitInCartHeight;
@@ -1551,14 +1540,14 @@
                     totalPrice.innerHTML = '';
                     totalPrice.appendChild(textContentTotal);
                     if (this.#useCases.getTotal()) {
-                        this.calcSubmitButton.disabled = false;
-                        this.totalPriceOrderAndServicesButton.classList.remove('calcHidden');
-                        this.totalPriceOrderAndServicesButton.classList.add('calcVisible');
+                        this.calcSubmitButton.classList.add('calcVisible');
+                        this.calcSubmitButton.classList.remove('calcHidden');
                         this.cartBackground.style.display = 'grid';
-                        // this.cartBackground.style.height = cartTotalHeight + 25 + 'px';
+                        this.cartBackground.style.maxHeight = this.calcUnits.offsetHeight + 'px';
                     } else {
                         this.cartBackground.style.display = 'none';
-                        this.calcSubmitButton.disabled = true;
+                        this.calcSubmitButton.classList.add('calcHidden');
+                        this.calcSubmitButton.classList.remove('calcVisible');
                     }
                 };
 
@@ -1748,4 +1737,12 @@
         calc();
 
     </script>
+</div>
+<div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam consequatur, culpa delectus dolorem eaque earum
+    maxime, molestiae nostrum officia praesentium provident quae quaerat quos recusandae reiciendis rerum saepe sed
+    sequi voluptatem voluptatibus. Mollitia natus officia quas temporibus. Accusamus autem consequuntur impedit incidunt
+    nulla odit, praesentium repellendus? Atque dolorem earum ipsum maxime quasi sed soluta. Ad assumenda ducimus eaque
+    eius impedit officia sunt. Aut delectus dolorem dolorum explicabo harum hic inventore ipsa iusto magni
+    necessitatibus nemo nisi quae quas quos recusandae, reiciendis rerum soluta ullam velit veniam. Alias aperiam
+    commodi cupiditate, dolor illum impedit numquam obcaecati quam repellat vel? Accusantium, nostrum!
 </div>
