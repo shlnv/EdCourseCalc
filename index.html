@@ -37,11 +37,13 @@
         }
 
         .additionalServicesVisible {
+            display: block;
             visibility: visible;
             transform: scaleY(1);
         }
 
         .additionalServicesHidden {
+            display: none;
             visibility: hidden;
             transform: scaleY(0);
         }
@@ -270,11 +272,6 @@
             grid-area: calcUnits;
         }
 
-        #SLChoiceTextHeader {
-            font-weight: 600;
-            font-size: 20px;
-        }
-
         #SLChoiceTextText {
             font-size: 12px;
             font-weight: 300;
@@ -282,18 +279,12 @@
 
         #chooseCourseText {
             grid-area: text2;
-            color: rgba(75, 80, 97, 1);
-            font-size: 20px;
-            font-weight: 600;
             transform-origin: top;
             transition: transform 100ms ease-out;
         }
 
         #cartHeader {
             margin-bottom: 25px;
-            font-size: 20px;
-            font-weight: 600;
-            color: rgba(75, 80, 97, 1);
         }
 
         #calcServices {
@@ -306,7 +297,9 @@
         }
 
         .calcLeftHeaders {
-            /*TODO class for all headers including servicesButton*/
+            font-weight: 600;
+            font-size: 20px;
+            color: rgba(75, 80, 97, 1);
         }
 
         #calcCurrencies {
@@ -420,6 +413,7 @@
         }
 
         #servicesList {
+            /*display: none;*/
             padding-left: 20px;
             background-color: rgba(255, 255, 255, 1);
             transform-origin: top;
@@ -720,7 +714,7 @@
         <br>
         <div id="SLAndCourseSwitchWrapper">
             <div id="SLChoiceText">
-                <span id="SLChoiceTextHeader">Ваш курс будет интерактивным?</span>
+                <span id="SLChoiceTextHeader" class="calcLeftHeaders">Ваш курс будет интерактивным?</span>
                 <br>
                 <span id="SLChoiceTextText">Нелинейная логика прохождения,<br>взаимодействие с учеником</span>
             </div>
@@ -729,7 +723,7 @@
                 <button id="SLNoButton" class="calcButton">НЕТ</button>
             </div>
             <div class="calcGridGap"></div>
-            <span id="chooseCourseText" class="calcHidden">Какой курс вам нужен?</span>
+            <span id="chooseCourseText" class="calcHidden calcLeftHeaders">Какой курс вам нужен?</span>
             <div id="longReadWrapper" class="buttonAndExampleWrapper">
                 <button class="chooseCourseButton calcHidden" id="longReadButton">ЛОНГРИД</button>
                 <a href="#" id="longreadExampleLink" class="calcExampleLink">Посмотреть пример курса</a>
@@ -746,12 +740,12 @@
         <div id="calcHide" class="calcHidden">
             <div id="calcCart">
                 <div id="calcUnits">
-                    <div id="cartHeader">Выберите нужные блоки</div>
+                    <div id="cartHeader" class="calcLeftHeaders">Выберите нужные блоки</div>
                     <div id="unitList"></div>
-                    <div id="calcServices">
-                        <p id="servicesButton">Добавить услуги ˅</p>
-                        <div id="servicesList" class="additionalServicesHidden"></div>
-                    </div>
+                    <!--                    <div id="calcServices">-->
+                    <p id="servicesButton" class="calcLeftHeaders">Добавить услуги ˅</p>
+                    <div id="servicesList" class="additionalServicesHidden"></div>
+                    <!--                    </div>-->
                 </div>
                 <div id="cartGridContainer">
                     <div id="cartBackground">
@@ -1193,6 +1187,7 @@
                         if (!event.path.includes(this.servicesList) && !event.path.includes(this.servicesButton)) {
                             this.servicesList.classList.remove('additionalServicesVisible');
                             this.servicesList.classList.add('additionalServicesHidden');
+                            // this.servicesList.style.display = 'none';
                         }
                     })
                     this.chooseCourseText = document.getElementById('chooseCourseText')
@@ -1232,7 +1227,6 @@
                         this.videoCourseExampleLink.style.display = 'none';
                         this.trainerExampleLink.style.display = 'none';
                         this.renderUnitList(this.#useCases.longreadFilter());
-                        // this.calcHide.style.display = 'block';
                         this.calcHide.classList.remove('calcHidden');
                         this.calcHide.classList.add('calcVisible');
                         this.renderCart();
@@ -1255,7 +1249,6 @@
                         this.longreadExampleLink.style.display = 'none';
                         this.trainerExampleLink.style.display = 'none';
                         this.renderUnitList(this.#useCases.videocourseFilter());
-                        // this.calcHide.style.display = 'block';
                         this.calcHide.classList.remove('calcHidden');
                         this.calcHide.classList.add('calcVisible');
                         this.renderCart();
@@ -1278,7 +1271,6 @@
                         this.longreadExampleLink.style.display = 'none';
                         this.videoCourseExampleLink.style.display = 'none';
                         this.renderUnitList(this.#useCases.trainerFilter());
-                        // this.calcHide.style.display = 'block';
                         this.calcHide.classList.remove('calcHidden');
                         this.calcHide.classList.add('calcVisible');
                         this.renderCart();
@@ -1302,6 +1294,10 @@
                         this.renderServicesList();
                         this.servicesList.classList.toggle('additionalServicesHidden');
                         this.servicesList.classList.toggle('additionalServicesVisible');
+                        // if (this.servicesList.style.display = 'none')
+                        //     this.servicesList.style.display = 'block';
+                        // else
+                        //     this.servicesList.style.display = 'none';
                     });
                     this.calcSubmitButton = document.getElementById('calcSubmitButton');
                     this.calcSubmitButton.addEventListener('click', this.openModalWindow1);
