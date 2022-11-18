@@ -36,18 +36,6 @@
             transform: scaleY(0);
         }
 
-        .additionalServicesVisible {
-            display: block;
-            visibility: visible;
-            transform: scaleY(1);
-        }
-
-        .additionalServicesHidden {
-            display: none;
-            visibility: hidden;
-            transform: scaleY(0);
-        }
-
         #calcHeader {
             display: inline-block;
             color: rgba(134, 68, 215, 1);
@@ -413,11 +401,25 @@
         }
 
         #servicesList {
-            /*display: none;*/
             padding-left: 20px;
             background-color: rgba(255, 255, 255, 1);
             transform-origin: top;
-            transition: transform 500ms ease-out;
+            transition: transform 300ms ease-out;
+        }
+
+        .additionalServicesVisible {
+            position: static;
+            visibility: visible;
+            transform: scaleY(1);
+        }
+
+        .additionalServicesScaleY0 {
+            position: absolute;
+            transform: scaleY(0);
+        }
+
+        .additionalServicesHidden {
+            visibility: hidden;
         }
 
         #totalPrice {
@@ -744,7 +746,7 @@
                     <div id="unitList"></div>
                     <!--                    <div id="calcServices">-->
                     <p id="servicesButton" class="calcLeftHeaders">Добавить услуги ˅</p>
-                    <div id="servicesList" class="additionalServicesHidden"></div>
+                    <div id="servicesList" class="additionalServicesHidden additionalServicesScaleY0"></div>
                     <!--                    </div>-->
                 </div>
                 <div id="cartGridContainer">
@@ -1184,12 +1186,16 @@
                     this.calc = document.getElementById('calcWrapper');
                     this.servicesList = document.getElementById('servicesList');
                     this.calc.addEventListener('click', (event) => {
-                        if (!event.path.includes(this.servicesList) && !event.path.includes(this.servicesButton)) {
+                        if (!event.path.includes(this.servicesList) && !event.path.includes(this.servicesButton) && this.servicesListToggle) {
                             this.servicesList.classList.remove('additionalServicesVisible');
-                            this.servicesList.classList.add('additionalServicesHidden');
-                            // this.servicesList.style.display = 'none';
+                            this.servicesList.classList.add('additionalServicesScaleY0');
+                            setTimeout(() => {
+                                this.servicesList.classList.add('additionalServicesHidden');
+                                this.servicesListToggle = !this.servicesListToggle;
+                            }, 300);
                         }
                     })
+                    
                     this.chooseCourseText = document.getElementById('chooseCourseText')
                     this.chooseCourseButtons = document.getElementsByClassName('chooseCourseButton');
                     this.SLYesButton = document.getElementById('SLYesButton');
@@ -1290,10 +1296,25 @@
                     this.tengeButton = document.getElementById('tengeButton');
                     this.tengeButton.addEventListener('click', this.onTenge);
                     this.servicesButton = document.getElementById('servicesButton');
+                    this.servicesListToggle = false;
                     this.servicesButton.addEventListener('click', () => {
-                        this.renderServicesList();
-                        this.servicesList.classList.toggle('additionalServicesHidden');
-                        this.servicesList.classList.toggle('additionalServicesVisible');
+                        if (!this.servicesListToggle) {
+                            this.renderServicesList();
+                            // this.servicesList.style.display = 'block';
+                            setTimeout(() => {
+                                this.servicesList.classList.remove('additionalServicesHidden', 'additionalServicesScaleY0');
+                                this.servicesList.classList.add('additionalServicesVisible');
+                                this.servicesListToggle = !this.servicesListToggle;
+                            }, 0);
+                        } else {
+                            this.servicesList.classList.remove('additionalServicesVisible');
+                            this.servicesList.classList.add('additionalServicesScaleY0');
+                            setTimeout(() => {
+                                this.servicesList.classList.add('additionalServicesHidden');
+                                this.servicesListToggle = !this.servicesListToggle;
+                            }, 300);
+
+                        }
                         // if (this.servicesList.style.display = 'none')
                         //     this.servicesList.style.display = 'block';
                         // else
