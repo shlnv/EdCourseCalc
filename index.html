@@ -1,11 +1,3 @@
-<div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab deserunt dignissimos dolor fuga illo ipsum neque,
-    nulla officiis provident suscipit! Blanditiis consequatur inventore libero mollitia, quos similique vel! Laborum,
-    voluptate voluptates? Accusamus, dolores et iusto nobis optio quaerat qui vel! Doloribus enim tempora voluptas. Ab
-    aperiam cum iure odit omnis perferendis repudiandae suscipit? Aut, esse, facilis. Beatae dolores eum ipsam officiis
-    quas. Accusantium asperiores ex molestias, mollitia non tenetur vel. A, alias aut dolores doloribus earum, error est
-    eum excepturi exercitationem expedita nam nostrum nulla quisquam quos, recusandae rem velit veritatis voluptates!
-    Accusamus asperiores dolore facilis id nemo officiis quibusdam.
-</div>
 <div>
     <meta charset="UTF-8">
 
@@ -50,9 +42,16 @@
         #calcLogo {
             position: relative;
             display: inline-block;
+            float: right;
+        }
+
+        #calcLogoImg {
             width: 187px;
             height: 95px;
-            float: right;
+        }
+
+        #calcLogo:hover {
+            cursor: pointer;
         }
 
         #calcSubHeader {
@@ -131,6 +130,7 @@
             color: #4B5061;
             background-color: rgba(255, 255, 255, 1);
             margin-top: 20px;
+            transition: 500ms;
         }
 
         .calcButton:hover {
@@ -144,18 +144,6 @@
             background-color: #FFD200;
         }
 
-        #longReadButton:disabled {
-            color: black;
-        }
-
-        #videoCourseButton:disabled {
-            color: black;
-        }
-
-        #trainerButton:disabled {
-            color: black;
-        }
-
         .chooseCourseButton {
             font-size: 20px;
             font-family: Montserrat;
@@ -167,10 +155,10 @@
             background-color: rgba(255, 255, 255, 1);
             transform-origin: top;
             transition: transform 250ms ease-out;
+            transition: 500ms;
         }
 
         .chooseCourseButton:hover {
-
             background-color: #FFD200;
             cursor: pointer;
         }
@@ -275,13 +263,26 @@
             margin-bottom: 25px;
         }
 
-        #calcServices {
-            grid-area: calcServices;
+        #servicesHeader {
+            display: inline;
+            color: inherit;
+        }
+
+        #servicesButton {
+            margin: 5px 0 25px 0;
+            color: rgba(75, 80, 97, 1);;
         }
 
         #servicesButton:hover {
             cursor: pointer;
-            font-weight: bold;
+            color: black;
+            font-weight: 700;
+        }
+
+        #calcDownArrow {
+            display: inline;
+            height: 11px;
+            /*margin-top: 3px;*/
         }
 
         .calcLeftHeaders {
@@ -330,6 +331,11 @@
             display: block;
             position: relative;
             top: -20px;
+        }
+
+        .unitLabel:hover {
+            cursor: pointer;
+            text-shadow: 0 0 2px #8644D7;
         }
 
         .unitCheckboxWrapper {
@@ -447,6 +453,7 @@
             border: 0;
             transform-origin: top;
             transition: transform 500ms ease-out;
+            transition: 500ms;
         }
 
         #calcSubmitButton:hover {
@@ -620,6 +627,7 @@
             background-color: rgba(75, 80, 97, 1);
             border: 0;
             color: #F7F7F7;
+            transition: 500ms;
         }
 
         #userDataSubmitButton:hover {
@@ -708,9 +716,10 @@
         </div>
 
         <h1 id="calcHeader">КАЛЬКУЛЯТОР КУРСА</h1>
-        <img src="https://downloader.disk.yandex.ru/preview/75ead0cec289444e37160f97fbed503e13b7560713b4b25ab4d6efcd9a5f06e7/6325ecbe/6BT_65iy4PXvu2PF0YpJ6D14QMkfvcNQtXs-2_Y00s8dlFBC17CHsnKS2hMMDK46hUoqW2j11FiUO_Ru2YXPJw%3D%3D?uid=0&filename=logo-04.png&disposition=inline&hash=&limit=0&content_type=image%2Fpng&owner_uid=0&tknv=v2&size=2048x2048"
-             alt="logo"
-             id="calcLogo">
+        <a href="#" id="calcLogo">
+            <img id="calcLogoImg" src="https://s41vlx.storage.yandex.net/rdisk/04c7fc3d9aea3a1dc796b73812490f2df9b139369d5f4d349c0e1a48dbbe55b9/637800f2/ucK3pFvhwysf-TvQkJpnl8W1FdtpreZzAogMbxg5UbTosyTmuTBJ55A9MI3scCBtPsYVlOlNDBVD9GMh-_h6Gw==?uid=0&filename=logo-04.png&disposition=inline&hash=&limit=0&content_type=image%2Fpng&owner_uid=0&fsize=25436&hid=40d17b82964346712fdfc21cf6ad09a3&media_type=image&tknv=v2&etag=6c3ac108249f490c5697e48e10c49661&rtoken=41NQSYrm6PGo&force_default=no&ycrid=na-15229a179a5d762e5c966db135a75a17-downloader19e&ts=5edc5dc6ca080&s=b869c5e51ed58995551657aa7848efc8265a2fde856bad4e66460e87982ebe3f&pb=U2FsdGVkX1_xwm_E4r0BqXeJQQGmVnyTdQV4GInEvFjEpbz9CM3Wjjcujfnc4Mr90CHwwuVXd8RcXBKIwjUiwuZIXacOKmCibRK8FovGhFk"
+                 alt="logo">
+        </a>
         <br>
         <h3 id="calcSubHeader">ВЫБЕРИТЕ НУЖНЫЕ ВАМ ХАРАКТЕРИСТИКИ</h3>
         <br>
@@ -744,10 +753,12 @@
                 <div id="calcUnits">
                     <div id="cartHeader" class="calcLeftHeaders">Выберите нужные блоки</div>
                     <div id="unitList"></div>
-                    <!--                    <div id="calcServices">-->
-                    <p id="servicesButton" class="calcLeftHeaders">Добавить услуги ˅</p>
+                    <div id="servicesButton">
+                        <p id="servicesHeader" class="calcLeftHeaders">Добавить услуги&nbsp;</p>
+                        <img id="calcDownArrow" src="https://cdn-icons-png.flaticon.com/512/32/32195.png">
+                    </div>
                     <div id="servicesList" class="additionalServicesHidden additionalServicesScaleY0"></div>
-                    <!--                    </div>-->
+
                 </div>
                 <div id="cartGridContainer">
                     <div id="cartBackground">
@@ -1195,7 +1206,7 @@
                             }, 300);
                         }
                     })
-                    
+
                     this.chooseCourseText = document.getElementById('chooseCourseText')
                     this.chooseCourseButtons = document.getElementsByClassName('chooseCourseButton');
                     this.SLYesButton = document.getElementById('SLYesButton');
@@ -1300,7 +1311,6 @@
                     this.servicesButton.addEventListener('click', () => {
                         if (!this.servicesListToggle) {
                             this.renderServicesList();
-                            // this.servicesList.style.display = 'block';
                             setTimeout(() => {
                                 this.servicesList.classList.remove('additionalServicesHidden', 'additionalServicesScaleY0');
                                 this.servicesList.classList.add('additionalServicesVisible');
@@ -1315,10 +1325,6 @@
                             }, 300);
 
                         }
-                        // if (this.servicesList.style.display = 'none')
-                        //     this.servicesList.style.display = 'block';
-                        // else
-                        //     this.servicesList.style.display = 'none';
                     });
                     this.calcSubmitButton = document.getElementById('calcSubmitButton');
                     this.calcSubmitButton.addEventListener('click', this.openModalWindow1);
@@ -1754,12 +1760,4 @@
         calc();
 
     </script>
-</div>
-<div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam consequatur, culpa delectus dolorem eaque earum
-    maxime, molestiae nostrum officia praesentium provident quae quaerat quos recusandae reiciendis rerum saepe sed
-    sequi voluptatem voluptatibus. Mollitia natus officia quas temporibus. Accusamus autem consequuntur impedit incidunt
-    nulla odit, praesentium repellendus? Atque dolorem earum ipsum maxime quasi sed soluta. Ad assumenda ducimus eaque
-    eius impedit officia sunt. Aut delectus dolorem dolorum explicabo harum hic inventore ipsa iusto magni
-    necessitatibus nemo nisi quae quas quos recusandae, reiciendis rerum soluta ullam velit veniam. Alias aperiam
-    commodi cupiditate, dolor illum impedit numquam obcaecati quam repellat vel? Accusantium, nostrum!
 </div>
