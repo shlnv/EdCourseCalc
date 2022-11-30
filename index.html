@@ -717,7 +717,8 @@
 
         <h1 id="calcHeader">КАЛЬКУЛЯТОР КУРСА</h1>
         <a href="#" id="calcLogo">
-            <img id="calcLogoImg" src="https://s41vlx.storage.yandex.net/rdisk/04c7fc3d9aea3a1dc796b73812490f2df9b139369d5f4d349c0e1a48dbbe55b9/637800f2/ucK3pFvhwysf-TvQkJpnl8W1FdtpreZzAogMbxg5UbTosyTmuTBJ55A9MI3scCBtPsYVlOlNDBVD9GMh-_h6Gw==?uid=0&filename=logo-04.png&disposition=inline&hash=&limit=0&content_type=image%2Fpng&owner_uid=0&fsize=25436&hid=40d17b82964346712fdfc21cf6ad09a3&media_type=image&tknv=v2&etag=6c3ac108249f490c5697e48e10c49661&rtoken=41NQSYrm6PGo&force_default=no&ycrid=na-15229a179a5d762e5c966db135a75a17-downloader19e&ts=5edc5dc6ca080&s=b869c5e51ed58995551657aa7848efc8265a2fde856bad4e66460e87982ebe3f&pb=U2FsdGVkX1_xwm_E4r0BqXeJQQGmVnyTdQV4GInEvFjEpbz9CM3Wjjcujfnc4Mr90CHwwuVXd8RcXBKIwjUiwuZIXacOKmCibRK8FovGhFk"
+            <img id="calcLogoImg"
+                 src="https://s41vlx.storage.yandex.net/rdisk/04c7fc3d9aea3a1dc796b73812490f2df9b139369d5f4d349c0e1a48dbbe55b9/637800f2/ucK3pFvhwysf-TvQkJpnl8W1FdtpreZzAogMbxg5UbTosyTmuTBJ55A9MI3scCBtPsYVlOlNDBVD9GMh-_h6Gw==?uid=0&filename=logo-04.png&disposition=inline&hash=&limit=0&content_type=image%2Fpng&owner_uid=0&fsize=25436&hid=40d17b82964346712fdfc21cf6ad09a3&media_type=image&tknv=v2&etag=6c3ac108249f490c5697e48e10c49661&rtoken=41NQSYrm6PGo&force_default=no&ycrid=na-15229a179a5d762e5c966db135a75a17-downloader19e&ts=5edc5dc6ca080&s=b869c5e51ed58995551657aa7848efc8265a2fde856bad4e66460e87982ebe3f&pb=U2FsdGVkX1_xwm_E4r0BqXeJQQGmVnyTdQV4GInEvFjEpbz9CM3Wjjcujfnc4Mr90CHwwuVXd8RcXBKIwjUiwuZIXacOKmCibRK8FovGhFk"
                  alt="logo">
         </a>
         <br>
@@ -974,6 +975,7 @@
                     userData.forEach(obj => {
                         Object.assign(order, {[obj.name]: obj.value});
                     })
+                    console.log(order);
                     const response = await fetch(this.#url, {
                         method: 'POST',
                         mode: 'no-cors',
@@ -1194,163 +1196,170 @@
 
                 constructor(useCases) {
                     this.#useCases = useCases;
-                    this.calc = document.getElementById('calcWrapper');
-                    this.servicesList = document.getElementById('servicesList');
-                    this.calc.addEventListener('click', (event) => {
-                        if (!event.path.includes(this.servicesList) && !event.path.includes(this.servicesButton) && this.servicesListToggle) {
-                            this.servicesList.classList.remove('additionalServicesVisible');
-                            this.servicesList.classList.add('additionalServicesScaleY0');
-                            setTimeout(() => {
-                                this.servicesList.classList.add('additionalServicesHidden');
-                                this.servicesListToggle = !this.servicesListToggle;
-                            }, 300);
+                    this.servicesListToggle = false;
+
+                    this.htmlElements = {
+                        calc: document.getElementById('calcWrapper'),
+                        servicesList: document.getElementById('servicesList'),
+                        chooseCourseText: document.getElementById('chooseCourseText'),
+                        chooseCourseButtons: document.getElementsByClassName('chooseCourseButton'),
+                        SLYesButton: document.getElementById('SLYesButton'),
+                        SLNoButton: document.getElementById('SLNoButton'),
+                        longreadExampleLink: document.getElementById('longreadExampleLink'),
+                        videoCourseExampleLink: document.getElementById('videoCourseExampleLink'),
+                        trainerExampleLink: document.getElementById('trainerExampleLink'),
+                        calcHide: document.getElementById('calcHide'),
+                        longReadButton: document.getElementById('longReadButton'),
+                        videoCourseButton: document.getElementById('videoCourseButton'),
+                        trainerButton: document.getElementById('trainerButton'),
+                        cartBackground: document.getElementById('cartBackground'),
+                        unitList: document.getElementById('unitList'),
+                        calcUnits: document.getElementById('calcUnits'),
+                        cartUnits: document.getElementById('calcInCart'),
+                        cartQuantity: document.getElementById('unitQuantity'),
+                        cartPrices: document.getElementById('unitPrice'),
+                        deleteUnitColumn: document.getElementById('deleteUnitColumn'),
+                        rubleButton: document.getElementById('rubleButton'),
+                        dollarButton: document.getElementById('dollarButton'),
+                        tengeButton: document.getElementById('tengeButton'),
+                        servicesButton: document.getElementById('servicesButton'),
+                        calcSubmitButton: document.getElementById('calcSubmitButton'),
+                        userDataWindow: document.getElementById('userDataWindow'),
+                        calcModalClose1: document.getElementById('calcModalClose1'),
+                        calcDark: document.getElementById('calcDark'),
+                        calcUserForm: document.getElementById('calcUserForm'),
+                        calcModalClose2: document.getElementById('calcModalClose2'),
+                        thanksWindow: document.getElementById('thanksWindow')
+                    };
+
+                    this.htmlElements.calcUserForm.addEventListener('submit', this.submitCalc);
+                    this.htmlElements.calcModalClose2.addEventListener('click', this.closeModalWindow2);
+                    this.htmlElements.calcSubmitButton.addEventListener('click', this.openModalWindow1);
+                    this.htmlElements.calcModalClose1.addEventListener('click', this.closeModalWindow1);
+                    this.htmlElements.rubleButton.addEventListener('click', this.onRuble);
+                    this.htmlElements.dollarButton.addEventListener('click', this.onDollar);
+                    this.htmlElements.tengeButton.addEventListener('click', this.onTenge);
+
+                    this.htmlElements.calcDark.addEventListener('click', (event) => {
+                        if (event.target.id == 'calcDark') {
+                            this.htmlElements.userDataWindow.style.display = 'none';
+                            this.htmlElements.calcDark.style.display = 'none';
+                        } else if (event.target.id == 'calcDark') {
+                            this.htmlElements.thanksWindow.style.display = 'none';
+                            this.htmlElements.calcDark.style.display = 'none';
                         }
                     })
 
-                    this.chooseCourseText = document.getElementById('chooseCourseText')
-                    this.chooseCourseButtons = document.getElementsByClassName('chooseCourseButton');
-                    this.SLYesButton = document.getElementById('SLYesButton');
-                    this.SLNoButton = document.getElementById('SLNoButton');
-                    this.longreadExampleLink = document.getElementById('longreadExampleLink');
-                    this.videoCourseExampleLink = document.getElementById('videoCourseExampleLink');
-                    this.trainerExampleLink = document.getElementById('trainerExampleLink');
-                    this.calcHide = document.getElementById('calcHide');
-                    this.SLYesButton.addEventListener('click', () => {
+                    this.htmlElements.calc.addEventListener('click', (event) => {
+                        if (!event.path.includes(this.htmlElements.servicesList) && !event.path.includes(this.htmlElements.servicesButton) && this.servicesListToggle) {
+                            this.htmlElements.servicesList.classList.remove('additionalServicesVisible');
+                            this.htmlElements.servicesList.classList.add('additionalServicesScaleY0');
+                            setTimeout(() => {
+                                this.htmlElements.servicesList.classList.add('additionalServicesHidden');
+                                this.htmlElements.servicesListToggle = !this.servicesListToggle;
+                            }, 300);
+                        }
+                    });
+
+                    this.htmlElements.SLYesButton.addEventListener('click', () => {
                         this.onYesVisual();
                         return this.onYes();
                     });
-                    this.SLNoButton.addEventListener('click', () => {
+                    this.htmlElements.SLNoButton.addEventListener('click', () => {
                         this.onNoVisual();
                         return this.onNo();
                     });
-                    this.longReadButton = document.getElementById('longReadButton');
-                    this.videoCourseButton = document.getElementById('videoCourseButton');
-                    this.trainerButton = document.getElementById('trainerButton');
-                    this.longReadButton.addEventListener('click', () => {
+
+                    this.htmlElements.longReadButton.addEventListener('click', () => {
                         this.#filter = 'LONGREAD';
-                        this.longReadButton.classList.remove('chooseCourseButton');
-                        this.longReadButton.classList.remove('chooseCourseButtonNotSelected');
-                        this.longReadButton.classList.add('chooseCourseButtonSelected');
-                        this.longReadButton.disabled = true;
-                        this.videoCourseButton.classList.add('chooseCourseButton');
-                        this.videoCourseButton.classList.add('chooseCourseButtonNotSelected');
-                        this.videoCourseButton.classList.remove('chooseCourseButtonSelected');
-                        this.videoCourseButton.disabled = false;
-                        this.trainerButton.classList.add('chooseCourseButton');
-                        this.trainerButton.classList.add('chooseCourseButtonNotSelected');
-                        this.trainerButton.classList.remove('chooseCourseButtonSelected');
-                        this.trainerButton.disabled = false;
-                        this.longreadExampleLink.style.display = 'inline';
-                        this.videoCourseExampleLink.style.display = 'none';
-                        this.trainerExampleLink.style.display = 'none';
+                        this.htmlElements.longReadButton.classList.remove('chooseCourseButton');
+                        this.htmlElements.longReadButton.classList.remove('chooseCourseButtonNotSelected');
+                        this.htmlElements.longReadButton.classList.add('chooseCourseButtonSelected');
+                        this.htmlElements.longReadButton.disabled = true;
+                        this.htmlElements.videoCourseButton.classList.add('chooseCourseButton');
+                        this.htmlElements.videoCourseButton.classList.add('chooseCourseButtonNotSelected');
+                        this.htmlElements.videoCourseButton.classList.remove('chooseCourseButtonSelected');
+                        this.htmlElements.videoCourseButton.disabled = false;
+                        this.htmlElements.trainerButton.classList.add('chooseCourseButton');
+                        this.htmlElements.trainerButton.classList.add('chooseCourseButtonNotSelected');
+                        this.htmlElements.trainerButton.classList.remove('chooseCourseButtonSelected');
+                        this.htmlElements.trainerButton.disabled = false;
+                        this.htmlElements.longreadExampleLink.style.display = 'inline';
+                        this.htmlElements.videoCourseExampleLink.style.display = 'none';
+                        this.htmlElements.trainerExampleLink.style.display = 'none';
                         this.renderUnitList(this.#useCases.longreadFilter());
-                        this.calcHide.classList.remove('calcHidden');
-                        this.calcHide.classList.add('calcVisible');
+                        this.htmlElements.calcHide.classList.remove('calcHidden');
+                        this.htmlElements.calcHide.classList.add('calcVisible');
                         this.renderCart();
                     });
-                    this.videoCourseButton.addEventListener('click', () => {
+                    this.htmlElements.videoCourseButton.addEventListener('click', () => {
                         this.#filter = 'VIDEOCOURSE';
-                        this.videoCourseButton.classList.remove('chooseCourseButton');
-                        this.videoCourseButton.classList.remove('chooseCourseButtonNotSelected');
-                        this.videoCourseButton.classList.add('chooseCourseButtonSelected');
-                        this.videoCourseButton.disabled = true;
-                        this.longReadButton.classList.add('chooseCourseButton');
-                        this.longReadButton.classList.add('chooseCourseButtonNotSelected');
-                        this.longReadButton.classList.remove('chooseCourseButtonSelected');
-                        this.longReadButton.disabled = false;
-                        this.trainerButton.classList.add('chooseCourseButton');
-                        this.trainerButton.classList.add('chooseCourseButtonNotSelected');
-                        this.trainerButton.classList.remove('chooseCourseButtonSelected');
-                        this.trainerButton.disabled = false;
-                        this.videoCourseExampleLink.style.display = 'inline';
-                        this.longreadExampleLink.style.display = 'none';
-                        this.trainerExampleLink.style.display = 'none';
+                        this.htmlElements.videoCourseButton.classList.remove('chooseCourseButton');
+                        this.htmlElements.videoCourseButton.classList.remove('chooseCourseButtonNotSelected');
+                        this.htmlElements.videoCourseButton.classList.add('chooseCourseButtonSelected');
+                        this.htmlElements.videoCourseButton.disabled = true;
+                        this.htmlElements.longReadButton.classList.add('chooseCourseButton');
+                        this.htmlElements.longReadButton.classList.add('chooseCourseButtonNotSelected');
+                        this.htmlElements.longReadButton.classList.remove('chooseCourseButtonSelected');
+                        this.htmlElements.longReadButton.disabled = false;
+                        this.htmlElements.trainerButton.classList.add('chooseCourseButton');
+                        this.htmlElements.trainerButton.classList.add('chooseCourseButtonNotSelected');
+                        this.htmlElements.trainerButton.classList.remove('chooseCourseButtonSelected');
+                        this.htmlElements.trainerButton.disabled = false;
+                        this.htmlElements.videoCourseExampleLink.style.display = 'inline';
+                        this.htmlElements.longreadExampleLink.style.display = 'none';
+                        this.htmlElements.trainerExampleLink.style.display = 'none';
                         this.renderUnitList(this.#useCases.videocourseFilter());
-                        this.calcHide.classList.remove('calcHidden');
-                        this.calcHide.classList.add('calcVisible');
+                        this.htmlElements.calcHide.classList.remove('calcHidden');
+                        this.htmlElements.calcHide.classList.add('calcVisible');
                         this.renderCart();
                     });
-                    this.trainerButton.addEventListener('click', () => {
+                    this.htmlElements.trainerButton.addEventListener('click', () => {
                         this.#filter = 'TRAINER';
-                        this.trainerButton.classList.remove('chooseCourseButton');
-                        this.trainerButton.classList.remove('chooseCourseButtonNotSelected');
-                        this.trainerButton.classList.add('chooseCourseButtonSelected');
-                        this.trainerButton.disabled = true;
-                        this.longReadButton.classList.add('chooseCourseButton');
-                        this.longReadButton.classList.add('chooseCourseButtonNotSelected');
-                        this.longReadButton.classList.remove('chooseCourseButtonSelected');
-                        this.longReadButton.disabled = false;
-                        this.videoCourseButton.classList.add('chooseCourseButton');
-                        this.videoCourseButton.classList.add('chooseCourseButtonNotSelected');
-                        this.videoCourseButton.classList.remove('chooseCourseButtonSelected');
-                        this.videoCourseButton.disabled = false;
-                        this.trainerExampleLink.style.display = 'inline';
-                        this.longreadExampleLink.style.display = 'none';
-                        this.videoCourseExampleLink.style.display = 'none';
+                        this.htmlElements.trainerButton.classList.remove('chooseCourseButton');
+                        this.htmlElements.trainerButton.classList.remove('chooseCourseButtonNotSelected');
+                        this.htmlElements.trainerButton.classList.add('chooseCourseButtonSelected');
+                        this.htmlElements.trainerButton.disabled = true;
+                        this.htmlElements.longReadButton.classList.add('chooseCourseButton');
+                        this.htmlElements.longReadButton.classList.add('chooseCourseButtonNotSelected');
+                        this.htmlElements.longReadButton.classList.remove('chooseCourseButtonSelected');
+                        this.htmlElements.longReadButton.disabled = false;
+                        this.htmlElements.videoCourseButton.classList.add('chooseCourseButton');
+                        this.htmlElements.videoCourseButton.classList.add('chooseCourseButtonNotSelected');
+                        this.htmlElements.videoCourseButton.classList.remove('chooseCourseButtonSelected');
+                        this.htmlElements.videoCourseButton.disabled = false;
+                        this.htmlElements.trainerExampleLink.style.display = 'inline';
+                        this.htmlElements.longreadExampleLink.style.display = 'none';
+                        this.htmlElements.videoCourseExampleLink.style.display = 'none';
                         this.renderUnitList(this.#useCases.trainerFilter());
-                        this.calcHide.classList.remove('calcHidden');
-                        this.calcHide.classList.add('calcVisible');
+                        this.htmlElements.calcHide.classList.remove('calcHidden');
+                        this.htmlElements.calcHide.classList.add('calcVisible');
                         this.renderCart();
                     });
 
-                    this.cartBackground = document.getElementById('cartBackground');
-                    this.unitList = document.getElementById('unitList');
-                    this.calcUnits = document.getElementById('calcUnits');
-                    this.cartUnits = document.getElementById('calcInCart');
-                    this.cartQuantity = document.getElementById('unitQuantity');
-                    this.cartPrices = document.getElementById('unitPrice');
-                    this.deleteUnitColumn = document.getElementById('deleteUnitColumn');
-                    this.rubleButton = document.getElementById('rubleButton');
-                    this.rubleButton.addEventListener('click', this.onRuble);
-                    this.dollarButton = document.getElementById('dollarButton');
-                    this.dollarButton.addEventListener('click', this.onDollar);
-                    this.tengeButton = document.getElementById('tengeButton');
-                    this.tengeButton.addEventListener('click', this.onTenge);
-                    this.servicesButton = document.getElementById('servicesButton');
-                    this.servicesListToggle = false;
-                    this.servicesButton.addEventListener('click', () => {
+                    this.htmlElements.servicesButton.addEventListener('click', () => {
                         if (!this.servicesListToggle) {
                             this.renderServicesList();
                             setTimeout(() => {
-                                this.servicesList.classList.remove('additionalServicesHidden', 'additionalServicesScaleY0');
-                                this.servicesList.classList.add('additionalServicesVisible');
-                                this.servicesListToggle = !this.servicesListToggle;
+                                this.htmlElements.servicesList.classList.remove('additionalServicesHidden', 'additionalServicesScaleY0');
+                                this.htmlElements.servicesList.classList.add('additionalServicesVisible');
+                                this.htmlElements.servicesListToggle = !this.servicesListToggle;
                             }, 0);
                         } else {
-                            this.servicesList.classList.remove('additionalServicesVisible');
-                            this.servicesList.classList.add('additionalServicesScaleY0');
+                            this.htmlElements.servicesList.classList.remove('additionalServicesVisible');
+                            this.htmlElements.servicesList.classList.add('additionalServicesScaleY0');
                             setTimeout(() => {
-                                this.servicesList.classList.add('additionalServicesHidden');
-                                this.servicesListToggle = !this.servicesListToggle;
+                                this.htmlElements.servicesList.classList.add('additionalServicesHidden');
+                                this.htmlElements.servicesListToggle = !this.servicesListToggle;
                             }, 300);
 
                         }
                     });
-                    this.calcSubmitButton = document.getElementById('calcSubmitButton');
-                    this.calcSubmitButton.addEventListener('click', this.openModalWindow1);
-                    this.userDataWindow = document.getElementById('userDataWindow');
-                    this.calcModalClose1 = document.getElementById('calcModalClose1');
-                    this.calcModalClose1.addEventListener('click', this.closeModalWindow1);
-                    this.calcDark = document.getElementById('calcDark');
-                    this.calcDark.addEventListener('click', (event) => {
-                        if (event.target.id == 'calcDark') {
-                            this.userDataWindow.style.display = 'none';
-                            this.calcDark.style.display = 'none';
-                        } else if (event.target.id == 'calcDark') {
-                            this.thanksWindow.style.display = 'none';
-                            this.calcDark.style.display = 'none';
-                        }
-                    })
-                    this.calcUserForm = document.getElementById('calcUserForm');
-                    this.calcUserForm.addEventListener('submit', this.submitCalc);
-                    this.calcModalClose2 = document.getElementById('calcModalClose2');
-                    this.calcModalClose2.addEventListener('click', this.closeModalWindow2);
-                    this.thanksWindow = document.getElementById('thanksWindow');
                 }
 
                 openCalc = () => {
-                    this.calc.classList.remove('calcHidden');
-                    this.calc.classList.add('calcVisible');
+                    this.htmlElements.calc.classList.remove('calcHidden');
+                    this.htmlElements.calc.classList.add('calcVisible');
                 }
 
                 createInputWithoutID = (unit) => {
@@ -1375,7 +1384,7 @@
                 }
 
                 renderUnitList = (units) => {
-                    this.unitList.innerHTML = '';
+                    this.htmlElements.unitList.innerHTML = '';
                     units.forEach((unit) => {
                         const div = document.createElement('div');
                         div.className = 'unitCheckboxWrapper';
@@ -1387,13 +1396,13 @@
                             label.style.color = 'rgba(134, 68, 215, 1)'
                         div.appendChild(input);
                         div.appendChild(label);
-                        this.unitList.appendChild(div);
+                        this.htmlElements.unitList.appendChild(div);
                     });
                 }
 
                 renderServicesList = () => {
                     const units = this.#useCases.getUnits();
-                    this.servicesList.innerHTML = '';
+                    this.htmlElements.servicesList.innerHTML = '';
                     units.forEach((unit) => {
                         if (unit.services) {
                             const div = document.createElement('div');
@@ -1404,7 +1413,7 @@
                             label.htmlFor = input.id;
                             div.appendChild(input);
                             div.appendChild(label);
-                            this.servicesList.appendChild(div);
+                            this.htmlElements.servicesList.appendChild(div);
                         }
                     })
                 }
@@ -1440,10 +1449,10 @@
                 }
 
                 renderCart = () => {
-                    this.cartUnits.innerHTML = '';
-                    this.cartPrices.innerHTML = '';
-                    this.cartQuantity.innerHTML = '';
-                    this.deleteUnitColumn.innerHTML = '';
+                    this.htmlElements.cartUnits.innerHTML = '';
+                    this.htmlElements.cartPrices.innerHTML = '';
+                    this.htmlElements.cartQuantity.innerHTML = '';
+                    this.htmlElements.deleteUnitColumn.innerHTML = '';
                     let SLswitchers = 0;
                     let tildaSwitchers = 0;
                     let yesNoSwitcher = false;
@@ -1512,11 +1521,11 @@
                             const deleteImgWrapper = document.createElement('div');
                             deleteImgWrapper.className = 'deleteImgWrapper';
                             inCartLinePrice.appendChild(textContentPrice);
-                            this.cartUnits.appendChild(inCartLineUnit);
-                            this.cartPrices.appendChild(inCartLinePrice);
-                            this.cartQuantity.appendChild(quantityWrapper);
+                            this.htmlElements.cartUnits.appendChild(inCartLineUnit);
+                            this.htmlElements.cartPrices.appendChild(inCartLinePrice);
+                            this.htmlElements.cartQuantity.appendChild(quantityWrapper);
                             deleteImgWrapper.appendChild(deleteImg);
-                            this.deleteUnitColumn.appendChild(deleteImgWrapper);
+                            this.htmlElements.deleteUnitColumn.appendChild(deleteImgWrapper);
                             if (unit.toolSwitcher) {
                                 if (unit.toolSwitcher.trim().toLowerCase() == 'sl') {
                                     SLswitchers++;
@@ -1563,14 +1572,14 @@
                     totalPrice.innerHTML = '';
                     totalPrice.appendChild(textContentTotal);
                     if (this.#useCases.getTotal()) {
-                        this.calcSubmitButton.classList.add('calcVisible');
-                        this.calcSubmitButton.classList.remove('calcHidden');
-                        this.cartBackground.style.display = 'grid';
-                        this.cartBackground.style.maxHeight = this.calcUnits.offsetHeight + 'px';
+                        this.htmlElements.calcSubmitButton.classList.add('calcVisible');
+                        this.htmlElements.calcSubmitButton.classList.remove('calcHidden');
+                        this.htmlElements.cartBackground.style.display = 'grid';
+                        this.htmlElements.cartBackground.style.maxHeight = this.htmlElements.calcUnits.offsetHeight + 'px';
                     } else {
-                        this.cartBackground.style.display = 'none';
-                        this.calcSubmitButton.classList.add('calcHidden');
-                        this.calcSubmitButton.classList.remove('calcVisible');
+                        this.htmlElements.cartBackground.style.display = 'none';
+                        this.htmlElements.calcSubmitButton.classList.add('calcHidden');
+                        this.htmlElements.calcSubmitButton.classList.remove('calcVisible');
                     }
                 };
 
@@ -1605,15 +1614,15 @@
                 }
 
                 onYesVisual = () => {
-                    this.SLYesButton.classList.remove('calcButton');
-                    this.SLYesButton.classList.add('calcButtonPressed');
-                    this.SLYesButton.disabled = true;
-                    this.SLNoButton.disabled = false;
-                    this.SLNoButton.classList.remove('calcButtonPressed');
-                    this.SLNoButton.classList.add('calcButton');
-                    this.chooseCourseText.classList.remove('calcHidden');
-                    this.chooseCourseText.classList.add('calcVisible');
-                    for (let chooseCourseButton of this.chooseCourseButtons) {
+                    this.htmlElements.SLYesButton.classList.remove('calcButton');
+                    this.htmlElements.SLYesButton.classList.add('calcButtonPressed');
+                    this.htmlElements.SLYesButton.disabled = true;
+                    this.htmlElements.SLNoButton.disabled = false;
+                    this.htmlElements.SLNoButton.classList.remove('calcButtonPressed');
+                    this.htmlElements.SLNoButton.classList.add('calcButton');
+                    this.htmlElements.chooseCourseText.classList.remove('calcHidden');
+                    this.htmlElements.chooseCourseText.classList.add('calcVisible');
+                    for (let chooseCourseButton of this.htmlElements.chooseCourseButtons) {
                         chooseCourseButton.classList.remove('calcHidden');
                         chooseCourseButton.classList.add('calcVisible');
                     }
@@ -1628,49 +1637,49 @@
                 }
 
                 onNoVisual = () => {
-                    this.SLNoButton.classList.remove('calcButton');
-                    this.SLNoButton.classList.add('calcButtonPressed');
-                    this.SLNoButton.disabled = true;
-                    this.SLYesButton.disabled = false;
-                    this.SLYesButton.classList.remove('calcButtonPressed');
-                    this.SLYesButton.classList.add('calcButton');
-                    this.chooseCourseText.classList.remove('calcHidden');
-                    this.chooseCourseText.classList.add('calcVisible');
-                    for (let chooseCourseButton of this.chooseCourseButtons) {
+                    this.htmlElements.SLNoButton.classList.remove('calcButton');
+                    this.htmlElements.SLNoButton.classList.add('calcButtonPressed');
+                    this.htmlElements.SLNoButton.disabled = true;
+                    this.htmlElements.SLYesButton.disabled = false;
+                    this.htmlElements.SLYesButton.classList.remove('calcButtonPressed');
+                    this.htmlElements.SLYesButton.classList.add('calcButton');
+                    this.htmlElements.chooseCourseText.classList.remove('calcHidden');
+                    this.htmlElements.chooseCourseText.classList.add('calcVisible');
+                    for (let chooseCourseButton of this.htmlElements.chooseCourseButtons) {
                         chooseCourseButton.classList.remove('calcHidden');
                         chooseCourseButton.classList.add('calcVisible');
                     }
                 }
 
                 onRuble = () => {
-                    this.rubleButton.classList.remove('currencyButton');
-                    this.rubleButton.classList.add('selectedCurrencyButton');
-                    this.dollarButton.classList.remove('selectedCurrencyButton');
-                    this.dollarButton.classList.add('currencyButton');
-                    this.tengeButton.classList.remove('selectedCurrencyButton');
-                    this.tengeButton.classList.add('currencyButton');
+                    this.htmlElements.rubleButton.classList.remove('currencyButton');
+                    this.htmlElements.rubleButton.classList.add('selectedCurrencyButton');
+                    this.htmlElements.dollarButton.classList.remove('selectedCurrencyButton');
+                    this.htmlElements.dollarButton.classList.add('currencyButton');
+                    this.htmlElements.tengeButton.classList.remove('selectedCurrencyButton');
+                    this.htmlElements.tengeButton.classList.add('currencyButton');
                     this.#useCases.setRublePrice();
                     this.renderCart();
                 };
 
                 onDollar = () => {
-                    this.dollarButton.classList.remove('currencyButton');
-                    this.dollarButton.classList.add('selectedCurrencyButton');
-                    this.rubleButton.classList.remove('selectedCurrencyButton');
-                    this.rubleButton.classList.add('currencyButton');
-                    this.tengeButton.classList.remove('selectedCurrencyButton');
-                    this.tengeButton.classList.add('currencyButton');
+                    this.htmlElements.dollarButton.classList.remove('currencyButton');
+                    this.htmlElements.dollarButton.classList.add('selectedCurrencyButton');
+                    this.htmlElements.rubleButton.classList.remove('selectedCurrencyButton');
+                    this.htmlElements.rubleButton.classList.add('currencyButton');
+                    this.htmlElements.tengeButton.classList.remove('selectedCurrencyButton');
+                    this.htmlElements.tengeButton.classList.add('currencyButton');
                     this.#useCases.setDollarPrice();
                     this.renderCart();
                 }
 
                 onTenge = () => {
-                    this.tengeButton.classList.remove('currencyButton');
-                    this.tengeButton.classList.add('selectedCurrencyButton');
-                    this.rubleButton.classList.remove('selectedCurrencyButton');
-                    this.rubleButton.classList.add('currencyButton');
-                    this.dollarButton.classList.remove('selectedCurrencyButton');
-                    this.dollarButton.classList.add('currencyButton');
+                    this.htmlElements.tengeButton.classList.remove('currencyButton');
+                    this.htmlElements.tengeButton.classList.add('selectedCurrencyButton');
+                    this.htmlElements.rubleButton.classList.remove('selectedCurrencyButton');
+                    this.htmlElements.rubleButton.classList.add('currencyButton');
+                    this.htmlElements.dollarButton.classList.remove('selectedCurrencyButton');
+                    this.htmlElements.dollarButton.classList.add('currencyButton');
                     this.#useCases.setTengePrice();
                     this.renderCart();
                 }
@@ -1690,28 +1699,28 @@
                 }
 
                 openModalWindow1 = () => {
-                    this.userDataWindow.style.display = 'block';
-                    this.calcDark.style.display = 'block';
+                    this.htmlElements.userDataWindow.style.display = 'block';
+                    this.htmlElements.calcDark.style.display = 'block';
                 }
 
                 openModalWindow2 = () => {
-                    this.userDataWindow.style.display = 'none';
-                    this.thanksWindow.style.display = 'block';
+                    this.htmlElements.userDataWindow.style.display = 'none';
+                    this.htmlElements.thanksWindow.style.display = 'block';
                 }
 
                 closeModalWindow1 = () => {
-                    this.userDataWindow.style.display = 'none';
-                    this.calcDark.style.display = 'none';
+                    this.htmlElements.userDataWindow.style.display = 'none';
+                    this.htmlElements.calcDark.style.display = 'none';
                 }
 
                 closeModalWindow2 = () => {
-                    this.thanksWindow.style.display = 'none';
-                    this.calcDark.style.display = 'none';
+                    this.htmlElements.thanksWindow.style.display = 'none';
+                    this.htmlElements.calcDark.style.display = 'none';
                 }
 
                 submitCalc = async (event) => {
                     event.preventDefault();
-                    const {elements} = this.calcUserForm;
+                    const {elements} = this.htmlElements.calcUserForm;
                     const data = Array.from(elements)
                         .filter((item) => !!item.name)
                         .map((element) => {
