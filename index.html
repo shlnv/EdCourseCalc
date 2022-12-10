@@ -68,6 +68,7 @@
             display: inline;
             width: 240px;
             text-align: right;
+            line-height: 20px;
         }
 
         #longReadWrapper {
@@ -282,7 +283,6 @@
         #calcDownArrow {
             display: inline;
             height: 11px;
-            /*margin-top: 3px;*/
         }
 
         .calcLeftHeaders {
@@ -293,7 +293,7 @@
 
         #calcCurrencies {
             grid-area: calcCurrencies;
-            padding-top: 25px;
+            padding: 25px 50px 0 0;
             text-align: center;
         }
 
@@ -333,10 +333,10 @@
             top: -20px;
         }
 
-        .unitLabel:hover {
-            cursor: pointer;
-            text-shadow: 0 0 2px #8644D7;
-        }
+        /*.unitLabel:hover {*/
+        /*    cursor: pointer;*/
+        /*    text-shadow: 0 0 2px #8644D7;*/
+        /*}*/
 
         .unitCheckboxWrapper {
             max-height: 45px;
@@ -354,7 +354,7 @@
         }
 
         .quantityWrapper {
-            width: 120px;
+            width: 100px;
             box-sizing: border-box;
             padding-top: 1px;
             margin-bottom: 12px;
@@ -509,7 +509,7 @@
         }
 
         .betweenPlusMinus {
-            margin-left: 31px;
+            margin-left: 20px;
         }
 
         #calcHide {
@@ -783,12 +783,15 @@
     <script>
         console.log(window.navigator.userAgent);
 
-        const YES_NO_BUTTON_UNIT_ID = 'UT-007'
+        const DATA_URL = 'https://script.google.com/macros/s/AKfycbyvuqVCLoujMoF4fEQIVzlx78E3DVLgD9fEfxKTaG2D-Z5ctCMPewsrsQCl4OH_qJaC/exec';
+        const BANK_URL = 'https://www.cbr-xml-daily.ru/daily_json.js';
+        const YES_NO_BUTTON_UNIT_ID = 'UT-007';
 
         const calc = () => {
 
             class Data {
-                #url;
+                #dataSourceURL;
+                #bankAPIurl;
                 #data;
                 #profitMultiplier;
                 #constantExpenses;
@@ -798,17 +801,16 @@
                 #constantExpensesUSD;
                 #constantExpensesKZT;
                 #units;
-                #bankOfRussiaAPI;
                 #usd;
                 #kzt;
 
-                constructor() {
-                    this.#url = 'https://script.google.com/macros/s/AKfycbyvuqVCLoujMoF4fEQIVzlx78E3DVLgD9fEfxKTaG2D-Z5ctCMPewsrsQCl4OH_qJaC/exec';
-                    this.#bankOfRussiaAPI = 'https://www.cbr-xml-daily.ru/daily_json.js';
+                constructor(dataSourceURL, bankAPIurl) {
+                    this.#dataSourceURL = dataSourceURL;
+                    this.#bankAPIurl = bankAPIurl;
                 }
 
                 getFromAPI = async () => {
-                    this.#data = await this.fetchData(this.#url, {
+                    this.#data = await this.fetchData(this.#dataSourceURL, {
                         method: "GET",
                         mode: "no-cors"
                     });
@@ -846,7 +848,7 @@
                 }
 
                 fetchExchangeRates = async () => {
-                    const data = await fetch(this.#bankOfRussiaAPI);
+                    const data = await fetch(this.#bankAPIurl);
                     const rates = await data.json();
                     this.#usd = +rates.Valute.USD.Value;
                     this.#kzt = +rates.Valute.KZT.Value;
@@ -976,7 +978,7 @@
                         Object.assign(order, {[obj.name]: obj.value});
                     })
                     console.log(order);
-                    const response = await fetch(this.#url, {
+                    const response = await fetch(this.#dataSourceURL, {
                         method: 'POST',
                         mode: 'no-cors',
                         body: JSON.stringify(order)
@@ -1229,7 +1231,9 @@
                         calcDark: document.getElementById('calcDark'),
                         calcUserForm: document.getElementById('calcUserForm'),
                         calcModalClose2: document.getElementById('calcModalClose2'),
-                        thanksWindow: document.getElementById('thanksWindow')
+                        thanksWindow: document.getElementById('thanksWindow'),
+                        calcCurrencies: document.getElementById('calcCurrencies'),
+                        unitLabel: document.getElementsByClassName('unitLabel')
                     };
 
                     this.eventListeners();
@@ -1359,6 +1363,11 @@
 
                         }
                     });
+
+                    for (let unitLabel of this.htmlElements.unitLabel) {
+                        unitLabel.addEventListener('mouseup',(e)=>{});
+                        unitLabel.addEventListener('mousedown',(e)=>{});
+                    }
                 };
 
                 openCalc = () => {
@@ -1740,20 +1749,23 @@
                 static serverError = (error) => {
                     console.log(error);
                 }
+                static currenciesOff = (draw) => {
+                    draw.htmlElements.calcCurrencies.style.visibility = 'hidden';
+                }
             };
 
             const run = async () => {
                 let success = false;
-                const data = new Data();
+                const data = new Data(DATA_URL, BANK_URL);
                 try {
                     success = await data.getFromAPI();
                 } catch (e) {
-                    console.log('caught data.getFromAPI()');
+                    console.log('connecting to google script error');
                     Draw.serverError(e);
                 }
                 if (success) {
-                    const useCases = new UseCases(data);
-                    const draw = new Draw(useCases);
+                    var useCases = new UseCases(data);
+                    var draw = new Draw(useCases);
                     draw.openCalc();
                 }
                 try {
@@ -1763,6 +1775,7 @@
                 } catch (e) {
                     console.log('caught data.fetchExchangeRates error')
                     Draw.serverError(e);
+                    Draw.currenciesOff(draw);
                 }
                 if (success) {
                     await data.setPrices();
