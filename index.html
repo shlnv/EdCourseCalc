@@ -1,8 +1,112 @@
 <meta charset="UTF-8">
+
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Pathway+Gothic+One&display=swap');
 
-    #calcWrapper {
+    #calcLoading {
+        margin: auto;
+        background-color: rgba(255, 255, 255, 1);
+        width: 1216px;
+        border-radius: 16px;
+        box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.1);
+        padding: 23px 40px 40px 23px;
+    }
+
+    .loadingWrapper {
+        width: 400px;
+        height: 60px;
+        position: relative;
+        left: 50%;
+        right: 50%;
+        top: 30px;
+        transform: translate(-50%, -50%);
+    }
+
+    .loadingCircle {
+        width: 20px;
+        height: 20px;
+        position: absolute;
+        border-radius: 50%;
+        background-color: #FFD200;
+        left: 15%;
+        transform-origin: 50%;
+        animation: loadingCircle .5s alternate infinite ease;
+    }
+
+    @keyframes loadingCircle {
+        0% {
+            top: 60px;
+            height: 5px;
+            border-radius: 50px 50px 25px 25px;
+            transform: scaleX(1.7);
+        }
+        40% {
+            height: 20px;
+            border-radius: 50%;
+            transform: scaleX(1);
+        }
+        100% {
+            top: 0%;
+        }
+    }
+
+    .loadingCircle:nth-child(2) {
+        left: 45%;
+        animation-delay: .2s;
+    }
+
+    .loadingCircle:nth-child(3) {
+        left: auto;
+        right: 15%;
+        animation-delay: .3s;
+    }
+
+    .loadingShadow {
+        width: 20px;
+        height: 4px;
+        border-radius: 50%;
+        background-color: rgba(0, 0, 0, .5);
+        position: absolute;
+        top: 62px;
+        transform-origin: 50%;
+        z-index: -1;
+        left: 15%;
+        filter: blur(1px);
+        animation: loadingShadow .5s alternate infinite ease;
+    }
+
+    @keyframes loadingShadow {
+        0% {
+            transform: scaleX(1.5);
+        }
+        40% {
+            transform: scaleX(1);
+            opacity: .7;
+        }
+        100% {
+            transform: scaleX(.2);
+            opacity: .4;
+        }
+    }
+
+    .loadingShadow:nth-child(4) {
+        left: 45%;
+        animation-delay: .2s
+    }
+
+    .loadingShadow:nth-child(5) {
+        left: auto;
+        right: 15%;
+        animation-delay: .3s;
+    }
+
+    .calcWrapper {
+        padding: 0;
+        margin: 0;
+        overflow: auto;
+    }
+
+    #calcContainer {
         margin: auto;
         background-color: rgba(255, 255, 255, 1);
         font-family: 'Montserrat', sans-serif;
@@ -13,6 +117,7 @@
         padding: 23px 40px 40px 23px;
         transform-origin: top;
         transition: transform 500ms ease-out;
+        overflow: hidden;
     }
 
     .calcVisible {
@@ -62,7 +167,6 @@
         font-weight: 400;
     }
 
-
     .buttonAndExampleWrapper {
         display: inline;
         width: 240px;
@@ -110,7 +214,7 @@
         left: -2px;
         display: inline-block;
         font-size: 20px;
-        width: 113px;
+        width: 112px;
         height: 46px;
         border: 3px solid rgba(255, 210, 0, 1);
         border-radius: 0 25px 25px 0;
@@ -333,10 +437,10 @@
         top: -20px;
     }
 
-    /*.unitLabel:hover {*/
-    /*    cursor: pointer;*/
-    /*    text-shadow: 0 0 2px #8644D7;*/
-    /*}*/
+    .unitLabel:hover {
+        cursor: pointer;
+        /*    text-shadow: 0 0 2px #8644D7;*/
+    }
 
     .unitCheckboxWrapper {
         max-height: 45px;
@@ -345,18 +449,10 @@
     #calcInCart {
         grid-area: calcInCart;
         padding-left: 45px;
-        /*z-index: 1;*/
         font-size: 12px;
     }
 
     .inCartLineUnit {
-        margin-bottom: 12px;
-    }
-
-    .quantityWrapper {
-        width: 100px;
-        box-sizing: border-box;
-        padding-top: 1px;
         margin-bottom: 12px;
     }
 
@@ -382,7 +478,6 @@
 
     .unitInCartHeader {
         color: #4B5061;
-        /*z-index: 1;*/
     }
 
     #unitQuantity {
@@ -442,6 +537,7 @@
 
     #priceNotice {
         grid-area: priceNotice;
+        padding-right: 5px;
     }
 
     .calcNotice {
@@ -526,8 +622,17 @@
         color: blue;
     }
 
+    .quantityWrapper {
+        width: 105px;
+        box-sizing: border-box;
+        padding-top: 1px;
+        margin-bottom: 12px;
+    }
+
     .betweenPlusMinus {
-        margin-left: 20px;
+        position: relative;
+        top: 4px;
+        margin-left: 18px;
     }
 
     #calcHide {
@@ -566,10 +671,26 @@
         cursor: default;
     }
 
+    #calcDark {
+        background: rgba(102, 102, 102, 0.5);
+        border-radius: 16px;
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        left: 0;
+        top: 0;
+        display: none;
+        z-index: 1000;
+    }
+
+    #userDataWindow {
+        display: none;
+    }
+
     .calcModalWindow {
         box-sizing: border-box;
         width: 280px;
-        height: 336px;
+        height: 356px;
         padding: 24px 40px 24px 40px;
         background-color: rgba(255, 255, 255, 1);
         font-family: 'Montserrat', sans-serif;
@@ -581,15 +702,6 @@
         bottom: 0;
         left: 0;
         margin: auto;
-
-    }
-
-    #userDataWindow {
-        display: none;
-    }
-
-    #thanksWindow {
-        display: none;
     }
 
     .calcModalClose {
@@ -605,27 +717,16 @@
         color: red;
     }
 
-    #calcDark {
-        background: rgba(102, 102, 102, 0.5);
-        border-radius: 16px;
-        position: absolute;
-        height: 100%;
-        width: 100%;
-        left: 0;
-        top: 0;
-        display: none;
-        z-index: 1000;
-    }
-
     .headerAtModalWindow {
         margin-top: 0;
-        margin-bottom: 10px;
+        margin-bottom: 12px;
         display: inline-block;
         float: left;
     }
 
-    .bottomHeaderModal {
-        max-width: 100px;
+    #calcUserForm {
+        position: static;
+        margin-bottom: 5px;
     }
 
     .calcUserInput {
@@ -638,10 +739,10 @@
     }
 
     #userDataSubmitButton {
-        width: 100%;
+        width: 95%;
         height: 32px;
         border-radius: 8px;
-        margin-bottom: 4px;
+        margin-bottom: 5px;
         background-color: rgba(75, 80, 97, 1);
         border: 0;
         color: #F7F7F7;
@@ -660,7 +761,16 @@
     .tinyModalWindowText {
         font-size: 8px;
         color: #989898;
-        margin-bottom: 15px;
+    }
+
+    .messengerLinksWrapper {
+        position: absolute;
+        bottom: 0;
+        margin-bottom: 20px;
+    }
+
+    .bottomHeaderModal {
+        max-width: 100px;
     }
 
     .calcMessengerLink {
@@ -673,126 +783,158 @@
         cursor: pointer;
     }
 
+    .telegramIcon {
+        visibility: hidden;
+    }
+
     .calcMessengerImage {
         width: 32px;
         height: 32px;
         border-radius: 5px;
     }
 
-    .calcModalText {
-        font-size: 12px;
+    #thanksWindow {
+        display: none;
     }
 
-    .messengerLinksWrapper {
+    #modalWindow2Header {
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    .secondModalWindowLinksWrapper {
         position: absolute;
         bottom: 0;
     }
 
+    .calcModalText {
+        font-size: 12px;
+    }
+
 </style>
 
-<div id="calcWrapper" class="calcHidden">
-
-    <div id="calcDark">
-        <div id="userDataWindow" class="calcModalWindow">
-            <div id="calcModalClose1" class="calcModalClose">X</div>
-            <h5 class="headerAtModalWindow">Оставьте заявку и менеджер свяжется в вами</h5>
-            <form id="calcUserForm">
-                <input type="email" name="email" placeholder="email" class="calcUserInput" required>
-                <input type="tel" name="phone" placeholder="+7 999 999 99 99" class="calcUserInput" required>
-                <input type="text" name="name" placeholder="Как к вам обращаться?" class="calcUserInput"
-                       required>
-                <input type="submit" value="Оставить заявку" id="userDataSubmitButton">
-                <div class="tinyModalWindowText">Нажатием на «Оставить заявку» подтверждаю согласие с обработкой
-                    персональный данных
-                </div>
-            </form>
-            <div class="messengerLinksWrapper">
-                <h5 class="headerAtModalWindow bottomHeaderModal">Можете нам написать</h5>
-<!--                <a href="#" class="calcMessengerLink"><img class="calcMessengerImage" src="https://static.tildacdn.com/tild3265-3830-4764-a630-643330613433/Telegram_logosvg.png" alt="Telegram"></a>-->
-                <a href="https://wa.me/+77051062642" class="calcMessengerLink"><img class="calcMessengerImage"
-                                                           src="https://static.tildacdn.com/tild3538-3732-4565-b561-363062636233/whatsapp.png"
-                                                           alt="WhatsApp"></a>
-            </div>
-        </div>
-        <div id="thanksWindow" class="calcModalWindow">
-            <div id="calcModalClose2" class="calcModalClose">X</div>
-
-            <h5>Спасибо за интерес к нашим курсам</h5>
-            <p class="calcModalText">Наш специалист свяжется с вами и проконсультирует по выбранному курсу</p>
-            <div class="messengerLinksWrapper">
-                <h5 class="headerAtModalWindow bottomHeaderModal">Можете нам написать</h5>
-                <!--                <a href="#" class="calcMessengerLink"><img class="calcMessengerImage" src="https://static.tildacdn.com/tild3265-3830-4764-a630-643330613433/Telegram_logosvg.png" alt="Telegram"></a>-->
-                <a href="https://wa.me/+77051062642"
-                   class="calcMessengerLink"><img class="calcMessengerImage"
-                                                  src="https://static.tildacdn.com/tild3538-3732-4565-b561-363062636233/whatsapp.png"
-                                                  alt="WhatsApp"></a>
-            </div>
-        </div>
+<div id="calcLoading">
+    <div class="loadingWrapper">
+        <div class="loadingCircle"></div>
+        <div class="loadingCircle"></div>
+        <div class="loadingCircle"></div>
+        <div class="loadingShadow"></div>
+        <div class="loadingShadow"></div>
+        <div class="loadingShadow"></div>
     </div>
+</div>
 
-    <h1 id="calcHeader">КАЛЬКУЛЯТОР КУРСА</h1>
-    <a href="#rec463377695" id="calcLogo">
-        <img id="calcLogoImg"
-             src="https://static.tildacdn.com/tild3462-3730-4034-b636-396137373061/6BT_65iy4PXvu2PF0YpJ.jpg"
-             alt="logo">
-    </a>
-    <br>
-    <h3 id="calcSubHeader">ВЫБЕРИТЕ НУЖНЫЕ ВАМ ХАРАКТЕРИСТИКИ</h3>
-    <br>
-    <div id="SLAndCourseSwitchWrapper">
-        <div id="SLChoiceText">
-            <span id="SLChoiceTextHeader" class="calcLeftHeaders">Ваш курс будет интерактивным?</span>
-            <br>
-            <span id="SLChoiceTextText">Нелинейная логика прохождения,<br>взаимодействие с учеником</span>
-        </div>
-        <div id="SLChoiceButtonsWrapper">
-            <button id="SLYesButton" class="calcButton">ДА</button>
-            <button id="SLNoButton" class="calcButton">НЕТ</button>
-        </div>
-        <div class="calcGridGap"></div>
-        <span id="chooseCourseText" class="calcHidden calcLeftHeaders">Какой курс вам нужен?</span>
-        <div id="longReadWrapper" class="buttonAndExampleWrapper">
-            <button class="chooseCourseButton calcHidden" id="longReadButton">ЛОНГРИД</button>
-            <a href="#rec500408196" id="longreadExampleLink" class="calcExampleLink">Посмотреть пример курса</a>
-        </div>
-        <div id="videoCourseWrapper" class="buttonAndExampleWrapper">
-            <button class="chooseCourseButton calcHidden" id="videoCourseButton">ВИДЕОКУРС</button>
-            <a href="#rec500408196" id="videoCourseExampleLink" class="calcExampleLink">Посмотреть пример курса</a>
-        </div>
-        <div id="trainerWrapper" class="buttonAndExampleWrapper">
-            <button class="chooseCourseButton calcHidden" id="trainerButton">ТРЕНАЖЁР</button>
-            <a href="#rec500408196" id="trainerExampleLink" class="calcExampleLink">Посмотреть пример курса</a>
-        </div>
-    </div>
-    <div id="calcHide" class="calcHidden">
-        <div id="calcCart">
-            <div id="calcUnits">
-                <div id="cartHeader" class="calcLeftHeaders">Выберите нужные блоки</div>
-                <div id="unitList"></div>
-                <div id="servicesButton">
-                    <p id="servicesHeader" class="calcLeftHeaders">Добавить услуги&nbsp;</p>
-                    <img id="calcDownArrow" src="https://cdn-icons-png.flaticon.com/512/32/32195.png">
-                </div>
-                <div id="servicesList" class="additionalServicesHidden additionalServicesScaleY0"></div>
-
-            </div>
-            <div id="cartGridContainer">
-                <div id="cartBackground">
-                    <div id="calcCurrencies">
-                        <span id="rubleButton" class="selectedCurrencyButton">&#8381;</span>
-                        <span id="dollarButton" class="currencyButton">$</span>
-                        <span id="tengeButton" class="currencyButton">&#8376;</span>
+<div id="calcWrapper">
+    <div id="calcContainer" class="calcHidden">
+        <div id="calcDark">
+            <div id="userDataWindow" class="calcModalWindow">
+                <div id="calcModalClose1" class="calcModalClose">X</div>
+                <h5 class="headerAtModalWindow">Оставьте заявку и менеджер свяжется в вами</h5>
+                <form id="calcUserForm">
+                    <input type="email" name="email" placeholder="&nbsp;email" class="calcUserInput" required>
+                    <input type="tel" name="phone" placeholder="&nbsp;+7 999 999 99 99" class="calcUserInput" required>
+                    <input type="text" name="name" placeholder="&nbsp;Как к вам обращаться?" class="calcUserInput"
+                           required>
+                    <input type="submit" value="Оставить заявку" id="userDataSubmitButton">
+                    <div class="tinyModalWindowText">Нажатием на «Оставить заявку» подтверждаю согласие с обработкой
+                        персональный данных
                     </div>
-                    <div id="calcInCart"></div>
-                    <div id="unitQuantity"></div>
-                    <div id="unitPrice"></div>
-                    <div id="deleteUnitColumn"></div>
-                    <h3 id="totalPrice"></h3>
-                    <p id="priceNotice" class="calcNotice">Формирование концепта курса включено в стоимость.<br>Не является офертой. Приведенная цена - ориентировочная и может быть скорректирована после обсуждения задачи с менеджером.</p>
+                </form>
+                <div class="messengerLinksWrapper">
+                    <h5 class="headerAtModalWindow bottomHeaderModal">Можете нам написать</h5>
+                    <a href="https://wa.me/+77051062642" target="_blank" class="calcMessengerLink"><img
+                            class="calcMessengerImage"
+                            src="https://static.tildacdn.com/tild6435-6436-4164-b630-646666333564/icons8-whatsapp-240.png"
+                            alt="WhatsApp"></a>
+                    <a href="#" target="_blank" class="calcMessengerLink telegramIcon"><img class="calcMessengerImage"
+                                                                                            src="https://static.tildacdn.com/tild3365-6166-4762-b730-636237643335/Telegram_logosvg.png"
+                                                                                            alt="Telegram"></a>
                 </div>
-                <div id="calcSubmitWrapper">
-                    <button id="calcSubmitButton" class="calcHidden">Оставить заявку</button>
-                    <!--                    <p id="" class="calcNotice">Нажимая кнопку "Оставить заявку", вы соглашаетесь с обработкой ваших персональных данных.</p>-->
+            </div>
+            <div id="thanksWindow" class="calcModalWindow">
+                <div id="calcModalClose2" class="calcModalClose">X</div>
+
+                <h5 id="modalWindow2Header">Спасибо за интерес к нашим курсам</h5>
+                <p class="calcModalText">Наш специалист свяжется с вами и проконсультирует по выбранному курсу</p>
+                <div class="messengerLinksWrapper secondModalWindowLinksWrapper">
+                    <h5 class="headerAtModalWindow bottomHeaderModal">Можете нам написать</h5>
+                    <a href="https://wa.me/+77051062642" target="_blank"
+                       class="calcMessengerLink"><img class="calcMessengerImage"
+                                                      src="https://static.tildacdn.com/tild6435-6436-4164-b630-646666333564/icons8-whatsapp-240.png"
+                                                      alt="WhatsApp"></a>
+                    <a href="#" target="_blank" class="calcMessengerLink telegramIcon"><img class="calcMessengerImage"
+                                                                                            src="https://static.tildacdn.com/tild3365-6166-4762-b730-636237643335/Telegram_logosvg.png"
+                                                                                            alt="Telegram"></a>
+                </div>
+            </div>
+        </div>
+
+        <h1 id="calcHeader">КАЛЬКУЛЯТОР КУРСА</h1>
+        <a href="#rec463377695" id="calcLogo">
+            <img id="calcLogoImg"
+                 src="https://static.tildacdn.com/tild3035-3130-4164-b436-313966633562/6BT_65iy4PXvu2PF0YpJ.jpg"
+                 alt="logo">
+        </a>
+        <br>
+        <h3 id="calcSubHeader">ВЫБЕРИТЕ НУЖНЫЕ ВАМ ХАРАКТЕРИСТИКИ</h3>
+        <br>
+        <div id="SLAndCourseSwitchWrapper">
+            <div id="SLChoiceText">
+                <span id="SLChoiceTextHeader" class="calcLeftHeaders">Ваш курс будет интерактивным?</span>
+                <br>
+                <span id="SLChoiceTextText">Нелинейная логика прохождения,<br>взаимодействие с учеником</span>
+            </div>
+            <div id="SLChoiceButtonsWrapper">
+                <button id="SLYesButton" class="calcButton">ДА</button>
+                <button id="SLNoButton" class="calcButton">НЕТ</button>
+            </div>
+            <div class="calcGridGap"></div>
+            <span id="chooseCourseText" class="calcHidden calcLeftHeaders">Какой курс вам нужен?</span>
+            <div id="longReadWrapper" class="buttonAndExampleWrapper">
+                <button class="chooseCourseButton calcHidden" id="longReadButton">ЛОНГРИД</button>
+                <a href="#rec500408196" id="longreadExampleLink" class="calcExampleLink">Посмотреть пример курса</a>
+            </div>
+            <div id="videoCourseWrapper" class="buttonAndExampleWrapper">
+                <button class="chooseCourseButton calcHidden" id="videoCourseButton">ВИДЕОКУРС</button>
+                <a href="#rec500408196" id="videoCourseExampleLink" class="calcExampleLink">Посмотреть пример курса</a>
+            </div>
+            <div id="trainerWrapper" class="buttonAndExampleWrapper">
+                <button class="chooseCourseButton calcHidden" id="trainerButton">ТРЕНАЖЁР</button>
+                <a href="#rec500408196" id="trainerExampleLink" class="calcExampleLink">Посмотреть пример курса</a>
+            </div>
+        </div>
+        <div id="calcHide" class="calcHidden">
+            <div id="calcCart">
+                <div id="calcUnits">
+                    <div id="cartHeader" class="calcLeftHeaders">Выберите нужные блоки</div>
+                    <div id="unitList"></div>
+                    <div id="servicesButton">
+                        <p id="servicesHeader" class="calcLeftHeaders">Добавить услуги&nbsp;</p>
+                        <img id="calcDownArrow" src="https://cdn-icons-png.flaticon.com/512/32/32195.png">
+                    </div>
+                    <div id="servicesList" class="additionalServicesHidden additionalServicesScaleY0"></div>
+
+                </div>
+                <div id="cartGridContainer">
+                    <div id="cartBackground">
+                        <div id="calcCurrencies">
+                            <span id="rubleButton" class="selectedCurrencyButton">&#8381;</span>
+                            <span id="dollarButton" class="currencyButton">$</span>
+                            <span id="tengeButton" class="currencyButton">&#8376;</span>
+                        </div>
+                        <div id="calcInCart"></div>
+                        <div id="unitQuantity"></div>
+                        <div id="unitPrice"></div>
+                        <div id="deleteUnitColumn"></div>
+                        <h3 id="totalPrice"></h3>
+                        <p id="priceNotice" class="calcNotice">Формирование концепта курса включено в стоимость.<br>Не
+                            является офертой. Приведенная цена - ориентировочная и может быть скорректирована после
+                            обсуждения задачи с менеджером.</p>
+                    </div>
+                    <div id="calcSubmitWrapper">
+                        <button id="calcSubmitButton" class="calcHidden">Оставить заявку</button>
+                        <!--                    <p id="" class="calcNotice">Нажимая кнопку "Оставить заявку", вы соглашаетесь с обработкой ваших персональных данных.</p>-->
+                    </div>
                 </div>
             </div>
         </div>
@@ -800,16 +942,21 @@
 </div>
 
 <script>
-    console.log(window.navigator.userAgent);
 
-    const DATA_URL = 'https://script.google.com/macros/s/AKfycbyvuqVCLoujMoF4fEQIVzlx78E3DVLgD9fEfxKTaG2D-Z5ctCMPewsrsQCl4OH_qJaC/exec';
+    const GET_DATA_URL = 'https://script.google.com/macros/s/AKfycbyvuqVCLoujMoF4fEQIVzlx78E3DVLgD9fEfxKTaG2D-Z5ctCMPewsrsQCl4OH_qJaC/exec';
+    const PUT_DATA_URL = 'https://script.google.com/macros/s/AKfycbyvuqVCLoujMoF4fEQIVzlx78E3DVLgD9fEfxKTaG2D-Z5ctCMPewsrsQCl4OH_qJaC/exec';
     const BANK_URL = 'https://www.cbr-xml-daily.ru/daily_json.js';
+    const TRASH_CAN_IMG_SRC = 'https://static.tildacdn.com/tild6137-3361-4535-a636-393131333430/icons8-trash-64.png';
+    const TRASH_CAN_IMG_SRC_HOVER = 'https://static.tildacdn.com/tild6635-3164-4262-a632-633363313032/icons8-trash-64_1.png';
+    const TRASH_CAN_IMG_SRC_ACTIVE = 'https://static.tildacdn.com/tild6635-3164-4262-a632-633363313032/icons8-trash-64_1.png';
     const YES_NO_BUTTON_UNIT_ID = 'UT-007';
+    const ATTEMPTS_TO_FETCH = 3;
 
     const calc = () => {
 
         class Data {
             #dataSourceURL;
+            #sendOrderURL;
             #bankAPIurl;
             #data;
             #profitMultiplier;
@@ -823,8 +970,9 @@
             #usd;
             #kzt;
 
-            constructor(dataSourceURL, bankAPIurl) {
+            constructor(dataSourceURL, sendOrderURL, bankAPIurl) {
                 this.#dataSourceURL = dataSourceURL;
+                this.#sendOrderURL = sendOrderURL;
                 this.#bankAPIurl = bankAPIurl;
             }
 
@@ -996,8 +1144,7 @@
                 userData.forEach(obj => {
                     Object.assign(order, {[obj.name]: obj.value});
                 })
-                console.log(order);
-                const response = await fetch(this.#dataSourceURL, {
+                const response = await fetch(this.#sendOrderURL, {
                     method: 'POST',
                     mode: 'no-cors',
                     body: JSON.stringify(order)
@@ -1005,7 +1152,7 @@
             }
         };
 
-        class UseCases {
+        class Controller {
             #data;
             #cart;
             #total;
@@ -1211,16 +1358,16 @@
             }
         };
 
-        class Draw {
-            #useCases;
+        class View {
+            #controller;
             #filter;
 
-            constructor(useCases) {
-                this.#useCases = useCases;
+            constructor(controller) {
+                this.#controller = controller;
                 this.servicesListToggle = false;
 
                 this.htmlElements = {
-                    calc: document.getElementById('calcWrapper'),
+                    calc: document.getElementById('calcContainer'),
                     servicesList: document.getElementById('servicesList'),
                     chooseCourseText: document.getElementById('chooseCourseText'),
                     chooseCourseButtons: document.getElementsByClassName('chooseCourseButton'),
@@ -1252,7 +1399,6 @@
                     calcModalClose2: document.getElementById('calcModalClose2'),
                     thanksWindow: document.getElementById('thanksWindow'),
                     calcCurrencies: document.getElementById('calcCurrencies'),
-                    unitLabel: document.getElementsByClassName('unitLabel')
                 };
 
                 this.eventListeners();
@@ -1275,19 +1421,17 @@
                         this.htmlElements.thanksWindow.style.display = 'none';
                         this.htmlElements.calcDark.style.display = 'none';
                     }
-                })
-
+                });
                 this.htmlElements.calc.addEventListener('click', (event) => {
                     if (!event.path.includes(this.htmlElements.servicesList) && !event.path.includes(this.htmlElements.servicesButton) && this.servicesListToggle) {
                         this.htmlElements.servicesList.classList.remove('additionalServicesVisible');
                         this.htmlElements.servicesList.classList.add('additionalServicesScaleY0');
                         setTimeout(() => {
                             this.htmlElements.servicesList.classList.add('additionalServicesHidden');
-                            this.htmlElements.servicesListToggle = !this.servicesListToggle;
+                            this.servicesListToggle = !this.servicesListToggle;
                         }, 300);
                     }
                 });
-
                 this.htmlElements.SLYesButton.addEventListener('click', () => {
                     this.onYesVisual();
                     return this.onYes();
@@ -1296,7 +1440,6 @@
                     this.onNoVisual();
                     return this.onNo();
                 });
-
                 this.htmlElements.longReadButton.addEventListener('click', () => {
                     this.#filter = 'LONGREAD';
                     this.htmlElements.longReadButton.classList.remove('chooseCourseButton');
@@ -1314,7 +1457,7 @@
                     this.htmlElements.longreadExampleLink.style.display = 'inline';
                     this.htmlElements.videoCourseExampleLink.style.display = 'none';
                     this.htmlElements.trainerExampleLink.style.display = 'none';
-                    this.renderUnitList(this.#useCases.longreadFilter());
+                    this.renderUnitList(this.#controller.longreadFilter());
                     this.htmlElements.calcHide.classList.remove('calcHidden');
                     this.htmlElements.calcHide.classList.add('calcVisible');
                     this.renderCart();
@@ -1336,7 +1479,7 @@
                     this.htmlElements.videoCourseExampleLink.style.display = 'inline';
                     this.htmlElements.longreadExampleLink.style.display = 'none';
                     this.htmlElements.trainerExampleLink.style.display = 'none';
-                    this.renderUnitList(this.#useCases.videocourseFilter());
+                    this.renderUnitList(this.#controller.videocourseFilter());
                     this.htmlElements.calcHide.classList.remove('calcHidden');
                     this.htmlElements.calcHide.classList.add('calcVisible');
                     this.renderCart();
@@ -1358,37 +1501,28 @@
                     this.htmlElements.trainerExampleLink.style.display = 'inline';
                     this.htmlElements.longreadExampleLink.style.display = 'none';
                     this.htmlElements.videoCourseExampleLink.style.display = 'none';
-                    this.renderUnitList(this.#useCases.trainerFilter());
+                    this.renderUnitList(this.#controller.trainerFilter());
                     this.htmlElements.calcHide.classList.remove('calcHidden');
                     this.htmlElements.calcHide.classList.add('calcVisible');
                     this.renderCart();
                 });
-
                 this.htmlElements.servicesButton.addEventListener('click', () => {
                     if (!this.servicesListToggle) {
                         this.renderServicesList();
                         setTimeout(() => {
                             this.htmlElements.servicesList.classList.remove('additionalServicesHidden', 'additionalServicesScaleY0');
                             this.htmlElements.servicesList.classList.add('additionalServicesVisible');
-                            this.htmlElements.servicesListToggle = !this.servicesListToggle;
+                            this.servicesListToggle = !this.servicesListToggle;
                         }, 0);
                     } else {
                         this.htmlElements.servicesList.classList.remove('additionalServicesVisible');
                         this.htmlElements.servicesList.classList.add('additionalServicesScaleY0');
                         setTimeout(() => {
                             this.htmlElements.servicesList.classList.add('additionalServicesHidden');
-                            this.htmlElements.servicesListToggle = !this.servicesListToggle;
+                            this.servicesListToggle = !this.servicesListToggle;
                         }, 300);
-
                     }
                 });
-
-                for (let unitLabel of this.htmlElements.unitLabel) {
-                    unitLabel.addEventListener('mouseup', (e) => {
-                    });
-                    unitLabel.addEventListener('mousedown', (e) => {
-                    });
-                }
             };
 
             openCalc = () => {
@@ -1408,6 +1542,7 @@
                 }
                 return input;
             }
+
             createLabelWithoutHtmlFor = (unit) => {
                 const label = document.createElement('label');
                 label.className = 'unitLabel';
@@ -1435,7 +1570,7 @@
             }
 
             renderServicesList = () => {
-                const units = this.#useCases.getUnits();
+                const units = this.#controller.getUnits();
                 this.htmlElements.servicesList.innerHTML = '';
                 units.forEach((unit) => {
                     if (unit.services) {
@@ -1453,7 +1588,7 @@
             }
 
             selectFromUnitList = (event) => {
-                const units = this.#useCases.getUnits();
+                const units = this.#controller.getUnits();
                 const unit = units[event.target.dataset.index];
                 if (unit.toolSwitcher) {
                     if (unit.toolSwitcher.trim().toLowerCase() == 'tilda') {
@@ -1464,7 +1599,7 @@
                                 return;
                             }
                         }
-                    } else if (unit.toolSwitcher.trim().toLowerCase() == 'sl' && !unit.TildaPossibility && this.#useCases.getTildaSwitch()) {
+                    } else if (unit.toolSwitcher.trim().toLowerCase() == 'sl' && !unit.TildaPossibility && this.#controller.getTildaSwitch()) {
                         alert(`Нельзя выбрать "${unit.name}", когда в корзину добавлена "Верстка курса на Tilda"`);
                         event.target.checked = !event.target.checked;
                         return;
@@ -1472,11 +1607,11 @@
                 }
 
                 if (event.target.checked) {
-                    this.#useCases.addToCartByIndex(event.target.dataset.index);
+                    this.#controller.addToCartByIndex(event.target.dataset.index);
                 } else {
-                    this.#useCases.removeFromCartByIndex(event.target.dataset.index);
+                    this.#controller.removeFromCartByIndex(event.target.dataset.index);
                 }
-                this.#useCases.setTotal();
+                this.#controller.setTotal();
                 this.renderUnitListWithFilters();
                 this.renderServicesList();
                 this.renderCart();
@@ -1491,7 +1626,7 @@
                 let tildaSwitchers = 0;
                 let yesNoSwitcher = false;
                 let currency;
-                switch (this.#useCases.getCurrency()) {
+                switch (this.#controller.getCurrency()) {
                     case 'RUB':
                         currency = '₽';
                         break;
@@ -1502,7 +1637,7 @@
                         currency = '₸';
                         break;
                 }
-                this.#useCases.getUnits().forEach((unit) => {
+                this.#controller.getUnits().forEach((unit) => {
                     if (unit.quantityInCart) {
                         const inCartLineUnit = document.createElement('div');
                         inCartLineUnit.className = 'inCartLineUnit';
@@ -1530,12 +1665,13 @@
                         quantityWrapper.appendChild(quantity);
                         const plus = document.createElement('button');
                         plus.className = 'invisiblePlus';
-                        if (!unit.single) {
-                            const textPlus = document.createTextNode('+');
-                            plus.appendChild(textPlus);
-                            plus.className = 'calcPlusMinus calcPlus';
-                            plus.dataset.index = unit.index;
-                            plus.addEventListener('click', () => this.onPlus(unit.index));
+                        const textPlus = document.createTextNode('+');
+                        plus.appendChild(textPlus);
+                        plus.className = 'calcPlusMinus calcPlus';
+                        plus.dataset.index = unit.index;
+                        plus.addEventListener('click', () => this.onPlus(unit.index));
+                        if (unit.single) {
+                            plus.style.visibility = 'hidden';
                         }
                         quantityWrapper.appendChild(plus);
                         inCartLineUnit.innerHTML = `
@@ -1546,12 +1682,18 @@
                                 <span class="unitInCartText">${unit.text}</span>
                             `;
                         const deleteImg = document.createElement('img');
-                        deleteImg.src = 'https://img.icons8.com/pastel-glyph/344/trash.png';
+                        deleteImg.src = TRASH_CAN_IMG_SRC;
                         deleteImg.alt = 'delete';
                         deleteImg.className = 'deleteImg';
                         deleteImg.dataset.index = unit.index;
-                        deleteImg.addEventListener('click', () =>
-                            this.deleteUnit(unit.index));
+                        deleteImg.addEventListener('click', () => {
+                            deleteImg.src = TRASH_CAN_IMG_SRC_ACTIVE;
+                            this.deleteUnit(unit.index);
+                        });
+                        deleteImg.addEventListener('mouseover', () =>
+                            deleteImg.src = TRASH_CAN_IMG_SRC_HOVER);
+                        deleteImg.addEventListener('mouseout', () =>
+                            deleteImg.src = TRASH_CAN_IMG_SRC);
                         const deleteImgWrapper = document.createElement('div');
                         deleteImgWrapper.className = 'deleteImgWrapper';
                         inCartLinePrice.appendChild(textContentPrice);
@@ -1578,22 +1720,22 @@
                         deleteImgWrapper.style.height = unitInCartHeight;
                     }
                 })
-                if (Boolean(SLswitchers) != this.#useCases.getSLswitch()) {
-                    if (this.#useCases.getSLswitch()) {
-                        this.#useCases.slSwitchOff();
+                if (Boolean(SLswitchers) != this.#controller.getSLswitch()) {
+                    if (this.#controller.getSLswitch()) {
+                        this.#controller.slSwitchOff();
                     } else {
-                        this.#useCases.slSwitchOn();
+                        this.#controller.slSwitchOn();
                     }
-                    this.#useCases.setTotal();
+                    this.#controller.setTotal();
                     this.renderCart();
                 }
-                if (Boolean(tildaSwitchers) != this.#useCases.getTildaSwitch()) {
-                    if (this.#useCases.getTildaSwitch()) {
-                        this.#useCases.tildaSwitchOff();
+                if (Boolean(tildaSwitchers) != this.#controller.getTildaSwitch()) {
+                    if (this.#controller.getTildaSwitch()) {
+                        this.#controller.tildaSwitchOff();
                     } else {
-                        this.#useCases.tildaSwitchOn();
+                        this.#controller.tildaSwitchOn();
                     }
-                    this.#useCases.setTotal();
+                    this.#controller.setTotal();
                     this.renderCart();
                 }
                 if (yesNoSwitcher) {
@@ -1602,10 +1744,10 @@
                     this.onNoVisual();
                 }
                 const totalPrice = document.getElementById('totalPrice');
-                const textContentTotal = document.createTextNode(`${this.#useCases.getTotal().toFixed(2).toString()} ${currency}`);
+                const textContentTotal = document.createTextNode(`${this.#controller.getTotal().toFixed(2).toString()} ${currency}`);
                 totalPrice.innerHTML = '';
                 totalPrice.appendChild(textContentTotal);
-                if (this.#useCases.getTotal()) {
+                if (this.#controller.getTotal()) {
                     this.htmlElements.calcSubmitButton.classList.add('calcVisible');
                     this.htmlElements.calcSubmitButton.classList.remove('calcHidden');
                     this.htmlElements.cartBackground.style.display = 'grid';
@@ -1618,30 +1760,30 @@
             };
 
             deleteUnit = (index) => {
-                this.#useCases.removeFromCartByIndex(index);
-                this.#useCases.setTotal();
+                this.#controller.removeFromCartByIndex(index);
+                this.#controller.setTotal();
                 this.renderUnitListWithFilters();
                 this.renderCart();
                 this.renderServicesList();
             }
 
             onPlus = (index) => {
-                this.#useCases.quantityInCartIncrement(index);
-                this.#useCases.setTotal();
+                this.#controller.quantityInCartIncrement(index);
+                this.#controller.setTotal();
                 this.renderCart();
             }
 
             onMinus = (index) => {
-                this.#useCases.quantityInCartDecrement(index);
-                this.#useCases.setTotal();
+                this.#controller.quantityInCartDecrement(index);
+                this.#controller.setTotal();
                 this.renderUnitListWithFilters();
                 this.renderCart();
                 this.renderServicesList();
             }
 
             onYes = () => {
-                this.#useCases.addToCartById(YES_NO_BUTTON_UNIT_ID);
-                this.#useCases.setTotal();
+                this.#controller.addToCartById(YES_NO_BUTTON_UNIT_ID);
+                this.#controller.setTotal();
                 this.renderUnitListWithFilters();
                 this.renderCart();
                 this.renderServicesList();
@@ -1663,9 +1805,9 @@
             }
 
             onNo = () => {
-                this.#useCases.removeFromCartById(YES_NO_BUTTON_UNIT_ID);
+                this.#controller.removeFromCartById(YES_NO_BUTTON_UNIT_ID);
                 this.renderUnitListWithFilters();
-                this.#useCases.setTotal();
+                this.#controller.setTotal();
                 this.renderCart();
                 this.renderServicesList();
             }
@@ -1692,7 +1834,7 @@
                 this.htmlElements.dollarButton.classList.add('currencyButton');
                 this.htmlElements.tengeButton.classList.remove('selectedCurrencyButton');
                 this.htmlElements.tengeButton.classList.add('currencyButton');
-                this.#useCases.setRublePrice();
+                this.#controller.setRublePrice();
                 this.renderCart();
             };
 
@@ -1703,7 +1845,7 @@
                 this.htmlElements.rubleButton.classList.add('currencyButton');
                 this.htmlElements.tengeButton.classList.remove('selectedCurrencyButton');
                 this.htmlElements.tengeButton.classList.add('currencyButton');
-                this.#useCases.setDollarPrice();
+                this.#controller.setDollarPrice();
                 this.renderCart();
             }
 
@@ -1714,20 +1856,20 @@
                 this.htmlElements.rubleButton.classList.add('currencyButton');
                 this.htmlElements.dollarButton.classList.remove('selectedCurrencyButton');
                 this.htmlElements.dollarButton.classList.add('currencyButton');
-                this.#useCases.setTengePrice();
+                this.#controller.setTengePrice();
                 this.renderCart();
             }
 
             renderUnitListWithFilters = () => {
                 switch (this.#filter) {
                     case 'LONGREAD':
-                        this.renderUnitList(this.#useCases.longreadFilter());
+                        this.renderUnitList(this.#controller.longreadFilter());
                         break;
                     case 'VIDEOCOURSE':
-                        this.renderUnitList(this.#useCases.videocourseFilter());
+                        this.renderUnitList(this.#controller.videocourseFilter());
                         break;
                     case 'TRAINER':
-                        this.renderUnitList(this.#useCases.trainerFilter());
+                        this.renderUnitList(this.#controller.trainerFilter());
                         break;
                 }
             }
@@ -1762,48 +1904,53 @@
                         return {name, value}
                     })
                 this.openModalWindow2();
-                this.#useCases.sendOrder(data);
-                this.#useCases.clearCart();
+                this.#controller.sendOrder(data);
+                this.#controller.clearCart();
                 this.renderUnitListWithFilters();
                 this.renderCart();
             }
+
             static serverError = (error) => {
                 console.log(error);
             }
-            static currenciesOff = (draw) => {
-                draw.htmlElements.calcCurrencies.style.visibility = 'hidden';
+
+            static currenciesOff = (view) => {
+                view.htmlElements.calcCurrencies.style.visibility = 'hidden';
             }
         };
 
         const run = async () => {
+            const loading = document.getElementById("calcLoading");
             let success = false;
-            const data = new Data(DATA_URL, BANK_URL);
-            try {
+            const data = new Data(GET_DATA_URL, PUT_DATA_URL, BANK_URL);
+            for (let i = 0; i < ATTEMPTS_TO_FETCH; i++) try {
                 success = await data.getFromAPI();
+                loading.style.display = 'none';
+                break;
             } catch (e) {
-                console.log('connecting to google script error');
-                Draw.serverError(e);
+                View.serverError(e);
             }
             if (success) {
-                var useCases = new UseCases(data);
-                var draw = new Draw(useCases);
-                draw.openCalc();
+                const controller = new Controller(data);
+                var view = new View(controller);
+                view.openCalc();
+                success = false;
             }
-            try {
-                if (success) {
-                    success = await data.fetchExchangeRates()
-                }
+            for (let i = 0; i < ATTEMPTS_TO_FETCH; i++) try {
+                success = await data.fetchExchangeRates();
+                break;
             } catch (e) {
-                console.log('caught data.fetchExchangeRates error')
-                Draw.serverError(e);
-                Draw.currenciesOff(draw);
+                View.serverError(e);
             }
-            if (success) {
-                await data.setPrices();
+            if (!success) {
+                View.currenciesOff(view);
             }
+            await data.setPrices();
         }
+
         run();
     };
+
     calc();
 
 </script>
