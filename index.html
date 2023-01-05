@@ -681,6 +681,8 @@
         top: 0;
         display: none;
         z-index: 1000;
+        justify-content: space-around;
+        align-items: center;
     }
 
     #userDataWindow {
@@ -811,6 +813,147 @@
         font-size: 12px;
     }
 
+    #calcAdditionalServices {
+
+    }
+
+    @media (max-width: 1304px) {
+        #calcContainer {
+            margin: auto;
+            background-color: rgba(255, 255, 255, 1);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: lighter;
+            width: 1024px;
+            border-radius: 16px;
+            box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.1);
+            padding: 23px 40px 40px 23px;
+            transform-origin: top;
+            transition: transform 500ms ease-out;
+            overflow: hidden;
+        }
+
+        #calcLoading {
+            margin: auto;
+            background-color: rgba(255, 255, 255, 1);
+            width: 1024px;
+            border-radius: 16px;
+            box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.1);
+            padding: 23px 40px 40px 23px;
+        }
+
+        .chooseCourseButton {
+            font-size: 20px;
+            font-family: Montserrat;
+            color: #4B5061;
+            width: 200px;
+            height: 46px;
+            border: 3px solid rgba(255, 210, 0, 1);
+            border-radius: 25px;
+            background-color: rgba(255, 255, 255, 1);
+            transform-origin: top;
+            transition: transform 250ms ease-out;
+            transition: 500ms;
+        }
+
+        #SLYesButton {
+            display: inline-block;
+            font-size: 20px;
+            width: 100px;
+            height: 46px;
+            border: 3px solid rgba(255, 210, 0, 1);
+            border-radius: 25px 0 0 25px;
+            margin: 0;
+        }
+
+        #SLNoButton {
+            position: relative;
+            left: -2px;
+            display: inline-block;
+            font-size: 20px;
+            width: 100px;
+            height: 46px;
+            border: 3px solid rgba(255, 210, 0, 1);
+            border-radius: 0 25px 25px 0;
+            margin: 0;
+        }
+
+    }
+
+    @media (max-width: 1112px) {
+        #calcContainer {
+            margin: auto;
+            background-color: rgba(255, 255, 255, 1);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: lighter;
+            width: 768px;
+            border-radius: 16px;
+            box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.1);
+            padding: 23px 40px 40px 23px;
+            transform-origin: top;
+            transition: transform 500ms ease-out;
+            overflow: hidden;
+        }
+
+        #calcLoading {
+            margin: auto;
+            background-color: rgba(255, 255, 255, 1);
+            width: 768px;
+            border-radius: 16px;
+            box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.1);
+            padding: 23px 40px 40px 23px;
+        }
+
+        #SLAndCourseSwitchWrapper {
+            margin-top: 20px;
+            font-size: 0;
+            display: grid;
+            align-items: center;
+            grid-template-columns: 1.5fr 1fr 1fr 1fr;
+            grid-column-gap: 10px;
+            grid-row-gap: 10px;
+            grid-template-rows: auto;
+            grid-template-areas:
+            "text1 buttons1 . "
+            "gap . . "
+            "text2 text2 . "
+            "longReadWrapper videoCourseWrapper trainerWrapper";
+        }
+
+        #calcAdditionalServices {
+            grid-area: calcAdditionalServices;
+        }
+
+        #calcCart {
+            margin-top: 20px;
+            padding-right: 24px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: auto;
+            grid-column-gap: 10px;
+            grid-row-gap: 10px;
+            grid-template-areas:
+            "calcUnits calcAdditionalServices"
+            "cartGridContainer cartGridContainer";
+        }
+
+        .calcModalWindow {
+            box-sizing: border-box;
+            width: 280px;
+            height: 356px;
+            padding: 24px 40px 24px 40px;
+            background-color: rgba(255, 255, 255, 1);
+            font-family: 'Montserrat', sans-serif;
+            border-radius: 16px;
+            box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.1);
+            position: absolute;
+            top: 450px;
+            right: 0;
+            bottom: 0px;
+            left: 0;
+            margin: auto;
+        }
+    }
+
 </style>
 
 <div id="calcLoading">
@@ -908,12 +1051,13 @@
                 <div id="calcUnits">
                     <div id="cartHeader" class="calcLeftHeaders">Выберите нужные блоки</div>
                     <div id="unitList"></div>
+                </div>
+                <div id="calcAdditionalServices">
                     <div id="servicesButton">
                         <p id="servicesHeader" class="calcLeftHeaders">Добавить услуги&nbsp;</p>
                         <img id="calcDownArrow" src="https://cdn-icons-png.flaticon.com/512/32/32195.png">
                     </div>
                     <div id="servicesList" class="additionalServicesHidden additionalServicesScaleY0"></div>
-
                 </div>
                 <div id="cartGridContainer">
                     <div id="cartBackground">
@@ -1876,7 +2020,7 @@
 
             openModalWindow1 = () => {
                 this.htmlElements.userDataWindow.style.display = 'block';
-                this.htmlElements.calcDark.style.display = 'block';
+                this.htmlElements.calcDark.style.display = 'flex';
             }
 
             openModalWindow2 = () => {
