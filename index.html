@@ -1,7 +1,7 @@
-<!--<meta charset="UTF-8">-->
+<meta charset="UTF-8">
 
 <style>
-    /*@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Pathway+Gothic+One&display=swap');*/
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Pathway+Gothic+One&display=swap');
 
     #calcLoading {
         margin: auto;
@@ -338,6 +338,9 @@
         border-radius: 16px;
         max-height: inherit;
         overflow-y: auto;
+        overflow-x: hidden;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(255, 210, 0, 1) rgba(134, 68, 215, 1);
         display: grid;
         grid-template-columns: 3fr 1fr 1fr 0.5fr;
         grid-template-rows: min-content;
@@ -348,6 +351,21 @@
             "calcInCart unitQuantity unitPrice deleteUnitColumn"
             ". . totalPrice totalPrice"
             ". . priceNotice priceNotice"
+    }
+
+    #cartBackground::-webkit-scrollbar-track {
+        /*-webkit-box-shadow: inset 0 0 2px rgba(0,0,0,0.3);*/
+        background-color: #F5F5F5;
+    }
+
+    #cartBackground::-webkit-scrollbar {
+        width: 5px;
+        background-color: #F5F5F5;
+    }
+
+    #cartBackground::-webkit-scrollbar-thumb {
+        background-color: #989898;
+        border: none;
     }
 
     #calcUnits {
@@ -1285,6 +1303,7 @@
 
     const GET_DATA_URL = 'https://script.google.com/macros/s/AKfycbyvuqVCLoujMoF4fEQIVzlx78E3DVLgD9fEfxKTaG2D-Z5ctCMPewsrsQCl4OH_qJaC/exec';
     const PUT_DATA_URL = 'https://script.google.com/macros/s/AKfycbyvuqVCLoujMoF4fEQIVzlx78E3DVLgD9fEfxKTaG2D-Z5ctCMPewsrsQCl4OH_qJaC/exec';
+    const PUT_STAT_DATA_URL = 'https://script.google.com/macros/s/AKfycbyvuqVCLoujMoF4fEQIVzlx78E3DVLgD9fEfxKTaG2D-Z5ctCMPewsrsQCl4OH_qJaC/exec';
     const BANK_URL = 'https://www.cbr-xml-daily.ru/daily_json.js';
     const TRASH_CAN_IMG_SRC = 'https://static.tildacdn.com/tild6137-3361-4535-a636-393131333430/icons8-trash-64.png';
     const TRASH_CAN_IMG_SRC_HOVER = 'https://static.tildacdn.com/tild6635-3164-4262-a632-633363313032/icons8-trash-64_1.png';
@@ -1297,6 +1316,7 @@
         class Data {
             #dataSourceURL;
             #sendOrderURL;
+            #sendStatURL
             #bankAPIurl;
             #data;
             #profitMultiplier;
@@ -1310,9 +1330,10 @@
             #usd;
             #kzt;
 
-            constructor(dataSourceURL, sendOrderURL, bankAPIurl) {
+            constructor(dataSourceURL, sendOrderURL, sendStatURL, bankAPIurl) {
                 this.#dataSourceURL = dataSourceURL;
                 this.#sendOrderURL = sendOrderURL;
+                this.#sendStatURL = sendStatURL;
                 this.#bankAPIurl = bankAPIurl;
             }
 
@@ -1490,6 +1511,16 @@
                     body: JSON.stringify(order)
                 })
             }
+
+            sendStat = async (statObj) => {
+                const response = await fetch(this.#sendStatURL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    body: JSON.stringify(statObj),
+                    statinfo: true
+                })
+            };
+
         };
 
         class Controller {
@@ -1696,16 +1727,22 @@
                 })
                 this.setTotal();
             }
+
+            sendStat = (statObj) => {
+                this.#data.sendStat(statObj);
+            }
+
         };
 
         class View {
             #controller;
             #filter;
+            #stats;
 
             constructor(controller) {
                 this.#controller = controller;
+                this.#stats = new Stats();
                 this.servicesListToggle = false;
-
                 this.htmlElements = {
                     calc: document.getElementById('calcContainer'),
                     servicesList: document.getElementById('servicesList'),
@@ -1772,12 +1809,15 @@
                         }, 300);
                     }
                 });
+
                 this.htmlElements.SLYesButton.addEventListener('click', () => {
                     this.onYesVisual();
+                    this.#stats.clickYesNo();
                     return this.onYes();
                 });
                 this.htmlElements.SLNoButton.addEventListener('click', () => {
                     this.onNoVisual();
+                    this.#stats.clickYesNo();
                     return this.onNo();
                 });
                 this.htmlElements.longReadButton.addEventListener('click', () => {
@@ -1801,6 +1841,7 @@
                     this.htmlElements.calcHide.classList.remove('calcHidden');
                     this.htmlElements.calcHide.classList.add('calcVisible');
                     this.renderCart();
+                    this.#stats.clickFilter();
                 });
                 this.htmlElements.videoCourseButton.addEventListener('click', () => {
                     this.#filter = 'VIDEOCOURSE';
@@ -1823,6 +1864,7 @@
                     this.htmlElements.calcHide.classList.remove('calcHidden');
                     this.htmlElements.calcHide.classList.add('calcVisible');
                     this.renderCart();
+                    this.#stats.clickFilter();
                 });
                 this.htmlElements.trainerButton.addEventListener('click', () => {
                     this.#filter = 'TRAINER';
@@ -1845,6 +1887,7 @@
                     this.htmlElements.calcHide.classList.remove('calcHidden');
                     this.htmlElements.calcHide.classList.add('calcVisible');
                     this.renderCart();
+                    this.#stats.clickFilter();
                 });
                 this.htmlElements.servicesButton.addEventListener('click', () => {
                     if (!this.servicesListToggle) {
@@ -1862,7 +1905,14 @@
                             this.servicesListToggle = !this.servicesListToggle;
                         }, 300);
                     }
+                    this.#stats.clickServicesButton();
                 });
+
+                window.addEventListener('beforeunload', (e) => {
+                    this.#stats.readFromSessionStorage();
+                    this.#controller.sendStat(this.#stats.statObj);
+                });
+
             };
 
             openCalc = () => {
@@ -2146,8 +2196,8 @@
 
             onNo = () => {
                 this.#controller.removeFromCartById(YES_NO_BUTTON_UNIT_ID);
-                this.renderUnitListWithFilters();
                 this.#controller.setTotal();
+                this.renderUnitListWithFilters();
                 this.renderCart();
                 this.renderServicesList();
             }
@@ -2217,6 +2267,7 @@
             openModalWindow1 = () => {
                 this.htmlElements.userDataWindow.style.display = 'block';
                 this.htmlElements.calcDark.style.display = 'flex';
+                this.#stats.clickSubmit();
             }
 
             openModalWindow2 = () => {
@@ -2259,10 +2310,68 @@
             }
         };
 
+        class Stats {
+            constructor() {
+                this.date = new Date();
+                this.statObj = {
+                    time: this.date.toDateString() + ' ' + this.date.toTimeString(),
+                    device: this.getDevice(),
+                    yesno: 0,
+                    filter: 0,
+                    servicesButton: 0,
+                    submit: 0
+                };
+                console.log(JSON.stringify(this.statObj))
+                this.writeToSessionStorage();
+            }
+
+            getDevice = () => {
+                const ua = navigator.userAgent;
+                if (/(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i.test(ua)) {
+                    return "tablet";
+                } else if (/Mobile|Android|iP(hone|od)|IEMobile|BlackBerry|Kindle|Silk-Accelerated|(hpw|web)OS|Opera M(obi|ini)/.test(ua)) {
+                    return "smartphone";
+                }
+                return "computer";
+            }
+
+            writeToSessionStorage = () => {
+                sessionStorage.setItem('calcActivity', JSON.stringify(this.statObj));
+            }
+            readFromSessionStorage = () => {
+                this.statObj = JSON.parse(sessionStorage.getItem('calcActivity'));
+            }
+
+            clickYesNo = () => {
+                this.readFromSessionStorage();
+                this.statObj.yesno++;
+                this.writeToSessionStorage();
+            }
+
+            clickFilter = () => {
+                this.readFromSessionStorage();
+                this.statObj.filter++;
+                this.writeToSessionStorage();
+            }
+
+            clickSubmit = () => {
+                this.readFromSessionStorage();
+                this.statObj.submit++;
+                this.writeToSessionStorage();
+            }
+
+            clickServicesButton = () => {
+                this.readFromSessionStorage();
+                this.statObj.servicesButton++;
+                this.writeToSessionStorage();
+            }
+
+        };
+
         const run = async () => {
             const loading = document.getElementById("calcLoading");
             let success = false;
-            const data = new Data(GET_DATA_URL, PUT_DATA_URL, BANK_URL);
+            const data = new Data(GET_DATA_URL, PUT_DATA_URL, PUT_STAT_DATA_URL, BANK_URL);
             for (let i = 0; i < ATTEMPTS_TO_FETCH; i++) try {
                 success = await data.getFromAPI();
                 loading.style.display = 'none';
