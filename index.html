@@ -1244,8 +1244,8 @@
             fetchExchangeRates = async () => {
                 const data = await fetch(this.#bankAPIurl);
                 const rates = await data.json();
-                this.#usd = +rates.Valute.USD.Value;
-                this.#kzt = +rates.Valute.KZT.Value;
+                this.#usd = +rates.Valute.USD.Value / +rates.Valute.USD.Nominal;
+                this.#kzt = +rates.Valute.KZT.Value / +rates.Valute.KZT.Nominal;
                 return true;
             }
 
@@ -1268,21 +1268,21 @@
                     } else {
                         unit.RUBpriceSL = unit.priceSL;
                         unit.USDpriceSL = unit.RUBpriceSL / this.#usd;
-                        unit.KZTpriceSL = unit.RUBpriceSL / this.#usd;
+                        unit.KZTpriceSL = unit.RUBpriceSL / this.#kzt;
                     }
                     if (unit.priceRisePriceBase === '') {
                         unit.priceRisePriceBase = false;
                     } else {
                         unit.RUBpriceRise = unit.priceRisePriceBase;
                         unit.USDpriceRise = unit.RUBpriceRise / this.#usd;
-                        unit.KZTpriceRise = unit.RUBpriceRise / this.#usd;
+                        unit.KZTpriceRise = unit.RUBpriceRise / this.#kzt;
                     }
                     if (unit.priceTilda === '') {
                         unit.priceTilda = false;
                     } else {
                         unit.RUBpriceTilda = unit.priceTilda;
                         unit.USDpriceTilda = unit.RUBpriceTilda / this.#usd;
-                        unit.KZTpriceTilda = unit.RUBpriceTilda / this.#usd;
+                        unit.KZTpriceTilda = unit.RUBpriceTilda / this.#kzt;
                     }
                 });
                 this.#constantExpensesRUB = this.#constantExpenses;
