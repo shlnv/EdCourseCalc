@@ -1,7 +1,8 @@
-<meta charset="UTF-8">
+<!--<meta charset="UTF-8">-->
 
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Pathway+Gothic+One&display=swap');
+
+    /*@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Pathway+Gothic+One&display=swap');*/
 
     #calcLoading {
         margin: auto;
@@ -354,7 +355,6 @@
     }
 
     #cartBackground::-webkit-scrollbar-track {
-        /*-webkit-box-shadow: inset 0 0 2px rgba(0,0,0,0.3);*/
         background-color: #F5F5F5;
     }
 
@@ -665,6 +665,7 @@
     }
 
     #dollarButton {
+        display: inline-block;
     }
 
     #tengeButton {
@@ -838,99 +839,36 @@
 
     @media (max-width: 1304px) {
         #calcContainer {
-            margin: auto;
-            background-color: rgba(255, 255, 255, 1);
-            font-family: 'Montserrat', sans-serif;
-            font-weight: lighter;
             width: 1024px;
-            border-radius: 16px;
-            box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.1);
-            padding: 23px 40px 40px 23px;
-            transform-origin: top;
-            transition: transform 500ms ease-out;
-            overflow: hidden;
         }
 
         #calcLoading {
-            margin: auto;
-            background-color: rgba(255, 255, 255, 1);
             width: 1024px;
-            border-radius: 16px;
-            box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.1);
-            padding: 23px 40px 40px 23px;
         }
 
         .chooseCourseButton {
-            font-size: 20px;
-            font-family: Montserrat;
-            color: #4B5061;
             width: 200px;
-            height: 46px;
-            border: 3px solid rgba(255, 210, 0, 1);
-            border-radius: 25px;
-            background-color: rgba(255, 255, 255, 1);
-            transform-origin: top;
-            transition: transform 250ms ease-out;
-            transition: 500ms;
         }
 
         #SLYesButton {
-            display: inline-block;
-            font-size: 20px;
             width: 100px;
-            height: 46px;
-            border: 3px solid rgba(255, 210, 0, 1);
-            border-radius: 25px 0 0 25px;
-            margin: 0;
         }
 
         #SLNoButton {
-            position: relative;
-            left: -2px;
-            display: inline-block;
-            font-size: 20px;
             width: 100px;
-            height: 46px;
-            border: 3px solid rgba(255, 210, 0, 1);
-            border-radius: 0 25px 25px 0;
-            margin: 0;
         }
-
     }
 
     @media (max-width: 1112px) {
         #calcContainer {
-            margin: auto;
-            background-color: rgba(255, 255, 255, 1);
-            font-family: 'Montserrat', sans-serif;
-            font-weight: lighter;
             width: 768px;
-            border-radius: 16px;
-            box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.1);
-            padding: 23px 40px 40px 23px;
-            transform-origin: top;
-            transition: transform 500ms ease-out;
-            overflow: hidden;
         }
 
         #calcLoading {
-            margin: auto;
-            background-color: rgba(255, 255, 255, 1);
             width: 768px;
-            border-radius: 16px;
-            box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.1);
-            padding: 23px 40px 40px 23px;
         }
 
         #SLAndCourseSwitchWrapper {
-            margin-top: 20px;
-            font-size: 0;
-            display: grid;
-            align-items: center;
-            grid-template-columns: 1.5fr 1fr 1fr 1fr;
-            grid-column-gap: 10px;
-            grid-row-gap: 10px;
-            grid-template-rows: auto;
             grid-template-areas:
             "text1 buttons1 . "
             "gap . . "
@@ -939,58 +877,25 @@
         }
 
         #calcCart {
-            margin-top: 20px;
-            padding-right: 24px;
-            display: grid;
             grid-template-columns: 1fr 1fr;
-            grid-template-rows: auto;
-            grid-column-gap: 10px;
-            grid-row-gap: 10px;
             grid-template-areas:
             "calcUnits calcAdditionalServices"
             "cartGridContainer cartGridContainer";
         }
 
         .calcModalWindow {
-            box-sizing: border-box;
-            width: 280px;
-            height: 356px;
-            padding: 24px 40px 24px 40px;
-            background-color: rgba(255, 255, 255, 1);
-            font-family: 'Montserrat', sans-serif;
-            border-radius: 16px;
-            box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.1);
-            position: absolute;
             top: initial;
-            right: 0;
             bottom: 100px;
-            left: 0;
-            margin: auto;
         }
     }
 
     @media (max-width: 848px) {
         #calcContainer {
-            margin: auto;
-            background-color: rgba(255, 255, 255, 1);
-            font-family: 'Montserrat', sans-serif;
-            font-weight: lighter;
             width: 360px;
-            border-radius: 16px;
-            box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.1);
-            padding: 10px;
-            transform-origin: top;
-            transition: transform 500ms ease-out;
-            overflow: hidden;
         }
 
         #calcLoading {
-            margin: auto;
-            background-color: rgba(255, 255, 255, 1);
             width: 360px;
-            border-radius: 16px;
-            box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.1);
-            padding: 23px 40px 40px 23px;
         }
 
         #calcLogo {
@@ -998,12 +903,7 @@
         }
 
         #calcHeader {
-            display: block;
-            color: rgba(134, 68, 215, 1);
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 700;
             text-align: center;
-            vertical-align: top;
             margin-top: 30px;
             font-size: 25px;
         }
@@ -1012,19 +912,13 @@
             display: block;
             text-align: center;
             margin: auto;
-            color: rgba(75, 80, 97, 1);
-            font-weight: 400;
         }
 
         #SLAndCourseSwitchWrapper {
             margin-top: 0;
-            font-size: 0;
-            display: grid;
-            align-items: center;
             grid-template-columns: 1fr;
             grid-column-gap: 0;
             grid-row-gap: 0;
-            grid-template-rows: auto;
             grid-template-areas:
             "text1"
             "buttons1"
@@ -1037,13 +931,10 @@
         #SLChoiceTextText {
             display: block;
             margin-bottom: 10px;
-            font-size: 12px;
-            font-weight: 300;
             text-align: center;
         }
 
         #SLChoiceButtonsWrapper {
-            grid-area: buttons1;
             display: flex;
             justify-content: center;
         }
@@ -1051,9 +942,6 @@
         #chooseCourseText {
             display: block;
             text-align: center;
-            grid-area: text2;
-            transform-origin: top;
-            transition: transform 100ms ease-out;
             margin-top: 10px;
             margin-bottom: 10px;
         }
@@ -1062,23 +950,14 @@
             display: block;
             width: auto;
             text-align: center;
-            line-height: 20px;
             margin: 5px;
         }
 
         .chooseCourseButtonSelected {
-            font-family: Montserrat;
-            color: #4B5061;
-            font-size: 20px;
             width: 200px;
-            height: 46px;
-            border: 3px solid rgba(255, 210, 0, 1);
-            border-radius: 25px;
-            background-color: rgba(255, 210, 0, 1);
         }
 
         .calcExampleLink {
-            color: rgba(75, 80, 97, 1);
             font-size: 10px;
             text-decoration: none;
             border-bottom: 1px dashed rgba(75, 80, 97, 1);
@@ -1088,13 +967,7 @@
         }
 
         #calcCart {
-            margin-top: 20px;
-            padding-right: 24px;
-            display: grid;
             grid-template-columns: 1fr;
-            grid-template-rows: auto;
-            grid-column-gap: 10px;
-            grid-row-gap: 10px;
             grid-template-areas:
             "calcUnits"
             "calcAdditionalServices"
@@ -1103,14 +976,8 @@
 
         #cartBackground {
             width: 360px;
-            background-color: rgba(217, 217, 217, 0.2);
-            border: 0;
-            border-radius: 16px;
-            max-height: inherit;
             overflow-y: scroll;
-            display: grid;
             grid-template-columns: 3fr 0.3fr 1.7fr 0.3fr;
-            grid-template-rows: min-content;
             grid-column-gap: 2px;
             grid-row-gap: 2px;
             grid-template-areas:
@@ -1121,55 +988,49 @@
         }
 
         .quantityWrapper {
-            width: 105px;
-            box-sizing: border-box;
-            padding-top: 1px;
-            margin-bottom: 12px;
             margin-right: 10px;
         }
 
         #calcInCart {
-            grid-area: calcInCart;
             padding-left: 2px;
-            font-size: 12px;
         }
 
         #calcCurrencies {
-            grid-area: calcCurrencies;
             padding: 25px 0 0 0;
-            text-align: center;
         }
 
         .inCartLinePrice {
-            box-sizing: border-box;
-            color: #4B5061;
-            padding-top: 4px;
-            margin-bottom: 12px;
             font-weight: 600;
             font-size: 13px;
         }
 
         .calcModalWindow {
-            box-sizing: border-box;
-            width: 280px;
-            height: 356px;
-            padding: 24px 40px 24px 40px;
-            background-color: rgba(255, 255, 255, 1);
-            font-family: 'Montserrat', sans-serif;
-            border-radius: 16px;
-            box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.1);
-            position: absolute;
-            top: initial;
-            right: 0;
             bottom: 80px;
-            left: 0;
-            margin: auto;
         }
 
         .inCartLineUnit {
             margin-left: 5px;
         }
 
+        @media (max-width: 800px) {
+            #calcContainer {
+                width: 330px;
+            }
+
+            #calcLoading {
+                width: 330px;
+            }
+
+            #calcLogo {
+                display: none;
+            }
+
+            #SLChoiceTextHeader {
+                display: block;
+                text-align: center;
+            }
+
+        }
     }
 
 </style>
@@ -1305,6 +1166,7 @@
 
 <script>
 
+    const SEND_STATISTICS = false;
     const GET_DATA_URL = 'https://script.google.com/macros/s/AKfycbyvuqVCLoujMoF4fEQIVzlx78E3DVLgD9fEfxKTaG2D-Z5ctCMPewsrsQCl4OH_qJaC/exec';
     const PUT_DATA_URL = 'https://script.google.com/macros/s/AKfycbyvuqVCLoujMoF4fEQIVzlx78E3DVLgD9fEfxKTaG2D-Z5ctCMPewsrsQCl4OH_qJaC/exec';
     const PUT_STAT_DATA_URL = 'https://script.google.com/macros/s/AKfycbyvuqVCLoujMoF4fEQIVzlx78E3DVLgD9fEfxKTaG2D-Z5ctCMPewsrsQCl4OH_qJaC/exec';
@@ -1804,13 +1666,15 @@
                     }
                 });
                 this.htmlElements.calc.addEventListener('click', (event) => {
-                    if (!event.path.includes(this.htmlElements.servicesList) && !event.path.includes(this.htmlElements.servicesButton) && this.servicesListToggle) {
-                        this.htmlElements.servicesList.classList.remove('additionalServicesVisible');
-                        this.htmlElements.servicesList.classList.add('additionalServicesScaleY0');
-                        setTimeout(() => {
-                            this.htmlElements.servicesList.classList.add('additionalServicesHidden');
-                            this.servicesListToggle = !this.servicesListToggle;
-                        }, 300);
+                    if (this.#stats.getDevice() != 'smartphone') {
+                        if (!event.composedPath().includes(this.htmlElements.servicesList) && !event.composedPath().includes(this.htmlElements.servicesButton) && this.servicesListToggle) {
+                            this.htmlElements.servicesList.classList.remove('additionalServicesVisible');
+                            this.htmlElements.servicesList.classList.add('additionalServicesScaleY0');
+                            setTimeout(() => {
+                                this.htmlElements.servicesList.classList.add('additionalServicesHidden');
+                                this.servicesListToggle = !this.servicesListToggle;
+                            }, 300);
+                        }
                     }
                 });
 
@@ -1914,7 +1778,9 @@
 
                 window.addEventListener('beforeunload', (e) => {
                     this.#stats.readFromSessionStorage();
-                    this.#controller.sendStat(this.#stats.statObj);
+                    if (SEND_STATISTICS) {
+                        this.#controller.sendStat(this.#stats.statObj);
+                    }
                 });
 
             };
@@ -2325,18 +2191,17 @@
                     servicesButton: 0,
                     submit: 0
                 };
-                console.log(JSON.stringify(this.statObj))
                 this.writeToSessionStorage();
             }
 
             getDevice = () => {
                 const ua = navigator.userAgent;
                 if (/(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i.test(ua)) {
-                    return "tablet";
+                    return 'tablet';
                 } else if (/Mobile|Android|iP(hone|od)|IEMobile|BlackBerry|Kindle|Silk-Accelerated|(hpw|web)OS|Opera M(obi|ini)/.test(ua)) {
-                    return "smartphone";
+                    return 'smartphone';
                 }
-                return "computer";
+                return 'computer';
             }
 
             writeToSessionStorage = () => {
